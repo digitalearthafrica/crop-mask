@@ -1,4 +1,5 @@
-# Eastern Africa Cropland Mask <img align="right" src="../../Supplementary_data/DE_Africa_Logo_Stacked_RGB_small.jpg">
+<img align="centre" src="data/figs/Github_banner.jpg" width="100%">
+# Eastern Africa Cropland Mask
 
 ## Background
 
