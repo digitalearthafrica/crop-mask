@@ -1,4 +1,5 @@
 <img align="centre" src="data/figs/Github_banner.jpg" width="100%">
+
 # Eastern Africa Cropland Mask
 
 ## Background
