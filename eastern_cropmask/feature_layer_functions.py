@@ -49,9 +49,9 @@ def gm_mads_two_seasons_predict(ds):
         
         #rainfall climatology
         if era == '_S1':
-            chirps = assign_crs(xr.open_rasterio('../data/CHIRPS/CHPclim_jan_jun_cumulative_rainfall.nc'),  crs='epsg:4326')
+            chirps = assign_crs(xr.open_rasterio('../pre-post_processing/data/CHIRPS/CHPclim_jan_jun_cumulative_rainfall.nc'),  crs='epsg:4326')
         if era == '_S2':
-            chirps = assign_crs(xr.open_rasterio('../data/CHIRPS/CHPclim_jul_dec_cumulative_rainfall.nc'),  crs='epsg:4326')
+            chirps = assign_crs(xr.open_rasterio('../pre-post_processing/data/CHIRPS/CHPclim_jul_dec_cumulative_rainfall.nc'),  crs='epsg:4326')
         
         chirps = xr_reproject(chirps,ds.geobox,"bilinear")
         chirps = chirps.chunk({'x':2000,'y':2000})
@@ -97,9 +97,9 @@ def gm_mads_two_seasons_training(ds):
         
         #rainfall climatology
         if era == '_S1':
-            chirps = assign_crs(xr.open_rasterio('../data/CHIRPS/CHPclim_jan_jun_cumulative_rainfall.nc'),  crs='epsg:4326')
+            chirps = assign_crs(xr.open_rasterio('../pre-post_processing/data/CHIRPS/CHPclim_jan_jun_cumulative_rainfall.nc'),  crs='epsg:4326')
         if era == '_S2':
-            chirps = assign_crs(xr.open_rasterio('../data/CHIRPS/CHPclim_jul_dec_cumulative_rainfall.nc'),  crs='epsg:4326')
+            chirps = assign_crs(xr.open_rasterio('../pre-post_processing/data/CHIRPS/CHPclim_jul_dec_cumulative_rainfall.nc'),  crs='epsg:4326')
         
         chirps = xr_reproject(chirps,ds.geobox,"bilinear")
         gm_mads['rain'] = chirps
