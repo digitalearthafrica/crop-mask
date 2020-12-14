@@ -1,2 +1,2 @@
 # crop-mask
-Production of crop-mask for Africa
+Production of a crop-mask for Africa
