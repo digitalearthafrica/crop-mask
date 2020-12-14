@@ -1,0 +1,378 @@
+<VRTDataset rasterXSize="371074" rasterYSize="334764">
+  <SRS dataAxisToSRSAxisMapping="2,1">GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]</SRS>
+  <GeoTransform> -3.0001215206796484e+01,  2.6949458523585658e-04,  0.0000000000000000e+00,  4.0108609626067285e+01,  0.0000000000000000e+00, -2.6949458523585658e-04</GeoTransform>
+  <VRTRasterBand dataType="Byte" band="1">
+    <ColorInterp>Gray</ColorInterp>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N00E00_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="111320" yOff="111580" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N00E10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="148427" yOff="111580" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N00E20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="185533" yOff="111580" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N00E30_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="222640" yOff="111580" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N00E40_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="259746" yOff="111580" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N00E50_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="296853" yOff="111580" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N00W10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="74214" yOff="111580" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N00W20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="37107" yOff="111580" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10E00_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="111320" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10E10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="148426" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10E20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="185533" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10E30_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="222639" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10E40_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="259746" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10E50_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="296852" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10W10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="74213" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10W20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="37107" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N10W30_001_2017290114500.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="0" yOff="74351" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N20E00_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="111320" yOff="37154" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N20E10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="148426" yOff="37154" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N20E20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="185533" yOff="37154" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N20E30_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="222639" yOff="37154" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N20W10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="74213" yOff="37154" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N20W20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="37107" yOff="37154" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N30E00_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="111319" yOff="0" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N30E10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="148426" yOff="0" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N30E20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="185532" yOff="0" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N30E30_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="222639" yOff="0" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N30W10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="74213" yOff="0" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_N30W20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="37106" yOff="0" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S10E00_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="111320" yOff="148825" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S10E10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="148427" yOff="148825" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S10E20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="185533" yOff="148825" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S10E30_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="222640" yOff="148825" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S10E40_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="259746" yOff="148825" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S10E50_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="296853" yOff="148825" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S10W20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37114" RasterYSize="37253" DataType="Byte" BlockXSize="37114" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37114" ySize="37253" />
+      <DstRect xOff="37107" yOff="148825" xSize="37114" ySize="37253" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S20E10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="148426" yOff="185932" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S20E20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="185533" yOff="185932" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S20E30_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="222639" yOff="185932" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S20E40_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="259746" yOff="185932" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S20E50_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="296852" yOff="185932" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S20E60_001_2017290131500.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="333959" yOff="185932" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S20W10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37375" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37375" />
+      <DstRect xOff="74213" yOff="185932" xSize="37115" ySize="37375" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S30E10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="148426" yOff="223038" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S30E20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="185533" yOff="223038" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S30E30_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="222639" yOff="223038" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S30E40_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="259746" yOff="223038" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S30E50_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37115" RasterYSize="37466" DataType="Byte" BlockXSize="37115" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37115" ySize="37466" />
+      <DstRect xOff="296852" yOff="223038" xSize="37115" ySize="37466" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S40E10_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="148426" yOff="260145" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S40E20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="185532" yOff="260145" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S40E30_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="222639" yOff="260145" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S40W20_001_2017261090100.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37116" RasterYSize="37513" DataType="Byte" BlockXSize="37116" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37116" ySize="37513" />
+      <DstRect xOff="37106" yOff="260145" xSize="37116" ySize="37513" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">GFSAD30AFCE_2015_S50E30_001_2017290131500.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="37118" RasterYSize="37513" DataType="Byte" BlockXSize="37118" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="37118" ySize="37513" />
+      <DstRect xOff="222638" yOff="297251" xSize="37118" ySize="37513" />
+    </SimpleSource>
+  </VRTRasterBand>
+</VRTDataset>

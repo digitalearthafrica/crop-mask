@@ -1,0 +1,6 @@
+Actual,Non-crop,Crop,Total,User's
+Non-crop,25.0,0.0,25.0,100.0
+Crop,2.0,16.0,18.0,88.89
+Total,27.0,16.0,43.0,--
+Producer's,92.59,100.0,--,95.35
+F-score,0.96,0.94,--,--
