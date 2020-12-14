@@ -1,6 +1,6 @@
 <img align="centre" src="eastern_cropmask/data/figs/Github_banner.jpg" width="100%">
 
-# DE Africa Continental Cropland Mask
+# Digital Earth Africa Continental Cropland Mask
 
 ## Background
 
