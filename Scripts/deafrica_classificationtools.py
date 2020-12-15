@@ -830,7 +830,7 @@ def collect_training_data(gdf,
                 gdf_rerun = gdf.loc[gdf['id'].isin(idx_nans)]
                 gdf_rerun = gdf_rerun.reset_index(drop=True)
 
-                time.sleep(30)  #sleep for 30 sec to rest api
+                time.sleep(10)  #sleep for 30 sec to rest api
                 column_names_again, results_again = _get_training_data_parallel(
                     gdf=gdf_rerun,
                     products=products,
