@@ -826,7 +826,8 @@ def collect_training_data(gdf,
         i = 1
         while (i <= max_retries):
             
-            # Find % of fails (null values) in data. Use Pandas for simplicity
+            # Find % of fails (null values) in data, regardless of
+            # Use Pandas for simplicity
             df = pd.DataFrame(data=model_input[:,0:-1], index=model_input[:,-1])
             #how many nan values per id?
             num_nans = df.isnull().sum(axis=1)
