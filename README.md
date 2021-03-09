@@ -1,4 +1,4 @@
-<img align="centre" src="eastern_cropmask/data/figs/Github_banner.jpg" width="100%">
+<img align="centre" src="figs/Github_banner.jpg" width="100%">
 
 # Digital Earth Africa Continental Cropland Mask
 
@@ -24,8 +24,7 @@ The cropland maps all share the following specifications:
 
 The `Scripts` folder is duplicated from the `deafrica-sandbox-notebooks` repo and contains useful function for running remote sensing analysis. 
 
-The `pre-post_processing` folder contains notebooks used for various miscellaneous tasks that are not directly associated with producing cropland classifications. These include things like generating randomly placed polygons for training data collection, pre and post processing of reference data, generating ancillary datasets that are used as feature layers in the ML models etc.
-
+The `pre-post_processing` folder contains notebooks used for various miscellaneous tasks.  These include things like generating randomly placed polygons for training data collection, pre and post processing of reference data, generating ancillary datasets that are used as feature layers in the ML models etc.
 
 ***
 
@@ -37,4 +36,3 @@ Digital Earth Africa data is licensed under the [Creative Commons by Attribution
 **Contact:** If you need assistance, please post a question on the [Open Data Cube Slack channel](http://slack.opendatacube.org/) or on the [GIS Stack Exchange](https://gis.stackexchange.com/questions/ask?tags=open-data-cube) using the `open-data-cube` tag (you can view previously asked questions [here](https://gis.stackexchange.com/questions/tagged/open-data-cube)).
 If you would like to report an issue with this notebook, you can file one on [Github](https://github.com/digitalearthafrica/crop-mask/issues).
 
-**Last modified:** Dec 2020
