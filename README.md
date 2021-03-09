@@ -11,7 +11,7 @@ A central focus for governing bodies in Africa is the need to secure the necessa
 The notebooks and scripts in this repository build cropland (crop/non-crop) maps for each of the seven simplified Agro-Ecological Zones (AEZ) shown in figure 1. The process for building models and generating classifications for each AEZ are contained in their namesake folders (e.g. `eastern_cropmask`).
 
 _figure 1: Simplified Agro-Ecological Zones. Seperate cropland models are produced for each region._ 
-<img align="centre" src="eastern_cropmask/data/figs/AEZs.png" width="35%">
+<img align="centre" src="figs/AEZs.png" width="35%">
 
 The cropland maps all share the following specifications:
 
