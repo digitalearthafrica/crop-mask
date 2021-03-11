@@ -1,4 +1,4 @@
-<img align="centre" src="figs/Github_banner.jpg" width="101%">
+<img align="centre" src="../figs/Github_banner.jpg" width="10%">
 
 # Digital Earth Africa Continental Cropland Mask - machine learning methods
 
