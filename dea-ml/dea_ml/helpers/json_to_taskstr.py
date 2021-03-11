@@ -1,12 +1,11 @@
 import json
 import sys
+from logging import getLogger
 from typing import List, Set, Dict
 
 import click
 
-from dea_ai_core.utils import get_logger
-
-logger = get_logger(__name__)
+logger = getLogger(__name__)
 
 
 def extract_taskstr_from_geojson(time_range: str, geojson: Dict) -> List[str]:

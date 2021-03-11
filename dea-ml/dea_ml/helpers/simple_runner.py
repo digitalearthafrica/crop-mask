@@ -11,7 +11,7 @@ from datacube.utils.dask import start_local_dask
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
-from dea_ai_core.tasks.merge_tifs_to_ds import FeaturePathConfig, TifsToFeature
+from dea_ml.core.merge_tifs_to_ds import FeaturePathConfig, TifsToFeature
 
 
 # sys.path.append("/home/jovyan/wa/u23/dea_ai_core/src")

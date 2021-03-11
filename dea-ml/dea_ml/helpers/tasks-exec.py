@@ -21,7 +21,7 @@ def worker_run(tifs_fld: str, task_str: str, cached_db: str):
     target_folder = osp.join(tifs_fld, task_str)
 
     if osp.exists(target_folder) and len(os.listdir(target_folder)) >= 15:
-        print(f"s1 folder {target_folder} exists, skip")
+        print(f"folder {target_folder} exists, skip")
     else:
         cmd = [
             "odc-stats",
