@@ -73,7 +73,7 @@ disable=import-star-module-level,old-octal-literal,oct-method,print-statement,un
         no-name-in-module,too-many-instance-attributes,no-self-use,logging-fstring-interpolation,
         bad-indentation,pointless-statement,too-many-arguments,unused-argument,line-too-long,dangerous-default-value,
         redefined-outer-name,duplicate-code,bad-option-value,attribute-defined-outside-init,too-many-statements,
-        len-as-condition,unnecessary-comprehension
+        len-as-condition,unnecessary-comprehension,wrong-import-order
 
 
 [REPORTS]

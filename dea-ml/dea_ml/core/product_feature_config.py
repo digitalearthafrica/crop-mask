@@ -1,19 +1,30 @@
 import os.path as osp
-from dataclasses import dataclass
 
+import toml
+from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
+
+# load the version
+_DIRNAME = osp.dirname(__file__)
+with open(osp.join(_DIRNAME, "../..", "pyproject.toml")) as fh:
+    __PROJ_VERSION__ = toml.loads(fh.read())["tool"]["poetry"]["version"]
 
 
 @dataclass
 class FeaturePathConfig:
+    """
+    The product version will align to the project version in the pyproject.toml file.
+    """
+
+    PRODUCT_VERSION = __PROJ_VERSION__
+    PRODUCT_NAME = "crop_mask_eastern"
+
     DATA_PATH = "/g/data/u23/data/"
     REMOTE_PATH = "s3://deafrica-data-dev-af/"
-    PRODUCT_NAME = "crop_mask_eastern"
-    PRODUCT_VERSION = "v0.1.4"
-
-    TIF_path = osp.join(DATA_PATH, "tifs20")
+    path = osp.join(DATA_PATH, "tifs20")
     model_path = "/g/data/u23/crop-mask/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib"
     model_type = "gm_mads_two_seasons"
+
     rename_dict = {  # "nir_1": "nir",
         "B02": "blue",
         "B03": "green",
