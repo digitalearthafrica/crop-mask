@@ -64,7 +64,7 @@ my_env = os.environ.copy()
 my_env["PYTHONPATH"] = CWD
 
 # manually add tasks
-# tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
+tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
 
 worker = PredictFromFeature()
 
