@@ -11,8 +11,8 @@ from datacube.utils.dask import start_local_dask
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
-from dea_ml.core.merge_tifs_to_ds import FeaturePathConfig, TifsToFeature
-
+from dea_ml.core.merge_tifs_to_ds import PredictFromFeature
+from dea_ml.core.product_feature_config import FeaturePathConfig
 
 # sys.path.append("/home/jovyan/wa/u23/dea_ai_core/src")
 
@@ -66,7 +66,7 @@ my_env["PYTHONPATH"] = CWD
 # manually add tasks
 # tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
 
-worker = TifsToFeature()
+worker = PredictFromFeature()
 
 for task in tasks:
     tile_indx = "/".join(task.split("/")[:2])
