@@ -50,7 +50,6 @@ _log = logging.getLogger(__name__)
 nthreads = get_max_cpu()
 memory_limit = get_max_mem()
 
-# client = Client(address="scheduler:8786")
 
 with open("/home/jovyan/wa/u23/notebooks/s2_tiles_eastern_aez_tasks.json") as fhin:
     tasks = json.load(fhin)
@@ -68,11 +67,9 @@ my_env["PYTHONPATH"] = CWD
 # manually add tasks
 tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
 
-cluster = LocalCluster(
+with LocalCluster(
     n_workers=1, threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
-)
-
-with Client(cluster) as client:
+) as cluster, Client(cluster) as client:
     for task in tasks:
         tile_indx = "/".join(task.split("/")[:2])
 
@@ -94,8 +91,3 @@ with Client(cluster) as client:
         t1 = time.time()
         wall_time = (t1 - t0) / 60
         _log.info(f"time used {wall_time:.4f}")
-        # # client.shutdown()
-        # try:
-        #     client.close()
-        # except:
-        #     import pdb; pdb.set_trace()
