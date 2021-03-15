@@ -1,13 +1,13 @@
 import os.path as osp
 
-import toml
 from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
 
 # load the version
-_DIRNAME = osp.dirname(__file__)
-with open(osp.join(_DIRNAME, "../..", "pyproject.toml")) as fh:
-    __PROJ_VERSION__ = toml.loads(fh.read())["tool"]["poetry"]["version"]
+# _DIRNAME = osp.dirname(__file__)
+# with open(osp.join(_DIRNAME, "../..", "pyproject.toml")) as fh:
+#     __PROJ_VERSION__ = toml.loads(fh.read())["tool"]["poetry"]["version"]
+__PROJ_VERSION__ = "v0.1.5"
 
 
 @dataclass
