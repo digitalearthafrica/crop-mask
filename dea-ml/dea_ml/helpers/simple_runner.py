@@ -49,9 +49,6 @@ _log = logging.getLogger(__name__)
 nthreads = get_max_cpu()
 memory_limit = get_max_mem()
 
-client = start_local_dask(
-    threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
-)
 # client = Client(address="scheduler:8786")
 
 with open("/home/jovyan/wa/u23/notebooks/s2_tiles_eastern_aez_tasks.json") as fhin:
@@ -88,9 +85,15 @@ for task in tasks:
     #     f"task",
     # ]
     # subprocess.run(cmd, env=my_env)
+
+    client = start_local_dask(
+        threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
+    )
+
     worker = PredictFromFeature()
     worker.run(task)
     del worker
     t1 = time.time()
     wall_time = (t1 - t0) / 60
     _log.info(f"time used {wall_time:.4f}")
+    client.shutdown()
