@@ -7,15 +7,16 @@ import os.path as osp
 import time
 
 import psutil
+from dask.distributed import Client, LocalCluster
 
 # from datacube.utils.dask import start_local_dask
 # from distributed import Client
-from datacube.utils.dask import start_local_dask
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
 from dea_ml.core.merge_tifs_to_ds import PredictFromFeature
 from dea_ml.core.product_feature_config import FeaturePathConfig
+
 
 # sys.path.append("/home/jovyan/wa/u23/dea_ai_core/src")
 
@@ -67,28 +68,34 @@ my_env["PYTHONPATH"] = CWD
 # manually add tasks
 tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
 
+cluster = LocalCluster(
+    n_workers=1, threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
+)
 
-for task in tasks:
-    tile_indx = "/".join(task.split("/")[:2])
+with Client(cluster) as client:
+    for task in tasks:
+        tile_indx = "/".join(task.split("/")[:2])
 
-    file_prefix = f"{tile_indx}"
-    output_path = osp.join(output_fld, file_prefix, "*")
-    if glob.glob(output_path):
-        _log.warning(f"tile {output_path} is done already. Skipping...")
-        continue
-    _log.info(f"proessing tiles for task {output_path}. (2019-01 and 2019-07)")
+        file_prefix = f"{tile_indx}"
+        output_path = osp.join(output_fld, file_prefix, "*")
+        if glob.glob(output_path):
+            _log.warning(f"tile {output_path} is done already. Skipping...")
+            continue
+        _log.info(f"proessing tiles for task {output_path}. (2019-01 and 2019-07)")
 
-    t0 = time.time()
+        t0 = time.time()
 
-    client = start_local_dask(
-        threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
-    )
-
-    worker = PredictFromFeature()
-    worker.run(task)
-    del worker
-    t1 = time.time()
-    wall_time = (t1 - t0) / 60
-    _log.info(f"time used {wall_time:.4f}")
-    # client.shutdown()
-    client.close()
+        # client = start_local_dask(
+        #     threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
+        # )
+        worker = PredictFromFeature()
+        worker.run(task)
+        del worker
+        t1 = time.time()
+        wall_time = (t1 - t0) / 60
+        _log.info(f"time used {wall_time:.4f}")
+        # # client.shutdown()
+        # try:
+        #     client.close()
+        # except:
+        #     import pdb; pdb.set_trace()
