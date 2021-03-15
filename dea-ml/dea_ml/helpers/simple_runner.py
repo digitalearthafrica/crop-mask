@@ -60,8 +60,12 @@ my_env["PYTHONPATH"] = CWD
 # manually add tasks
 tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
 
+# n_workers=1, threads_per_worker=nthreads, processes=True, memory_limit=memory_limit
 with LocalCluster(
-    n_workers=1, threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
+    n_workers=int(0.9 * nthreads),
+    threads_per_worker=1,
+    processes=True,
+    memory_limit=memory_limit,
 ) as cluster, Client(cluster) as client:
     for task in tasks:
         tile_indx = "/".join(task.split("/")[:2])
