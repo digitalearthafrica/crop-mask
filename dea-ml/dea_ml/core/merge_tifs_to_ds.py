@@ -172,6 +172,7 @@ class PredictFromFeature:
 
         with open(metadata_path, "w") as fh:
             json.dump(stac_doc, fh, indent=2)
+        del predicted
 
 
 def calculate_indices(ds: xr.Dataset) -> xr.Dataset:
