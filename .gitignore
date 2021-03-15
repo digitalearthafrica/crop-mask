@@ -141,6 +141,7 @@ dmypy.json
 
 # dask cache
 dask-worker-space/
+**/dask-worker-space
 # seed
 src/seed
 docker/cache
