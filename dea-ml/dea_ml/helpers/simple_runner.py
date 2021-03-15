@@ -9,7 +9,7 @@ import time
 import psutil
 
 # from datacube.utils.dask import start_local_dask
-from distributed import Client
+# from distributed import Client
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
@@ -51,7 +51,7 @@ memory_limit = get_max_mem()
 # client = start_local_dask(
 #     threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
 # )
-client = Client(address="tcp://10.95.123.251:8786")
+# client = Client(address="scheduler:8786")
 
 with open("/home/jovyan/wa/u23/notebooks/s2_tiles_eastern_aez_tasks.json") as fhin:
     tasks = json.load(fhin)

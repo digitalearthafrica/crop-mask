@@ -1,6 +1,7 @@
 import dask.array as da
 import joblib
 import xarray as xr
+from dask.distributed import Client
 from dask_ml.wrappers import ParallelPostFit
 from datacube.utils.geometry import assign_crs
 
@@ -61,7 +62,7 @@ def predict_xr(
     # convert model to dask predict
     model = ParallelPostFit(model)
 
-    # client = Client(processes=False)
+    _ = Client(processes=False)
     with joblib.parallel_backend("dask"):
         x, y, crs = input_xr.x, input_xr.y, input_xr.geobox.crs
 
