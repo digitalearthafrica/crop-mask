@@ -65,7 +65,7 @@ with LocalCluster(
     n_workers=int(0.9 * nthreads),
     threads_per_worker=1,
     processes=True,
-    memory_limit=memory_limit,
+    memory_limit="2GB",
 ) as cluster, Client(cluster) as client:
     for task in tasks:
         tile_indx = "/".join(task.split("/")[:2])
