@@ -7,7 +7,9 @@ import os.path as osp
 import time
 
 import psutil
-from datacube.utils.dask import start_local_dask
+
+# from datacube.utils.dask import start_local_dask
+from distributed import Client
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
@@ -46,9 +48,10 @@ _log = logging.getLogger(__name__)
 nthreads = get_max_cpu()
 memory_limit = get_max_mem()
 
-client = start_local_dask(
-    threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
-)
+# client = start_local_dask(
+#     threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
+# )
+client = Client(address="tcp://10.95.123.251:8786")
 
 with open("/home/jovyan/wa/u23/notebooks/s2_tiles_eastern_aez_tasks.json") as fhin:
     tasks = json.load(fhin)
@@ -89,6 +92,3 @@ for task in tasks:
     t1 = time.time()
     wall_time = (t1 - t0) / 60
     _log.info(f"time used {wall_time:.4f}")
-
-# client.shutdown()
-# client.close()
