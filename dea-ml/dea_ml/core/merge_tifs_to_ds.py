@@ -28,10 +28,17 @@ class PredictFromFeature:
     """
     This only covers 2019 case in sandbox now. Check configureation in FeaturePathConfig before use
     run this.
+    # todo: add context  to this classpredicted
     """
 
     def __init__(self):
         self.geobox_dict = None
+
+    # def __enter__(self):
+    #     pass
+    #
+    # def __exit__(self):
+    #     pass
 
     def merge_ds_exec(self, x: int, y: int) -> Tuple[str, xr.Dataset]:
         """

@@ -70,7 +70,6 @@ my_env["PYTHONPATH"] = CWD
 # manually add tasks
 tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
 
-worker = PredictFromFeature()
 
 for task in tasks:
     tile_indx = "/".join(task.split("/")[:2])
@@ -89,7 +88,9 @@ for task in tasks:
     #     f"task",
     # ]
     # subprocess.run(cmd, env=my_env)
+    worker = PredictFromFeature()
     worker.run(task)
+    del worker
     t1 = time.time()
     wall_time = (t1 - t0) / 60
     _log.info(f"time used {wall_time:.4f}")
