@@ -79,12 +79,6 @@ for task in tasks:
     _log.info(f"proessing tiles for task {output_path}. (2019-01 and 2019-07)")
 
     t0 = time.time()
-    # cmd = [
-    #     "python3",
-    #     "dea_ai_core/tasks/merge_tifs_to_ds.py",
-    #     f"task",
-    # ]
-    # subprocess.run(cmd, env=my_env)
 
     client = start_local_dask(
         threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
@@ -96,4 +90,5 @@ for task in tasks:
     t1 = time.time()
     wall_time = (t1 - t0) / 60
     _log.info(f"time used {wall_time:.4f}")
-    client.shutdown()
+    # client.shutdown()
+    client.close()
