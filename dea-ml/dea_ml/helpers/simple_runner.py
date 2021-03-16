@@ -79,12 +79,9 @@ with LocalCluster(
 
         t0 = time.time()
 
-        # client = start_local_dask(
-        #     threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
-        # )
         worker = PredictFromFeature()
         worker.run(task)
-        del worker
+
         t1 = time.time()
         wall_time = (t1 - t0) / 60
         _log.info(f"time used {wall_time:.4f}")

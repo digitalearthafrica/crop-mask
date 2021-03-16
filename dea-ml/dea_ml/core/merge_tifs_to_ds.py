@@ -1,5 +1,6 @@
 import datetime
 import json
+import math
 import os
 import os.path as osp
 import re
@@ -9,12 +10,16 @@ from typing import List, Optional, Dict, Tuple
 import click
 import joblib
 import numpy as np
+import psutil
 import xarray as xr
 from datacube import Datacube
 from datacube.testutils.io import rio_slurp_xarray
 from datacube.utils.cog import write_cog
+from datacube.utils.dask import start_local_dask
 from datacube.utils.geometry import assign_crs, GeoBox, Geometry
+from datacube.utils.rio import configure_s3_access
 from odc.algo import xr_reproject
+from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 from pyproj import Proj, transform
 
@@ -22,6 +27,28 @@ from dea_ml.core.africa_geobox import AfricaGeobox
 from dea_ml.core.cm_prediction import predict_xr
 from dea_ml.core.product_feature_config import FeaturePathConfig
 from dea_ml.core.stac_to_dc import StacIntoDc
+
+
+def get_max_mem() -> int:
+    """
+    Max available memory, takes into account pod resource allocation
+    """
+    total = psutil.virtual_memory().total
+    mem_quota = get_mem_quota()
+    if mem_quota is None:
+        return total
+    return min(mem_quota, total)
+
+
+def get_max_cpu() -> int:
+    """
+    Max available CPU (rounded up if fractional), takes into account pod
+    resource allocation
+    """
+    ncpu = get_cpu_quota()
+    if ncpu is not None:
+        return int(math.ceil(ncpu))
+    return psutil.cpu_count()
 
 
 class PredictFromFeature:
@@ -33,12 +60,13 @@ class PredictFromFeature:
 
     def __init__(self):
         self.geobox_dict = None
-
-    # def __enter__(self):
-    #     pass
-    #
-    # def __exit__(self):
-    #     pass
+        nthreads = get_max_cpu()
+        memory_limit = get_max_mem()
+        client = start_local_dask(
+            threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
+        )
+        configure_s3_access(aws_unsigned=True, cloud_defaults=True, client=client)
+        self.client = client
 
     def merge_ds_exec(self, x: int, y: int) -> Tuple[str, xr.Dataset]:
         """
