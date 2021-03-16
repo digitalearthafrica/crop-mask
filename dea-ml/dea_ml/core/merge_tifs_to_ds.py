@@ -64,7 +64,9 @@ class PredictFromFeature:
             nthreads = get_max_cpu()
             memory_limit = get_max_mem()
             client = start_local_dask(
-                threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
+                threads_per_worker=nthreads,
+                processes=False,
+                memory_limit=int(0.9 * memory_limit),
             )
             configure_s3_access(aws_unsigned=True, cloud_defaults=True, client=client)
         self.client = client
