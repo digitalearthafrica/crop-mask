@@ -58,14 +58,15 @@ class PredictFromFeature:
     # todo: add context  to this classpredicted
     """
 
-    def __init__(self):
+    def __init__(self, client=None):
         self.geobox_dict = None
-        nthreads = get_max_cpu()
-        memory_limit = get_max_mem()
-        client = start_local_dask(
-            threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
-        )
-        configure_s3_access(aws_unsigned=True, cloud_defaults=True, client=client)
+        if not client:
+            nthreads = get_max_cpu()
+            memory_limit = get_max_mem()
+            client = start_local_dask(
+                threads_per_worker=nthreads, processes=False, memory_limit=memory_limit
+            )
+            configure_s3_access(aws_unsigned=True, cloud_defaults=True, client=client)
         self.client = client
 
     def merge_ds_exec(self, x: int, y: int) -> Tuple[str, xr.Dataset]:
