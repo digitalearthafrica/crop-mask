@@ -2,7 +2,6 @@ import glob
 import json
 import logging
 import math
-import os
 import os.path as osp
 import time
 
@@ -13,7 +12,7 @@ from distributed import LocalCluster, Client
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
-from dea_ml.core.merge_tifs_to_ds import PredictFromFeature
+from dea_ml.core.merge_tifs_to_ds import PredictFromFeature, extract_xy_from_title
 from dea_ml.core.product_feature_config import FeaturePathConfig
 
 
@@ -47,21 +46,23 @@ nthreads = get_max_cpu()
 memory_limit = get_max_mem()
 
 # prepare the tile index into the json
-with open("eastern_cropmask/data/s2_tiles_eastern_aez.geojson") as fhin:
-    tasks = json.load(fhin)
+with open("../eastern_cropmask/data/s2_tiles_eastern_aez.geojson") as fhin:
+    raw = json.load(fhin)
+    tile_indicies = [
+        extract_xy_from_title(feature["properties"]["title"])
+        for feature in raw["features"]
+    ]
+    tasks = [f"x{x:+04d}/y{y:+04d}" for x, y in tile_indicies]
 
+config = FeaturePathConfig()
 output_fld = osp.join(
-    FeaturePathConfig.DATA_PATH,
-    FeaturePathConfig.product.name,
-    FeaturePathConfig.product.version,
+    config.DATA_PATH,
+    config.product.name,
+    config.product.version,
 )
 
-CWD = osp.dirname(__file__)
-my_env = os.environ.copy()
-my_env["PYTHONPATH"] = CWD
-
-# manually add tasks
-tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
+# tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
+tasks = tasks[-2:]
 
 with LocalCluster() as cluster:
     with Client(cluster) as client:

@@ -1,12 +1,9 @@
 import os.path as osp
-
+from typing import Tuple, Dict
 from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
 
-# load the version
-# _DIRNAME = osp.dirname(__file__)
-# with open(osp.join(_DIRNAME, "../..", "pyproject.toml")) as fh:
-#     __PROJ_VERSION__ = toml.loads(fh.read())["tool"]["poetry"]["version"]
+
 __PROJ_VERSION__ = "v0.1.5"
 
 
@@ -109,3 +106,41 @@ class FeaturePathConfig:
         measurements=("mask", "prob"),
         href=f"https://explorer.digitalearth.africa/products/{PRODUCT_NAME}",
     )
+
+    def prepare_the_io_path(self, tile_indx: str) -> Tuple[str, Dict[str, str], str]:
+        """
+        use sandbox local path to mimic the target s3 prefixes. The path follow our nameing rule:
+        <product_name>/version/<x>/<y>/<year>/<product_name>_<x>_<y>_<timeperiod>_<band>.<extension>
+        the name in config a crop_mask_eastern_product.yaml and the github repo for those proudct config
+        @param tile_indx: <x>/<y>
+        @return:
+        """
+
+        start_year = self.datetime_range.start.year
+        tile_year_prefix = f"{tile_indx}/{start_year}"
+        file_prefix = f"{self.product.name}/{tile_year_prefix}"
+
+        output_fld = osp.join(
+            self.DATA_PATH,
+            self.product.name,
+            self.product.version,
+            tile_year_prefix,
+        )
+
+        mask_path = osp.join(
+            output_fld,
+            file_prefix.replace("/", "_") + "_mask.tif",
+        )
+
+        prob_path = osp.join(
+            output_fld,
+            file_prefix.replace("/", "_") + "_prob.tif",
+        )
+
+        paths = {"mask": mask_path, "prob": prob_path}
+
+        metadata_path = mask_path.replace("_mask.tif", ".json")
+
+        assert set(paths.keys()) == set(self.product.measurements)
+
+        return output_fld, paths, metadata_path

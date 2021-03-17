@@ -18,6 +18,7 @@ from datacube.utils.cog import write_cog
 from datacube.utils.dask import start_local_dask
 from datacube.utils.geometry import assign_crs, GeoBox, Geometry
 from datacube.utils.rio import configure_s3_access
+from distributed import Client
 from odc.algo import xr_reproject
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
@@ -58,8 +59,15 @@ class PredictFromFeature:
     # todo: add context  to this classpredicted
     """
 
-    def __init__(self, client=None):
-        self.geobox_dict = None
+    def __init__(
+        self,
+        config: Optional[FeaturePathConfig] = None,
+        geobox_dict: Optional[Dict] = None,
+        client: Optional[Client] = None,
+        gm_ds: Optional[xr.Dataset] = None,
+    ):
+        self.config = config
+        self.geobox_dict = geobox_dict
         if not client:
             nthreads = get_max_cpu()
             memory_limit = get_max_mem()
@@ -70,31 +78,35 @@ class PredictFromFeature:
             )
             configure_s3_access(aws_unsigned=True, cloud_defaults=True, client=client)
         self.client = client
+        self.gm_ds = gm_ds
 
     def merge_ds_exec(self, x: int, y: int) -> Tuple[str, xr.Dataset]:
         """
         merge the xarray dataset
-        # TODO: move to feature building step
         @param x: tile index x
         #param y: time inde y
         @return: subfolder path and the xarray dataset of the features
         """
         subfld = "x{x:+04d}/y{y:+04d}".format(x=x, y=y)
-        P6M_tifs: Dict = get_tifs_paths(FeaturePathConfig.TIF_path, subfld)
+        P6M_tifs: Dict = get_tifs_paths(self.config.TIF_path, subfld)
         geobox = self.geobox_dict[(x, y)]
         seasoned_ds = {}
         for k, tifs in P6M_tifs.items():
             era = "_S1" if "2019-01--P6M" in k else "_S2"
-            base_ds = merge_tifs_into_ds(
-                k, tifs, rename_dict=FeaturePathConfig.rename_dict
-            )
-            # TODO: rewrite from here for dc load half year geomedian
+            if not self.gm_ds:
+                # no prepare base ds
+                base_ds = merge_tifs_into_ds(
+                    k, tifs, rename_dict=self.config.rename_dict
+                )
+            else:
+                base_ds = self.gm_ds
+            # TODO: to validate the 6month geomedia is down scaled already.
             base_ds = down_scale_gm_band(base_ds)
 
             seasoned_ds[era] = complete_gm_mads(base_ds, geobox, era)
 
         slope = (
-            rio_slurp_xarray(FeaturePathConfig.url_slope, gbox=geobox)
+            rio_slurp_xarray(self.config.url_slope, gbox=geobox)
             .drop("spatial_ref")
             .to_dataset(name="slope")
         )
@@ -117,19 +129,20 @@ class PredictFromFeature:
         _log = logging.getLogger(__name__)
         if not self.geobox_dict:
             self.geobox_dict = AfricaGeobox(
-                resolution=FeaturePathConfig.resolution,
-                crs=FeaturePathConfig.output_crs,
+                resolution=self.config.resolution,
+                crs=self.config.output_crs,
             ).geobox_dict
 
         x, y = get_xy_from_task(taskstr)
 
         # step 1: collect the geomedian, indices, rainfall, slope as feature
         # TODO: add more interface in merge_ds_exec, dc.load and x, y
+        # adapt to other africa_geobox type
         subfld, data = self.merge_ds_exec(x, y)
-        input_data = data[FeaturePathConfig.training_features]
+        input_data = data[self.config.training_features]
 
         # step 2: load trained model
-        model = joblib.load(FeaturePathConfig.model_path)
+        model = joblib.load(self.config.model_path)
 
         # step 3: prediction
         predicted = predict_xr(
@@ -145,9 +158,7 @@ class PredictFromFeature:
 
         # post prediction filtering
         predict = predicted.Predictions
-
-        query = FeaturePathConfig.query.copy()
-
+        query = self.config.query.copy()
         # Update dc query with geometry
         geobox_used = self.geobox_dict[(x, y)]
         query["geopolygon"] = Geometry(geobox_used.extent.geom, crs=geobox_used.crs)
@@ -170,7 +181,7 @@ class PredictFromFeature:
         predict = predict.where(~elevation.squeeze(), 0)
         predict = predict.astype(np.uint8)
 
-        output_fld, paths, metadata_path = prepare_the_io_path(subfld)
+        output_fld, paths, metadata_path = self.config.prepare_the_io_path(subfld)
 
         if not osp.exists(output_fld):
             os.makedirs(output_fld)
@@ -196,13 +207,13 @@ class PredictFromFeature:
         uuid_hex = uuid.uuid4()
         remoe_path = dict((k, osp.basename(p)) for k, p in paths.items())
         remote_metadata_path = metadata_path.replace(
-            FeaturePathConfig.DATA_PATH, FeaturePathConfig.REMOTE_PATH
+            self.config.DATA_PATH, self.config.REMOTE_PATH
         )
         stac_doc = StacIntoDc.render_metadata(
-            FeaturePathConfig.product,
+            self.config.product,
             geobox_used,
             (x, y),
-            FeaturePathConfig.datetime_range,
+            self.config.datetime_range,
             uuid_hex,
             remoe_path,
             remote_metadata_path,
@@ -358,45 +369,6 @@ def get_xy_from_task(taskstr: str) -> Tuple[int, int]:
 
 def extract_dt_from_model_path(path: str) -> str:
     return re.search(r"_(\d{8})", path).groups()[0]
-
-
-def prepare_the_io_path(tile_indx: str) -> Tuple[str, Dict[str, str], str]:
-    """
-    use sandbox local path to mimic the target s3 prefixes. The path follow our nameing rule:
-    <product_name>/version/<x>/<y>/<year>/<product_name>_<x>_<y>_<timeperiod>_<band>.<extension>
-    the name in config a crop_mask_eastern_product.yaml and the github repo for those proudct config
-    @param tile_indx: <x>/<y>
-    @return:
-    """
-
-    start_year = FeaturePathConfig.datetime_range.start.year
-    tile_year_prefix = f"{tile_indx}/{start_year}"
-    file_prefix = f"{FeaturePathConfig.product.name}/{tile_year_prefix}"
-
-    output_fld = osp.join(
-        FeaturePathConfig.DATA_PATH,
-        FeaturePathConfig.product.name,
-        FeaturePathConfig.product.version,
-        tile_year_prefix,
-    )
-
-    mask_path = osp.join(
-        output_fld,
-        file_prefix.replace("/", "_") + "_mask.tif",
-    )
-
-    prob_path = osp.join(
-        output_fld,
-        file_prefix.replace("/", "_") + "_prob.tif",
-    )
-
-    paths = {"mask": mask_path, "prob": prob_path}
-
-    metadata_path = mask_path.replace("_mask.tif", ".json")
-
-    assert set(paths.keys()) == set(FeaturePathConfig.product.measurements)
-
-    return output_fld, paths, metadata_path
 
 
 def extract_xy_from_title(title: str) -> Tuple[int, int]:

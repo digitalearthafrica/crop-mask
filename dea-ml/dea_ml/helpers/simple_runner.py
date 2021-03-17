@@ -49,10 +49,12 @@ memory_limit = get_max_mem()
 with open("/home/jovyan/wa/u23/notebooks/s2_tiles_eastern_aez_tasks.json") as fhin:
     tasks = json.load(fhin)
 
+config = FeaturePathConfig()
+
 output_fld = osp.join(
-    FeaturePathConfig.DATA_PATH,
-    FeaturePathConfig.product.name,
-    FeaturePathConfig.product.version,
+    config.DATA_PATH,
+    config.product.name,
+    config.product.version,
 )
 
 CWD = osp.dirname(__file__)
@@ -61,6 +63,7 @@ my_env["PYTHONPATH"] = CWD
 
 # manually add tasks
 tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
+
 
 with LocalCluster() as cluster:
     with Client(cluster) as client:
