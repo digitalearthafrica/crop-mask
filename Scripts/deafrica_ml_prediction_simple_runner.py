@@ -64,7 +64,7 @@ output_fld = osp.join(
 # tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
 tasks = tasks[-2:]
 
-with LocalCluster() as cluster:
+with LocalCluster(processes=False) as cluster:
     with Client(cluster) as client:
         worker = PredictFromFeature(client=client)
         for task in tasks:
