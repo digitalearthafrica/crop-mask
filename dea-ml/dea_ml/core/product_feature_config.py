@@ -1,8 +1,8 @@
 import os.path as osp
 from typing import Tuple, Dict
+
 from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
-
 
 __PROJ_VERSION__ = "v0.1.5"
 
@@ -107,40 +107,44 @@ class FeaturePathConfig:
         href=f"https://explorer.digitalearth.africa/products/{PRODUCT_NAME}",
     )
 
-    def prepare_the_io_path(self, tile_indx: str) -> Tuple[str, Dict[str, str], str]:
-        """
-        use sandbox local path to mimic the target s3 prefixes. The path follow our nameing rule:
-        <product_name>/version/<x>/<y>/<year>/<product_name>_<x>_<y>_<timeperiod>_<band>.<extension>
-        the name in config a crop_mask_eastern_product.yaml and the github repo for those proudct config
-        @param tile_indx: <x>/<y>
-        @return:
-        """
 
-        start_year = self.datetime_range.start.year
-        tile_year_prefix = f"{tile_indx}/{start_year}"
-        file_prefix = f"{self.product.name}/{tile_year_prefix}"
+def prepare_the_io_path(
+    config: FeaturePathConfig, tile_indx: str
+) -> Tuple[str, Dict[str, str], str]:
+    """
+    use sandbox local path to mimic the target s3 prefixes. The path follow our nameing rule:
+    <product_name>/version/<x>/<y>/<year>/<product_name>_<x>_<y>_<timeperiod>_<band>.<extension>
+    the name in config a crop_mask_eastern_product.yaml and the github repo for those proudct config
+    @param config: configureation dataclass as the FeaturePathConfig
+    @param tile_indx: <x>/<y>
+    @return:
+    """
 
-        output_fld = osp.join(
-            self.DATA_PATH,
-            self.product.name,
-            self.product.version,
-            tile_year_prefix,
-        )
+    start_year = config.datetime_range.start.year
+    tile_year_prefix = f"{tile_indx}/{start_year}"
+    file_prefix = f"{config.product.name}/{tile_year_prefix}"
 
-        mask_path = osp.join(
-            output_fld,
-            file_prefix.replace("/", "_") + "_mask.tif",
-        )
+    output_fld = osp.join(
+        config.DATA_PATH,
+        config.product.name,
+        config.product.version,
+        tile_year_prefix,
+    )
 
-        prob_path = osp.join(
-            output_fld,
-            file_prefix.replace("/", "_") + "_prob.tif",
-        )
+    mask_path = osp.join(
+        output_fld,
+        file_prefix.replace("/", "_") + "_mask.tif",
+    )
 
-        paths = {"mask": mask_path, "prob": prob_path}
+    prob_path = osp.join(
+        output_fld,
+        file_prefix.replace("/", "_") + "_prob.tif",
+    )
 
-        metadata_path = mask_path.replace("_mask.tif", ".json")
+    paths = {"mask": mask_path, "prob": prob_path}
 
-        assert set(paths.keys()) == set(self.product.measurements)
+    metadata_path = mask_path.replace("_mask.tif", ".json")
 
-        return output_fld, paths, metadata_path
+    assert set(paths.keys()) == set(config.product.measurements)
+
+    return output_fld, paths, metadata_path

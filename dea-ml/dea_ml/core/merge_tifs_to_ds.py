@@ -26,7 +26,7 @@ from pyproj import Proj, transform
 
 from dea_ml.core.africa_geobox import AfricaGeobox
 from dea_ml.core.cm_prediction import predict_xr
-from dea_ml.core.product_feature_config import FeaturePathConfig
+from dea_ml.core.product_feature_config import FeaturePathConfig, prepare_the_io_path
 from dea_ml.core.stac_to_dc import StacIntoDc
 
 
@@ -181,7 +181,7 @@ class PredictFromFeature:
         predict = predict.where(~elevation.squeeze(), 0)
         predict = predict.astype(np.uint8)
 
-        output_fld, paths, metadata_path = self.config.prepare_the_io_path(subfld)
+        output_fld, paths, metadata_path = prepare_the_io_path(self.config, subfld)
 
         if not osp.exists(output_fld):
             os.makedirs(output_fld)
