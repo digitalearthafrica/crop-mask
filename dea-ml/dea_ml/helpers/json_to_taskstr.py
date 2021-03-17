@@ -1,11 +1,17 @@
 import json
 import sys
 from logging import getLogger
-from typing import List, Set, Dict
+from typing import List, Set, Dict, Tuple
 
 import click
 
 logger = getLogger(__name__)
+
+
+def geofeature_to_tileidx(feature: Dict) -> Tuple[int, int]:
+    title = feature["properties"]["title"]
+    x_str, y_str = title.split(",")
+    return int(x_str), int(y_str)
 
 
 def extract_taskstr_from_geojson(time_range: str, geojson: Dict) -> List[str]:

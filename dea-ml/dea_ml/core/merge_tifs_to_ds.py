@@ -115,10 +115,11 @@ class PredictFromFeature:
         import logging  # noqa pylint: disable=import-outside-toplevel
 
         _log = logging.getLogger(__name__)
-
-        self.geobox_dict = AfricaGeobox(
-            resolution=FeaturePathConfig.resolution, crs=FeaturePathConfig.output_crs
-        ).geobox_dict
+        if not self.geobox_dict:
+            self.geobox_dict = AfricaGeobox(
+                resolution=FeaturePathConfig.resolution,
+                crs=FeaturePathConfig.output_crs,
+            ).geobox_dict
 
         x, y = get_xy_from_task(taskstr)
 
