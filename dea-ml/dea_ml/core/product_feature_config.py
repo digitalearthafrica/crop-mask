@@ -4,7 +4,7 @@ from typing import Tuple, Dict
 from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
 
-__PROJ_VERSION__ = "v0.1.5"
+__PROJ_VERSION__ = "v0.1.6"
 
 
 @dataclass
