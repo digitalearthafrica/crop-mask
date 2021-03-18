@@ -54,9 +54,8 @@ def get_max_cpu() -> int:
 
 class PredictFromFeature:
     """
-    This only covers 2019 case in sandbox now. Check configureation in FeaturePathConfig before use
-    run this.
-    # todo: add context  to this classpredicted
+    This only covers 2019 case in sandbox now.
+    Check configureation in FeaturePathConfig before use run this.
     """
 
     def __init__(
@@ -84,7 +83,7 @@ class PredictFromFeature:
         """
         merge the xarray dataset
         @param x: tile index x
-        #param y: time inde y
+        @param y: time inde y
         @return: subfolder path and the xarray dataset of the features
         """
         subfld = "x{x:+04d}/y{y:+04d}".format(x=x, y=y)

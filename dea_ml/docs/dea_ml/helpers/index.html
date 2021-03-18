@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>dea_ml API documentation</title>
+<title>dea_ml.helpers API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,24 +19,32 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>dea_ml</code></h1>
+<h1 class="title">Module <code>dea_ml.helpers</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">__version__ = &#34;0.1.0&#34;</code></pre>
-</details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="dea_ml.core" href="core/index.html">dea_ml.core</a></code></dt>
+<dt><code class="name"><a title="dea_ml.helpers.enqueue_task" href="enqueue_task.html">dea_ml.helpers.enqueue_task</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="dea_ml.helpers" href="helpers/index.html">dea_ml.helpers</a></code></dt>
+<dt><code class="name"><a title="dea_ml.helpers.json_to_taskstr" href="json_to_taskstr.html">dea_ml.helpers.json_to_taskstr</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="dea_ml.helpers.local_files_into_dc" href="local_files_into_dc.html">dea_ml.helpers.local_files_into_dc</a></code></dt>
+<dd>
+<div class="desc"><p>before insert the data remember to insert products first, like below
+datacube product add crop_mask_eastern.yaml</p></div>
+</dd>
+<dt><code class="name"><a title="dea_ml.helpers.save_tasks" href="save_tasks.html">dea_ml.helpers.save_tasks</a></code></dt>
+<dd>
+<div class="desc"><p>resolution (-10, 10)
+odc-stats save-tasks &ndash;grid africa-10 &ndash;temporal_range 2019-01&ndash;P6M s2_l2a test1.db …</p></div>
+</dd>
+<dt><code class="name"><a title="dea_ml.helpers.validate_cloud_optimized_geotiff" href="validate_cloud_optimized_geotiff.html">dea_ml.helpers.validate_cloud_optimized_geotiff</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -55,10 +63,18 @@
 <ul></ul>
 </div>
 <ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dea_ml" href="../index.html">dea_ml</a></code></li>
+</ul>
+</li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="dea_ml.core" href="core/index.html">dea_ml.core</a></code></li>
-<li><code><a title="dea_ml.helpers" href="helpers/index.html">dea_ml.helpers</a></code></li>
+<li><code><a title="dea_ml.helpers.enqueue_task" href="enqueue_task.html">dea_ml.helpers.enqueue_task</a></code></li>
+<li><code><a title="dea_ml.helpers.json_to_taskstr" href="json_to_taskstr.html">dea_ml.helpers.json_to_taskstr</a></code></li>
+<li><code><a title="dea_ml.helpers.local_files_into_dc" href="local_files_into_dc.html">dea_ml.helpers.local_files_into_dc</a></code></li>
+<li><code><a title="dea_ml.helpers.save_tasks" href="save_tasks.html">dea_ml.helpers.save_tasks</a></code></li>
+<li><code><a title="dea_ml.helpers.validate_cloud_optimized_geotiff" href="validate_cloud_optimized_geotiff.html">dea_ml.helpers.validate_cloud_optimized_geotiff</a></code></li>
 </ul>
 </li>
 </ul>

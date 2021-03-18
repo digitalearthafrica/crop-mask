@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>dea_ml.helpers.json_to_taskstr API documentation</title>
-<meta name="description" content="" />
+<title>dea_ml.helpers.local_files_into_dc API documentation</title>
+<meta name="description" content="before insert the data remember to insert products first, like below
+datacube product add crop_mask_eastern.yaml" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,74 +20,77 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>dea_ml.helpers.json_to_taskstr</code></h1>
+<h1 class="title">Module <code>dea_ml.helpers.local_files_into_dc</code></h1>
 </header>
 <section id="section-intro">
+<p>before insert the data remember to insert products first, like below
+datacube product add crop_mask_eastern.yaml</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import json
-import sys
-from logging import getLogger
-from typing import List, Set, Dict
+import os
+import re
+from pathlib import Path
+from typing import Tuple, List
 
-import click
+from datacube import Datacube
+from odc.index._index import from_metadata_stream
+from odc.index.stac import stac_transform
 
-logger = getLogger(__name__)
+__doc__ = &#34;&#34;&#34;before insert the data remember to insert products first, like below
+datacube product add crop_mask_eastern.yaml
+&#34;&#34;&#34;
+dc = Datacube()
+ROOT = os.path.dirname(__file__)
 
-
-# def geofeature_to_tileidx(feature: Dict) -&gt; Tuple[int, int]:
-#     title = feature[&#34;properties&#34;][&#34;title&#34;]
-#     x_str, y_str = title.split(&#34;,&#34;)
-#     return int(x_str), int(y_str)
-
-
-def extract_taskstr_from_geojson(time_range: str, geojson: Dict) -&gt; List[str]:
-    &#34;&#34;&#34;
-    transfer geojosn into task list
-    &#34;&#34;&#34;
-    taskstr_set: Set[str] = set()
-    for feat in geojson[&#34;features&#34;]:
-        x, y = feat[&#34;properties&#34;][&#34;title&#34;].split(&#34;,&#34;)
-        # xy_str = &#34;{:s}/{:+}/{:+}&#34;.format(time_range, int(x), int(y))
-        xy_str = &#34;x{x:+04d}/y{y:+04d}/{time_range:s}&#34;.format(
-            time_range=time_range, x=int(x), y=int(y)
-        )
-        taskstr_set.add(xy_str)
-    return sorted(taskstr_set)
+# ad hoc dir for the sample data folder
+DATA_DIR = os.path.join(ROOT, &#34;../../seed/v0.1.4&#34;)
 
 
-@click.group(help=&#34;Transform geojson into the task list&#34;)
-def main():
-    pass
+def get_xy(part: str) -&gt; Tuple[int, int]:
+    x, y = list(map(int, re.findall(r&#34;(\d{3})&#34;, part)))
+    return x, y
 
 
-@main.command(&#34;json2tasks&#34;)
-@click.argument(&#34;in-path&#34;, type=str)
-@click.argument(&#34;temporal-range&#34;, type=str)
-@click.argument(&#34;out-path&#34;, type=str)
-def json_to_tasks(in_path: str, temporal_range: str, out_path: str):
-    &#34;&#34;&#34;
-    Transform geojson into task string list.
-    geojson features must have title in properties, like {&#39;properties&#39;: {&#39;title&#39;: &#39;+0041,+0013&#39;,...
-    @param in_path: absolute path input path, or relative path
-    @param temporal_range:Time range use for the geomedian, &#39;2019-01--P6M&#39;, &#39;2019-07--P6M&#39;
-    @param out_path: absolute path of output result file.
-    @return: None
-    # TODO: add s3 access support, pick up geojson in s3, push result to s3. Otherwise, manually with awscli
-    &#34;&#34;&#34;
-    logger.info(f&#34;reading source file {in_path}&#34;)
-    with open(in_path) as fh_in:
-        geojson = json.load(fh_in)
-    taskstrs: List[str] = extract_taskstr_from_geojson(temporal_range, geojson)
-    with open(out_path, &#34;w&#34;) as fh_out:
-        json.dump(taskstrs, fh_out, indent=2)
-    logger.info(f&#34;output task string list into {out_path}&#34;)
+def fetch_stac_json_files(data_folder: str) -&gt; List[Tuple[str, List]]:
+    return [
+        (fld, data_files)
+        for fld, subfld, data_files in os.walk(data_folder)
+        if not subfld and (&#34;.ipynb&#34; not in fld)
+    ]
+
+
+def collect_datasets(data_folder: str):
+    files = fetch_stac_json_files(data_folder)
+
+    for fld, data_files in files:
+        for fn in data_files:
+            if not fn.endswith(&#34;.json&#34;):
+                continue
+            print(f&#34;processing {fn}&#34;)
+            full_fn = Path(fld).joinpath(fn)
+            with open(full_fn) as fhin:
+                rendered = json.load(fhin)
+
+            stac_doc = stac_transform(rendered)
+            metapath = list(
+                filter(lambda item: item[&#34;rel&#34;] in &#34;self&#34;, rendered[&#34;links&#34;])
+            )[0][&#34;href&#34;]
+            # TODO: if s3 access available use s3-to-dc directly
+            yield list(from_metadata_stream([(metapath, stac_doc)], dc.index))[0][0]
+
+
+def index_insert():
+    data_folder = DATA_DIR
+    for dataset in collect_datasets(data_folder):
+        dc.index.datasets.add(dataset)
+    print(&#34;Done!&#34;)
 
 
 if __name__ == &#34;__main__&#34;:
-    sys.exit(main())</code></pre>
+    index_insert()</code></pre>
 </details>
 </section>
 <section>
@@ -96,28 +100,80 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="dea_ml.helpers.json_to_taskstr.extract_taskstr_from_geojson"><code class="name flex">
-<span>def <span class="ident">extract_taskstr_from_geojson</span></span>(<span>time_range: str, geojson: Dict) ‑> List[str]</span>
+<dt id="dea_ml.helpers.local_files_into_dc.collect_datasets"><code class="name flex">
+<span>def <span class="ident">collect_datasets</span></span>(<span>data_folder: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>transfer geojosn into task list</p></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def extract_taskstr_from_geojson(time_range: str, geojson: Dict) -&gt; List[str]:
-    &#34;&#34;&#34;
-    transfer geojosn into task list
-    &#34;&#34;&#34;
-    taskstr_set: Set[str] = set()
-    for feat in geojson[&#34;features&#34;]:
-        x, y = feat[&#34;properties&#34;][&#34;title&#34;].split(&#34;,&#34;)
-        # xy_str = &#34;{:s}/{:+}/{:+}&#34;.format(time_range, int(x), int(y))
-        xy_str = &#34;x{x:+04d}/y{y:+04d}/{time_range:s}&#34;.format(
-            time_range=time_range, x=int(x), y=int(y)
-        )
-        taskstr_set.add(xy_str)
-    return sorted(taskstr_set)</code></pre>
+<pre><code class="python">def collect_datasets(data_folder: str):
+    files = fetch_stac_json_files(data_folder)
+
+    for fld, data_files in files:
+        for fn in data_files:
+            if not fn.endswith(&#34;.json&#34;):
+                continue
+            print(f&#34;processing {fn}&#34;)
+            full_fn = Path(fld).joinpath(fn)
+            with open(full_fn) as fhin:
+                rendered = json.load(fhin)
+
+            stac_doc = stac_transform(rendered)
+            metapath = list(
+                filter(lambda item: item[&#34;rel&#34;] in &#34;self&#34;, rendered[&#34;links&#34;])
+            )[0][&#34;href&#34;]
+            # TODO: if s3 access available use s3-to-dc directly
+            yield list(from_metadata_stream([(metapath, stac_doc)], dc.index))[0][0]</code></pre>
+</details>
+</dd>
+<dt id="dea_ml.helpers.local_files_into_dc.fetch_stac_json_files"><code class="name flex">
+<span>def <span class="ident">fetch_stac_json_files</span></span>(<span>data_folder: str) ‑> List[Tuple[str, List]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_stac_json_files(data_folder: str) -&gt; List[Tuple[str, List]]:
+    return [
+        (fld, data_files)
+        for fld, subfld, data_files in os.walk(data_folder)
+        if not subfld and (&#34;.ipynb&#34; not in fld)
+    ]</code></pre>
+</details>
+</dd>
+<dt id="dea_ml.helpers.local_files_into_dc.get_xy"><code class="name flex">
+<span>def <span class="ident">get_xy</span></span>(<span>part: str) ‑> Tuple[int, int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_xy(part: str) -&gt; Tuple[int, int]:
+    x, y = list(map(int, re.findall(r&#34;(\d{3})&#34;, part)))
+    return x, y</code></pre>
+</details>
+</dd>
+<dt id="dea_ml.helpers.local_files_into_dc.index_insert"><code class="name flex">
+<span>def <span class="ident">index_insert</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def index_insert():
+    data_folder = DATA_DIR
+    for dataset in collect_datasets(data_folder):
+        dc.index.datasets.add(dataset)
+    print(&#34;Done!&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -138,7 +194,10 @@ if __name__ == &#34;__main__&#34;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="dea_ml.helpers.json_to_taskstr.extract_taskstr_from_geojson" href="#dea_ml.helpers.json_to_taskstr.extract_taskstr_from_geojson">extract_taskstr_from_geojson</a></code></li>
+<li><code><a title="dea_ml.helpers.local_files_into_dc.collect_datasets" href="#dea_ml.helpers.local_files_into_dc.collect_datasets">collect_datasets</a></code></li>
+<li><code><a title="dea_ml.helpers.local_files_into_dc.fetch_stac_json_files" href="#dea_ml.helpers.local_files_into_dc.fetch_stac_json_files">fetch_stac_json_files</a></code></li>
+<li><code><a title="dea_ml.helpers.local_files_into_dc.get_xy" href="#dea_ml.helpers.local_files_into_dc.get_xy">get_xy</a></code></li>
+<li><code><a title="dea_ml.helpers.local_files_into_dc.index_insert" href="#dea_ml.helpers.local_files_into_dc.index_insert">index_insert</a></code></li>
 </ul>
 </li>
 </ul>
