@@ -38,47 +38,52 @@ def get_max_cpu() -> int:
     return psutil.cpu_count()
 
 
-setup_logging()
+def main():
+    setup_logging()
 
-_log = logging.getLogger(__name__)
+    _log = logging.getLogger(__name__)
 
-nthreads = get_max_cpu()
-memory_limit = get_max_mem()
+    # nthreads = get_max_cpu()
+    # memory_limit = get_max_mem()
 
-# prepare the tile index into the json
-with open("../eastern_cropmask/data/s2_tiles_eastern_aez.geojson") as fhin:
-    raw = json.load(fhin)
-    tile_indicies = [
-        extract_xy_from_title(feature["properties"]["title"])
-        for feature in raw["features"]
-    ]
-    tasks = [f"x{x:+04d}/y{y:+04d}" for x, y in tile_indicies]
+    # prepare the tile index into the json
+    with open("../eastern_cropmask/data/s2_tiles_eastern_aez.geojson") as fhin:
+        raw = json.load(fhin)
+        tile_indicies = [
+            extract_xy_from_title(feature["properties"]["title"])
+            for feature in raw["features"]
+        ]
+        tasks = [f"x{x:+04d}/y{y:+04d}" for x, y in tile_indicies]
 
-config = FeaturePathConfig()
-output_fld = osp.join(
-    config.DATA_PATH,
-    config.product.name,
-    config.product.version,
-)
+    config = FeaturePathConfig()
+    output_fld = osp.join(
+        config.DATA_PATH,
+        config.product.name,
+        config.product.version,
+    )
 
-# tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
-tasks = tasks[-2:]
+    # tasks = ["x+029/y+000/2019-P6M", "x+048/y+010"]
+    tasks = tasks[-2:]
 
-with LocalCluster(processes=False) as cluster:
-    with Client(cluster) as client:
-        worker = PredictFromFeature(client=client)
-        for task in tasks:
-            tile_indx = "/".join(task.split("/")[:2])
+    with LocalCluster(processes=False) as cluster:
+        with Client(cluster) as client:
+            worker = PredictFromFeature(client=client)
+            for task in tasks:
+                tile_indx = "/".join(task.split("/")[:2])
 
-            file_prefix = f"{tile_indx}"
-            output_path = osp.join(output_fld, file_prefix, "*")
-            if glob.glob(output_path):
-                _log.warning(f"tile {output_path} is done already. Skipping...")
-                continue
-            _log.info(f"proessing tiles for task {output_path}.")
+                file_prefix = f"{tile_indx}"
+                output_path = osp.join(output_fld, file_prefix, "*")
+                if glob.glob(output_path):
+                    _log.warning(f"tile {output_path} is done already. Skipping...")
+                    continue
+                _log.info(f"proessing tiles for task {output_path}.")
 
-            t0 = time.time()
-            worker.run(task)
-            t1 = time.time()
-            wall_time = (t1 - t0) / 60
-            _log.info(f"time used {wall_time:.4f}")
+                t0 = time.time()
+                worker.run(task)
+                t1 = time.time()
+                wall_time = (t1 - t0) / 60
+                _log.info(f"time used {wall_time:.4f}")
+
+
+if __name__ == "__main__":
+    main()
