@@ -10,18 +10,22 @@ __PROJ_VERSION__ = "v0.1.5"
 @dataclass
 class FeaturePathConfig:
     """
+    This is a configureation data class for the prediction and result stac json.
     The product version will align to the project version in the pyproject.toml file.
+    product version and name is critical for stac json
+
     """
 
+    # change here if you have different version rules for the product name
     PRODUCT_VERSION = __PROJ_VERSION__
     PRODUCT_NAME = "crop_mask_eastern"
-
+    # data path
     DATA_PATH = "/g/data/u23/data/"
     REMOTE_PATH = "s3://deafrica-data-dev-af/"
     TIF_path = osp.join(DATA_PATH, "tifs20")
     model_path = "/g/data/u23/crop-mask/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib"
     model_type = "gm_mads_two_seasons"
-
+    # if you want to use alias of band keep this, otherwise use None
     rename_dict = {  # "nir_1": "nir",
         "B02": "blue",
         "B03": "green",
@@ -145,6 +149,9 @@ def prepare_the_io_path(
 
     metadata_path = mask_path.replace("_mask.tif", ".json")
 
-    assert set(paths.keys()) == set(config.product.measurements)
+    assert set(paths.keys()) == set(
+        config.product.measurements
+    ), "file number can not cover the measurement number, \
+    each measurement a tif file. pls check the stac json schema requirements."
 
     return output_fld, paths, metadata_path
