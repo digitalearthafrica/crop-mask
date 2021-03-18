@@ -2,9 +2,23 @@
 
 # Digital Earth Africa Continental Cropland Mask - machine learning methods
 
-Use machine learning methods to predict crop mask.
+The code in dea-ml folder is to us machine learning methods to predict crop mask.
 
-***
+## How to build and install the code.
+
+In folder ```crop-mask/deal-ml```, run the following shell commands to install the dependency ```poetry```.
+```bash
+pip install poety && poetry build
+```
+
+After you have dea_ml built by ```poetry```, run
+```bash
+pip install dist/dea-ml-0.1.6.tar.gz
+```
+
+The version '0.1.6' will be changed according to the crop-mask development.
+
+After the install ```dea-ml``` in your python environment, you can use package through python imports.
 
 ## Additional information
 
