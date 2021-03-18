@@ -35,7 +35,7 @@ class FeaturePathConfig:
         "_S1": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc",
         "_S2": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc",
     }
-    s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
+    # s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
     resolution = (-20, 20)
     time = ("2019-01", "2019-12")
     datetime_range = DateTimeRange(time[0], "P12M")
