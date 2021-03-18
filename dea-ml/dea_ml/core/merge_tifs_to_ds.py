@@ -66,9 +66,8 @@ class PredictFromFeature:
         client: Optional[Client] = None,
         gm_ds: Optional[xr.Dataset] = None,
     ):
-        self.config = config
+        self.config = config if config else FeaturePathConfig()
         self.geobox_dict = geobox_dict
-
         if not client:
             nthreads = get_max_cpu()
             memory_limit = get_max_mem()
@@ -79,11 +78,7 @@ class PredictFromFeature:
             )
             configure_s3_access(aws_unsigned=True, cloud_defaults=True, client=client)
         self.client = client
-
-        if not gm_ds:
-            self.gm_ds = FeaturePathConfig()
-        else:
-            self.gm_ds = gm_ds
+        self.gm_ds = gm_ds
 
     def merge_ds_exec(self, x: int, y: int) -> Tuple[str, xr.Dataset]:
         """
