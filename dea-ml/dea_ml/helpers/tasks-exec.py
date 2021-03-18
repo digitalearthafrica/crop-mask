@@ -40,6 +40,7 @@ def worker_run(tifs_fld: str, task_str: str, cached_db: str):
         subprocess.run(cmd, check=True)
 
 
-for task_s1, task_s2 in zip(taskstr_list_s1, taskstr_list_s2):
-    worker_run(tifs_fld, task_s1, cached_db_s1)
-    worker_run(tifs_fld, task_s2, cached_db_s2)
+if __name__ == "__main__":
+    for task_s1, task_s2 in zip(taskstr_list_s1, taskstr_list_s2):
+        worker_run(tifs_fld, task_s1, cached_db_s1)
+        worker_run(tifs_fld, task_s2, cached_db_s2)
