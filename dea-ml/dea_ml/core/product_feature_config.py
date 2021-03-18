@@ -47,17 +47,21 @@ class FeaturePathConfig:
         "_S1": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc",
         "_S2": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc",
     }
-    s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
+    # s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
     resolution = (-20, 20)
+    # the time actually is the time range, required by datacube query
+    # the datetime_range is required by OutputProduct of odc-stats model
     time = ("2019-01", "2019-12")
     datetime_range = DateTimeRange(time[0], "P12M")
     output_crs = "epsg:6933"
+    # query is required by open datacube
     query = {
         "time": time,
         "resolution": resolution,
         "output_crs": output_crs,
         "group_by": "solar_day",
     }
+    # list the requird feature here
     training_features = [
         "red_S1",
         "blue_S1",
@@ -93,7 +97,7 @@ class FeaturePathConfig:
         "rain_S2",
         "slope",
     ]
-
+    # the prd_properties is required by the stac json
     prd_properties = {
         "odc:file_format": "GeoTIFF",
         "odc:producer": "digitalearthafrica.org",
@@ -101,6 +105,7 @@ class FeaturePathConfig:
         "proj:epsg": 6933,
         "crop-mask-model": osp.basename(model_path),
     }
+    # the OutputProduct is required by stac json
     product = OutputProduct(
         name=PRODUCT_NAME,
         version=PRODUCT_VERSION,
