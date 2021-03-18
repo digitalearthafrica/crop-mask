@@ -55,7 +55,7 @@ def get_max_cpu() -> int:
 class PredictFromFeature:
     """
     This only covers 2019 case in sandbox now.
-    Check configureation in FeaturePathConfig before use run this.
+    Check configuration in FeaturePathConfig before use run this.
     """
 
     def __init__(
