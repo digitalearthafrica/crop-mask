@@ -82,9 +82,8 @@ def get_max_cpu() -&gt; int:
 
 class PredictFromFeature:
     &#34;&#34;&#34;
-    This only covers 2019 case in sandbox now. Check configureation in FeaturePathConfig before use
-    run this.
-    # todo: add context  to this classpredicted
+    This only covers 2019 case in sandbox now.
+    Check configureation in FeaturePathConfig before use run this.
     &#34;&#34;&#34;
 
     def __init__(
@@ -112,7 +111,7 @@ class PredictFromFeature:
         &#34;&#34;&#34;
         merge the xarray dataset
         @param x: tile index x
-        #param y: time inde y
+        @param y: time inde y
         @return: subfolder path and the xarray dataset of the features
         &#34;&#34;&#34;
         subfld = &#34;x{x:+04d}/y{y:+04d}&#34;.format(x=x, y=y)
@@ -757,19 +756,16 @@ We need combine two half-year tifs ds and add (calculated indices, rainfall, and
 <span>(</span><span>config: Union[<a title="dea_ml.core.product_feature_config.FeaturePathConfig" href="product_feature_config.html#dea_ml.core.product_feature_config.FeaturePathConfig">FeaturePathConfig</a>, NoneType] = None, geobox_dict: Union[Dict, NoneType] = None, client: Union[distributed.client.Client, NoneType] = None, gm_ds: Union[xarray.core.dataset.Dataset, NoneType] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This only covers 2019 case in sandbox now. Check configureation in FeaturePathConfig before use
-run this.</p>
-<h1 id="todo-add-context-to-this-classpredicted">todo: add context
-to this classpredicted</h1></div>
+<div class="desc"><p>This only covers 2019 case in sandbox now.
+Check configureation in FeaturePathConfig before use run this.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class PredictFromFeature:
     &#34;&#34;&#34;
-    This only covers 2019 case in sandbox now. Check configureation in FeaturePathConfig before use
-    run this.
-    # todo: add context  to this classpredicted
+    This only covers 2019 case in sandbox now.
+    Check configureation in FeaturePathConfig before use run this.
     &#34;&#34;&#34;
 
     def __init__(
@@ -797,7 +793,7 @@ to this classpredicted</h1></div>
         &#34;&#34;&#34;
         merge the xarray dataset
         @param x: tile index x
-        #param y: time inde y
+        @param y: time inde y
         @return: subfolder path and the xarray dataset of the features
         &#34;&#34;&#34;
         subfld = &#34;x{x:+04d}/y{y:+04d}&#34;.format(x=x, y=y)
@@ -943,9 +939,9 @@ to this classpredicted</h1></div>
 </code></dt>
 <dd>
 <div class="desc"><p>merge the xarray dataset
-@param x: tile index x</p>
-<h1 id="param-y-time-inde-y">param y: time inde y</h1>
-<p>@return: subfolder path and the xarray dataset of the features</p></div>
+@param x: tile index x
+@param y: time inde y
+@return: subfolder path and the xarray dataset of the features</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -954,7 +950,7 @@ to this classpredicted</h1></div>
     &#34;&#34;&#34;
     merge the xarray dataset
     @param x: tile index x
-    #param y: time inde y
+    @param y: time inde y
     @return: subfolder path and the xarray dataset of the features
     &#34;&#34;&#34;
     subfld = &#34;x{x:+04d}/y{y:+04d}&#34;.format(x=x, y=y)
