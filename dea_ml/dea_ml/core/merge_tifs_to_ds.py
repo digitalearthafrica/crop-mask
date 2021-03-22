@@ -53,10 +53,6 @@ class PredictFromFeature:
     This only covers 2019 case in sandbox now.
     Check configuration in FeaturePathConfig before use run this.
     # refer to feature build: https://gist.github.com/cbur24/436a18145c2ac291247360c99ae053be
-    TODO: split function
-    TODO: 1. feature layer prepare
-    TODO: 2. prediction
-    TODO: 3. post processing
     """
 
     def __init__(
