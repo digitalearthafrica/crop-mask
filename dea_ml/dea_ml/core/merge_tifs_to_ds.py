@@ -59,7 +59,6 @@ class PredictFromFeature:
         config: Optional[FeaturePathConfig] = None,
         geobox_dict: Optional[Dict] = None,
         client: Optional[Client] = None,
-        gm_ds: Optional[xr.Dataset] = None,
     ):
         self.config = config if config else FeaturePathConfig()
         self.geobox_dict = geobox_dict
@@ -73,7 +72,6 @@ class PredictFromFeature:
             )
             configure_s3_access(aws_unsigned=True, cloud_defaults=True, client=client)
         self.client = client
-        self.gm_ds = gm_ds
 
         setup_logging()
         self._log = logging.getLogger(__name__)
@@ -116,6 +114,14 @@ class PredictFromFeature:
         probabilites: xr.DataArray,
         geobox_used: Geobox,
     ):
+        """
+        save the prediction results to local folder, prepare stac json
+        :param subfld: local subfolder to save the prediction tifs`
+        :param predict: predicted binary class label array
+        :param probabilites: prediction probabilities array
+        :param geobox_used: geobox used for the features for prediction
+        :return: None
+        """
         output_fld, paths, metadata_path = prepare_the_io_path(self.config, subfld)
         x, y = get_xy_from_task(subfld)
         if not osp.exists(output_fld):
