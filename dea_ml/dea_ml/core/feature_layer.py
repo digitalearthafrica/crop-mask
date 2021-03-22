@@ -7,7 +7,7 @@ import numpy as np
 import xarray as xr
 from datacube.testutils.io import rio_slurp_xarray
 from datacube.utils.geometry import assign_crs, GeoBox
-from dea_ml.core.product_feature_config import FeaturePathConfig
+from dea_ml.config.product_feature_config import FeaturePathConfig
 from odc.algo import xr_reproject
 from pyproj import Proj, transform
 
