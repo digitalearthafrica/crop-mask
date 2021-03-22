@@ -1,6 +1,7 @@
 import pytest
 
-from dea_ml.core.product_feature_config import FeaturePathConfig, prepare_the_io_path
+from dea_ml.config.product_feature_config import FeaturePathConfig
+from dea_ml.helpers.io import prepare_the_io_path
 
 
 @pytest.fixture
