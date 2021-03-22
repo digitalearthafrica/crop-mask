@@ -1,6 +1,6 @@
 import pytest
 
-from dea_ml.core.merge_tifs_to_ds import get_xy_from_task
+from dea_ml.core.feature_layer import get_xy_from_task
 
 
 # TODO: refer to https://github.com/spulec/moto/blob/master/tests/test_sqs/test_sqs.py

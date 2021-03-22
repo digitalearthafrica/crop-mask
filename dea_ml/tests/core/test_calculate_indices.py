@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import xarray as xr
 
-from dea_ml.core.merge_tifs_to_ds import calculate_indices
+from dea_ml.core.feature_layer import calculate_indices
 
 
 @pytest.fixture

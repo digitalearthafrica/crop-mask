@@ -1,6 +1,6 @@
 import pytest
 
-from dea_ml.core.merge_tifs_to_ds import extract_dt_from_model_path
+from dea_ml.core.feature_layer import extract_dt_from_model_path
 
 
 @pytest.mark.parametrize(
