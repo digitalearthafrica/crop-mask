@@ -7,7 +7,6 @@ import os.path as osp
 import uuid
 from typing import List, Optional, Dict
 
-import click
 import joblib
 import numpy as np
 import psutil
@@ -160,8 +159,8 @@ class PredictFromFeature:
             json.dump(stac_doc, fh, indent=2)
 
 
-@click.command("tile-predict")
-@click.argument("task-str", type=str, nargs=1)
-def main(task_str):
-    worker = PredictFromFeature()
-    worker.run(task_str)
+# @click.command("tile-predict")
+# @click.argument("task-str", type=str, nargs=1)
+# def main(task_str):
+#     worker = PredictFromFeature()
+#     worker.run(task_str)
