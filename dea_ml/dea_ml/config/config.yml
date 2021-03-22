@@ -1,0 +1,69 @@
+---
+PRODUCT_VERSION: "v0.1.7"
+PRODUCT_NAME: "crop_mask_eastern"
+
+PATH:
+    DATA_PATH: "/g/data/u23/data/"
+    REMOTE_PATH: "s3://deafrica-data-dev-af/"
+    TIF_path: "/g/data/u23/data/tifs20"
+
+    model_path: "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib?raw=true"
+    model_type: "gm_mads_two_seasons"
+    # if you want to use alias of band keep this, otherwise use None
+    rename_dict: {  # "nir_1": "nir",
+        "B02": "blue",
+        "B03": "green",
+        "B04": "red",
+        "B05": "red_edge_1",
+        "B06": "red_edge_2",
+        "B07": "red_edge_3",
+        "B08": "nir",
+        "B8A": "nir_narrow",
+        "B11": "swir_1",
+        "B12": "swir_2",
+        "BCMAD": "bcdev",
+        "EMAD": "edev",
+        "SMAD": "sdev",
+    }
+
+    url_slope: "https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
+    rainfall_path: {
+        "_S1": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc",
+        "_S2": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc",
+    }
+    # list the requird feature here
+    training_features: [
+        "red_S1",
+        "blue_S1",
+        "green_S1",
+        "nir_S1",
+        "swir_1_S1",
+        "swir_2_S1",
+        "red_edge_1_S1",
+        "red_edge_2_S1",
+        "red_edge_3_S1",
+        "edev_S1",
+        "sdev_S1",
+        "bcdev_S1",
+        "NDVI_S1",
+        "LAI_S1",
+        "MNDWI_S1",
+        "rain_S1",
+        "red_S2",
+        "blue_S2",
+        "green_S2",
+        "nir_S2",
+        "swir_1_S2",
+        "swir_2_S2",
+        "red_edge_1_S2",
+        "red_edge_2_S2",
+        "red_edge_3_S2",
+        "edev_S2",
+        "sdev_S2",
+        "bcdev_S2",
+        "NDVI_S2",
+        "LAI_S2",
+        "MNDWI_S2",
+        "rain_S2",
+        "slope",
+    ]

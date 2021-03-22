@@ -15,7 +15,6 @@ def post_processing(
 ) -> Tuple[xr.DataArray, xr.DataArray]:
     """
     filter prediction results with post processing filters.
-
     :param data: raw data with all features to run prediction
     :param predicted: The prediction results
     :param config:  FeaturePathConfig configureation
