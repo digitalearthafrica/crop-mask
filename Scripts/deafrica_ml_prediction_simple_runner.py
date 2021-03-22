@@ -12,7 +12,8 @@ from distributed import LocalCluster, Client
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
-from dea_ml.core.merge_tifs_to_ds import PredictFromFeature, extract_xy_from_title
+from dea_ml.core.predict_from_feature import PredictFromFeature
+from dea_ml.core.feature_layer import extract_xy_from_title
 from dea_ml.core.product_feature_config import FeaturePathConfig
 
 

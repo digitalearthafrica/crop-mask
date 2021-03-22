@@ -62,8 +62,8 @@ def merge_tile_ds(
 def calculate_indices(ds: xr.Dataset) -> xr.Dataset:
     """
     add calculate_indices into the datasets
-    @param ds: input ds with nir, red, green bands
-    @return: ds with new bands
+    :param ds: input ds with nir, red, green bands
+    :return: ds with new bands
     """
     inices_dict = {
         "NDVI": lambda ds: (ds.nir - ds.red) / (ds.nir + ds.red),
@@ -168,6 +168,7 @@ def complete_gm_mads(era_base_ds: xr.Dataset, geobox: GeoBox, era: str) -> xr.Da
     :return:
     """
     # TODO: this is half year data, require integration tests
+    # TODO: load this data once use dask publish (?)
     gm_mads = assign_crs(calculate_indices(era_base_ds))
 
     rainfall = assign_crs(

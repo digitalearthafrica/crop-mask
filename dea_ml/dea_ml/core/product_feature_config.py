@@ -4,16 +4,15 @@ from typing import Tuple, Dict
 from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
 
-__PROJ_VERSION__ = "v0.1.6"
+__PROJ_VERSION__ = "v0.1.7"
 
 
 @dataclass
 class FeaturePathConfig:
     """
-    This is a configureation data class for the prediction and result stac json.
+    This is a configuration data class for the prediction and result stac json.
     The product version will align to the project version in the pyproject.toml file.
     product version and name is critical for stac json
-
     """
 
     # change here if you have different version rules for the product name
