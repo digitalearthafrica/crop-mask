@@ -13,7 +13,7 @@ import psutil
 import xarray as xr
 from datacube.utils.cog import write_cog
 from datacube.utils.dask import start_local_dask
-from datacube.utils.geometry import Geobox
+from datacube.utils.geometry import GeoBox
 from datacube.utils.rio import configure_s3_access
 from dea_ml.core.africa_geobox import AfricaGeobox
 from dea_ml.core.cm_prediction import predict_xr
@@ -112,7 +112,7 @@ class PredictFromFeature:
         subfld: str,
         predict: xr.DataArray,
         probabilites: xr.DataArray,
-        geobox_used: Geobox,
+        geobox_used: GeoBox,
     ):
         """
         save the prediction results to local folder, prepare stac json
