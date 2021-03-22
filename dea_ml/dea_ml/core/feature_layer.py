@@ -6,7 +6,6 @@ from typing import Dict, List, Tuple, Optional
 import numpy as np
 import xarray as xr
 from datacube.testutils.io import rio_slurp_xarray
-from datacube.utils.geometry import Geobox
 from datacube.utils.geometry import assign_crs, GeoBox
 from dea_ml.core.product_feature_config import FeaturePathConfig
 from odc.algo import xr_reproject
@@ -17,9 +16,9 @@ def merge_tile_ds(
     x: int,
     y: int,
     config: FeaturePathConfig,
-    geobox_dict: Dict[Tuple, Geobox],
+    geobox_dict: Dict[Tuple, GeoBox],
     gm_ds: Optional[xr.Dataset] = None,
-) -> Tuple[str, Geobox, xr.Dataset]:
+) -> Tuple[str, GeoBox, xr.Dataset]:
     """
     merge the xarray dataset
     :param gm_ds:
