@@ -21,7 +21,7 @@ class FeaturePathConfig:
     DATA_PATH = "/g/data/u23/data/"
     REMOTE_PATH = "s3://deafrica-data-dev-af/"
     TIF_path = osp.join(DATA_PATH, "tifs20")
-    model_path = "/g/data/u23/crop-mask/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib"
+    model_path = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib?raw=true"  # noqa
     model_type = "gm_mads_two_seasons"
     # if you want to use alias of band keep this, otherwise use None
     rename_dict = {  # "nir_1": "nir",
