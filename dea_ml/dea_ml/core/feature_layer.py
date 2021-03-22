@@ -20,7 +20,7 @@ def merge_tile_ds(
     gm_ds: Optional[xr.Dataset] = None,
 ) -> Tuple[str, GeoBox, xr.Dataset]:
     """
-    merge the xarray dataset
+    merge the xarray dataset, integration of rainfall, slope with gm_ds
     :param gm_ds:
     :param x: tile index x
     :param y: time inde y

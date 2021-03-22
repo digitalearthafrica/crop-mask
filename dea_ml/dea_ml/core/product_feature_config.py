@@ -11,7 +11,7 @@ __PROJ_VERSION__ = "v0.1.7"
 @dataclass
 class FeaturePathConfig:
     """
-    This is a configuration data class for the prediction and result stac json.
+    This is a configuration dataclass for the prediction and result stac json.
     The product version will align to the project version in the pyproject.toml file.
     product version and name is critical for stac json
     """
@@ -46,20 +46,6 @@ class FeaturePathConfig:
     rainfall_path = {
         "_S1": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc",
         "_S2": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc",
-    }
-    # s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
-    resolution = (-20, 20)
-    # the time actually is the time range, required by datacube query
-    # the datetime_range is required by OutputProduct of odc-stats model
-    time = ("2019-01", "2019-12")
-    datetime_range = DateTimeRange(time[0], "P12M")
-    output_crs = "epsg:6933"
-    # query is required by open datacube
-    query = {
-        "time": time,
-        "resolution": resolution,
-        "output_crs": output_crs,
-        "group_by": "solar_day",
     }
     # list the requird feature here
     training_features = [
@@ -97,6 +83,20 @@ class FeaturePathConfig:
         "rain_S2",
         "slope",
     ]
+    # s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
+    resolution = (-20, 20)
+    # the time actually is the time range, required by datacube query
+    # the datetime_range is required by OutputProduct of odc-stats model
+    time = ("2019-01", "2019-12")
+    datetime_range = DateTimeRange(time[0], "P12M")
+    output_crs = "epsg:6933"
+    # query is required by open datacube
+    query = {
+        "time": time,
+        "resolution": resolution,
+        "output_crs": output_crs,
+        "group_by": "solar_day",
+    }
     # the prd_properties is required by the stac json
     prd_properties = {
         "odc:file_format": "GeoTIFF",
