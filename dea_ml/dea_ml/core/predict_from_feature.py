@@ -5,9 +5,8 @@ import math
 import os
 import os.path as osp
 import uuid
-from typing import List, Optional, Dict
+from typing import Optional, Dict
 
-import joblib
 import numpy as np
 import psutil
 import xarray as xr
@@ -20,7 +19,6 @@ from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
 from dea_ml.config.product_feature_config import FeaturePathConfig
-from dea_ml.core.africa_geobox import AfricaGeobox
 from dea_ml.core.cm_prediction import predict_xr
 from dea_ml.core.feature_layer import get_xy_from_task
 from dea_ml.core.stac_to_dc import StacIntoDc
@@ -78,35 +76,23 @@ class PredictFromFeature:
         setup_logging()
         self._log = logging.getLogger(__name__)
 
-    def predict_with_model(
-        self, model_path: str, feature_list: List[str], data: xr.Dataset
-    ) -> xr.Dataset:
+    @staticmethod
+    def predict_with_model(config, model, data: xr.Dataset) -> xr.Dataset:
         """
         run the prediction here, default crs='epsg:4326'
         The sample of a feature:
         :return: None
         """
-        # TODO: split this out, only feed in datasets
-        if not self.geobox_dict:
-            self.geobox_dict = AfricaGeobox(
-                resolution=self.config.resolution,
-                crs=self.config.output_crs,
-            ).geobox_dict
-
         # step 1: select features
-        input_data = data[feature_list]
-        # step 2: load trained model
-        model = joblib.load(model_path)
+        input_data = data[config.training_features]
 
-        # step 3: prediction
+        # step 2: prediction
         predicted = predict_xr(
             model,
             input_data,
             clean=True,
             proba=True,
         )
-
-        self._log.info("... Dask computing ...")
         return predicted.persist()
 
     def save_data(
