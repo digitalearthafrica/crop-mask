@@ -15,14 +15,16 @@ from datacube.utils.cog import write_cog
 from datacube.utils.dask import start_local_dask
 from datacube.utils.geometry import GeoBox
 from datacube.utils.rio import configure_s3_access
-from dea_ml.core.africa_geobox import AfricaGeobox
-from dea_ml.core.cm_prediction import predict_xr
-from dea_ml.core.feature_layer import get_xy_from_task
-from dea_ml.core.product_feature_config import FeaturePathConfig, prepare_the_io_path
-from dea_ml.core.stac_to_dc import StacIntoDc
 from distributed import Client
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
+
+from dea_ml.config.product_feature_config import FeaturePathConfig
+from dea_ml.core.africa_geobox import AfricaGeobox
+from dea_ml.core.cm_prediction import predict_xr
+from dea_ml.core.feature_layer import get_xy_from_task
+from dea_ml.core.stac_to_dc import StacIntoDc
+from dea_ml.helpers.io import prepare_the_io_path
 
 
 def get_max_mem() -> int:
