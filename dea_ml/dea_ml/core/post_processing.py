@@ -1,9 +1,8 @@
-from typing import Tuple
-
 import xarray as xr
 from datacube import Datacube
 from datacube.utils.geometry import GeoBox
 from datacube.utils.geometry import Geometry
+
 from dea_ml.config.product_feature_config import FeaturePathConfig
 
 
@@ -12,14 +11,14 @@ def post_processing(
     predicted: xr.Dataset,
     config: FeaturePathConfig,
     geobox_used: GeoBox,
-) -> Tuple[xr.DataArray, xr.DataArray]:
+) -> xr.DataArray:
     """
     filter prediction results with post processing filters.
     :param data: raw data with all features to run prediction
     :param predicted: The prediction results
     :param config:  FeaturePathConfig configureation
     :param geobox_used: Geobox used to generate the prediciton feature
-    :return:
+    :return: only predicted binary class label
     """
     # post prediction filtering
     predict = predicted.Predictions
@@ -44,4 +43,4 @@ def post_processing(
     elevation = dc.load(product="srtm", **query)
     elevation = elevation.elevation > 3600
     predict = predict.where(~elevation.squeeze(), 0)
-    return predict, predict.Probabilities
+    return predict
