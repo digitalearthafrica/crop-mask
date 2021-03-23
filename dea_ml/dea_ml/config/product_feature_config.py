@@ -114,3 +114,6 @@ class FeaturePathConfig:
         measurements=("mask", "prob"),
         href=f"https://explorer.digitalearth.africa/products/{PRODUCT_NAME}",
     )
+
+    def __repr__(self):
+        return f"<{self.PRODUCT_NAME}>.<{self.PRODUCT_VERSION}>"

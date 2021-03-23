@@ -28,6 +28,7 @@ def merge_tile_ds(
     :param geobox_dict: geobox will calculate the tile geometry from the tile index
     :return: subfolder path and the xarray dataset of the features
     """
+    # this folder naming x, y will change
     subfld = "x{x:+04d}/y{y:+04d}".format(x=x, y=y)
     P6M_tifs: Dict = get_tifs_paths(config.TIF_path, subfld)
     geobox = geobox_dict[(x, y)]
