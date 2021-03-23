@@ -23,6 +23,7 @@ class FeaturePathConfig:
     TIF_path = osp.join(DATA_PATH, "tifs20")
     model_path = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib?raw=true"  # noqa
     model_type = "gm_mads_two_seasons"
+    tiles_geojson = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/data/s2_tiles_eastern_aez.geojson?raw=true"  # noqa
     # if you want to use alias of band keep this, otherwise use None
     rename_dict = {  # "nir_1": "nir",
         "B02": "blue",
