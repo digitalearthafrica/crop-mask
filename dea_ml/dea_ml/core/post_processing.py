@@ -4,7 +4,7 @@ import xarray as xr
 from datacube import Datacube
 from datacube.utils.geometry import GeoBox
 from datacube.utils.geometry import Geometry
-from dea_ml.core.product_feature_config import FeaturePathConfig
+from dea_ml.config.product_feature_config import FeaturePathConfig
 
 
 def post_processing(
