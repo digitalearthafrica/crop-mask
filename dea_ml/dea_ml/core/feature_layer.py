@@ -96,13 +96,13 @@ def merge_tifs_into_ds(
     """
     use os.walk to get the all files under a folder, it just merge the half year tifs.
     We need combine two half-year tifs ds and add (calculated indices, rainfall, and slope)
-    @param tifs: tifs with the bands
-    @param root_fld: the parent folder for the sub_fld
-    @param tifs_min_num: geo-median tifs is 16 a tile idx
-    @param rename_dict: we can put the rename dictionary here
-    @return:
+    :param tifs: tifs with the bands
+    :param root_fld: the parent folder for the sub_fld
+    :param tifs_min_num: geo-median tifs is 16 a tile idx
+    :param rename_dict: we can put the rename dictionary here
+    :return:
     """
-    # TODO: create dummy datasets to test mergue tis
+    # TODO: create dummy datasets to test merge tis
     assert len(tifs) > tifs_min_num
     cache = []
     for tif in tifs:
@@ -194,6 +194,13 @@ def complete_gm_mads(era_base_ds: xr.Dataset, geobox: GeoBox, era: str) -> xr.Da
 def down_scale_gm_band(
     ds: xr.Dataset, exclude: Tuple[str, str] = ("sdev", "bcdev"), scale=10_000
 ) -> xr.Dataset:
+    """
+    down scale band not in exclude list.
+    :param ds:
+    :param exclude:
+    :param scale:
+    :return:
+    """
     for band in ds.data_vars:
         if band not in exclude:
             ds[band] = ds[band] / scale
@@ -201,19 +208,29 @@ def down_scale_gm_band(
 
 
 def get_xy_from_task(taskstr: str) -> Tuple[int, int]:
+    """
+    extract the x y from task string
+    :param taskstr:
+    :return:
+    """
     x_str, y_str = taskstr.split("/")[:2]
     return int(x_str.replace("x", "")), int(y_str.replace("y", ""))
 
 
 def extract_dt_from_model_path(path: str) -> str:
+    """
+    extract date string from the file name
+    :param path:
+    :return:
+    """
     return re.search(r"_(\d{8})", path).groups()[0]
 
 
 def extract_xy_from_title(title: str) -> Tuple[int, int]:
     """
     split the x, y out from title
-    @param title:
-    @return:
+    :param title:
+    :return:
     """
     x_str, y_str = title.split(",")
     return int(x_str), int(y_str)
@@ -222,7 +239,8 @@ def extract_xy_from_title(title: str) -> Tuple[int, int]:
 def get_tifs_paths(dirname: str, subfld: str) -> Dict[str, List[str]]:
     """
     generated src tifs dictionnary, season on and two, or more seasons
-
+    :param dirname: dir path name
+    :param subfld: subfolder in string type
     """
     all_tifs = os.walk(osp.join(dirname, subfld))
     # l0_dir, l0_subfld, _ = all_tifs[0]
