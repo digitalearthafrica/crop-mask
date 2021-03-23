@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>dea_ml API documentation</title>
+<title>dea_ml.core.post_processing API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,36 +19,124 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>dea_ml</code></h1>
+<h1 class="title">Module <code>dea_ml.core.post_processing</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python"># from core.feature_layer import merge_tile_ds</code></pre>
+<pre><code class="python">import xarray as xr
+from datacube import Datacube
+from datacube.utils.geometry import GeoBox
+from datacube.utils.geometry import Geometry
+
+from dea_ml.config.product_feature_config import FeaturePathConfig
+
+
+def post_processing(
+    data: xr.Dataset,
+    predicted: xr.Dataset,
+    config: FeaturePathConfig,
+    geobox_used: GeoBox,
+) -&gt; xr.DataArray:
+    &#34;&#34;&#34;
+    filter prediction results with post processing filters.
+    :param data: raw data with all features to run prediction
+    :param predicted: The prediction results
+    :param config:  FeaturePathConfig configureation
+    :param geobox_used: Geobox used to generate the prediciton feature
+    :return: only predicted binary class label
+    &#34;&#34;&#34;
+    # post prediction filtering
+    predict = predicted.Predictions
+    query = config.query.copy()
+    # Update dc query with geometry
+    # geobox_used = self.geobox_dict[(x, y)]
+    query[&#34;geopolygon&#34;] = Geometry(geobox_used.extent.geom, crs=geobox_used.crs)
+
+    dc = Datacube(app=__name__)
+    # mask with WOFS
+    # wofs_query = query.pop(&#34;measurements&#34;)
+    wofs = dc.load(product=&#34;ga_ls8c_wofs_2_summary&#34;, **query)
+    wofs = wofs.frequency &gt; 0.2  # threshold
+    predict = predict.where(~wofs, 0)
+
+    # mask steep slopes
+    slope = data.slope &gt; 35
+    predict = predict.where(~slope, 0)
+
+    # mask where the elevation is above 3600m
+    query.pop(&#34;time&#34;)
+    elevation = dc.load(product=&#34;srtm&#34;, **query)
+    elevation = elevation.elevation &gt; 3600
+    predict = predict.where(~elevation.squeeze(), 0)
+    return predict</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="dea_ml.config" href="config/index.html">dea_ml.config</a></code></dt>
+<dt id="dea_ml.core.post_processing.post_processing"><code class="name flex">
+<span>def <span class="ident">post_processing</span></span>(<span>data: xarray.core.dataset.Dataset, predicted: xarray.core.dataset.Dataset, config: <a title="dea_ml.config.product_feature_config.FeaturePathConfig" href="../config/product_feature_config.html#dea_ml.config.product_feature_config.FeaturePathConfig">FeaturePathConfig</a>, geobox_used: datacube.utils.geometry._base.GeoBox) ‑> xarray.core.dataarray.DataArray</span>
+</code></dt>
 <dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="dea_ml.core" href="core/index.html">dea_ml.core</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="dea_ml.helpers" href="helpers/index.html">dea_ml.helpers</a></code></dt>
-<dd>
-<div class="desc"></div>
+<div class="desc"><p>filter prediction results with post processing filters.
+:param data: raw data with all features to run prediction
+:param predicted: The prediction results
+:param config:
+FeaturePathConfig configureation
+:param geobox_used: Geobox used to generate the prediciton feature
+:return: only predicted binary class label</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def post_processing(
+    data: xr.Dataset,
+    predicted: xr.Dataset,
+    config: FeaturePathConfig,
+    geobox_used: GeoBox,
+) -&gt; xr.DataArray:
+    &#34;&#34;&#34;
+    filter prediction results with post processing filters.
+    :param data: raw data with all features to run prediction
+    :param predicted: The prediction results
+    :param config:  FeaturePathConfig configureation
+    :param geobox_used: Geobox used to generate the prediciton feature
+    :return: only predicted binary class label
+    &#34;&#34;&#34;
+    # post prediction filtering
+    predict = predicted.Predictions
+    query = config.query.copy()
+    # Update dc query with geometry
+    # geobox_used = self.geobox_dict[(x, y)]
+    query[&#34;geopolygon&#34;] = Geometry(geobox_used.extent.geom, crs=geobox_used.crs)
+
+    dc = Datacube(app=__name__)
+    # mask with WOFS
+    # wofs_query = query.pop(&#34;measurements&#34;)
+    wofs = dc.load(product=&#34;ga_ls8c_wofs_2_summary&#34;, **query)
+    wofs = wofs.frequency &gt; 0.2  # threshold
+    predict = predict.where(~wofs, 0)
+
+    # mask steep slopes
+    slope = data.slope &gt; 35
+    predict = predict.where(~slope, 0)
+
+    # mask where the elevation is above 3600m
+    query.pop(&#34;time&#34;)
+    elevation = dc.load(product=&#34;srtm&#34;, **query)
+    elevation = elevation.elevation &gt; 3600
+    predict = predict.where(~elevation.squeeze(), 0)
+    return predict</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -59,11 +147,14 @@
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="dea_ml.config" href="config/index.html">dea_ml.config</a></code></li>
-<li><code><a title="dea_ml.core" href="core/index.html">dea_ml.core</a></code></li>
-<li><code><a title="dea_ml.helpers" href="helpers/index.html">dea_ml.helpers</a></code></li>
+<li><code><a title="dea_ml.core" href="index.html">dea_ml.core</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dea_ml.core.post_processing.post_processing" href="#dea_ml.core.post_processing.post_processing">post_processing</a></code></li>
 </ul>
 </li>
 </ul>

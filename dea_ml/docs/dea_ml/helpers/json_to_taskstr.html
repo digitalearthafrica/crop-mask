@@ -45,6 +45,9 @@ logger = getLogger(__name__)
 def extract_taskstr_from_geojson(time_range: str, geojson: Dict) -&gt; List[str]:
     &#34;&#34;&#34;
     transfer geojosn into task list
+    TODO: update the xy_str with new requirements
+    :param time_range: name pattern follow the odc-stats, 2019-01--P6M
+    :param: geojson: is the parsed dict from json containing the tile index
     &#34;&#34;&#34;
     taskstr_set: Set[str] = set()
     for feat in geojson[&#34;features&#34;]:
@@ -100,7 +103,10 @@ if __name__ == &#34;__main__&#34;:
 <span>def <span class="ident">extract_taskstr_from_geojson</span></span>(<span>time_range: str, geojson: Dict) ‑> List[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>transfer geojosn into task list</p></div>
+<div class="desc"><p>transfer geojosn into task list
+TODO: update the xy_str with new requirements
+:param time_range: name pattern follow the odc-stats, 2019-01&ndash;P6M
+:param: geojson: is the parsed dict from json containing the tile index</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -108,6 +114,9 @@ if __name__ == &#34;__main__&#34;:
 <pre><code class="python">def extract_taskstr_from_geojson(time_range: str, geojson: Dict) -&gt; List[str]:
     &#34;&#34;&#34;
     transfer geojosn into task list
+    TODO: update the xy_str with new requirements
+    :param time_range: name pattern follow the odc-stats, 2019-01--P6M
+    :param: geojson: is the parsed dict from json containing the tile index
     &#34;&#34;&#34;
     taskstr_set: Set[str] = set()
     for feat in geojson[&#34;features&#34;]:
