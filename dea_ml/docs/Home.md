@@ -1,8 +1,11 @@
-Welcome to the dea_ai_core wiki!
+Welcome to the dea_ml  wiki!
 
-These are some introduction of feature building out of remote sensing data.
+These are some introductions of feature building out of remote sensing data.
 
-This repo usage a lot of the methods from the following repos.
+This repo depends on the following frameworks, but you can use the code directly by walking through the docs.
 
 * [open datacube](https://github.com/opendatacube/datacube-core)
-* [odc-tools](https://github.com/opendatacube/odc-tools)
+  - The detailed docs is [here](https://datacube-core.readthedocs.io/en/latest/)
+
+* [odc-tools](https://github.com/opendatacube/odc-tools):
+  - Some docs are available [here](https://github.com/opendatacube/odc-tools/blob/develop/docs/db-core-interface.md)
