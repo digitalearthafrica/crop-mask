@@ -7,8 +7,10 @@ from datacube.testutils.io import rio_slurp_xarray
 from datacube.utils.geometry import assign_crs
 from odc.algo import xr_reproject
 from pyproj import Proj, transform
+import os.path as osp
+cwd = osp.dirname(__file__)
 
-sys.path.append("../../../../Scripts")
+sys.path.append(osp.join(cwd, "../../Scripts"))
 from deafrica_bandindices import (  # noqa pylint: disable=wrong-import-position,wrong-import-position
     calculate_indices,
 )
