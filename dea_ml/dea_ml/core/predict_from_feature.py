@@ -47,7 +47,7 @@ def get_max_cpu() -> int:
     return psutil.cpu_count()
 
 
-class PredictFromFeature:
+class PredictContext:
     """
     This only covers 2019 case in sandbox now.
     Check configuration in FeaturePathConfig before use run this.
@@ -75,25 +75,6 @@ class PredictFromFeature:
 
         setup_logging()
         self._log = logging.getLogger(__name__)
-
-    @staticmethod
-    def predict_with_model(config, model, data: xr.Dataset) -> xr.Dataset:
-        """
-        run the prediction here, default crs='epsg:4326'
-        The sample of a feature:
-        :return: None
-        """
-        # step 1: select features
-        input_data = data[config.training_features]
-
-        # step 2: prediction
-        predicted = predict_xr(
-            model,
-            input_data,
-            clean=True,
-            proba=True,
-        )
-        return predicted.persist()
 
     def save_data(
         self,
@@ -151,6 +132,25 @@ class PredictFromFeature:
 
         with open(metadata_path, "w") as fh:
             json.dump(stac_doc, fh, indent=2)
+
+
+def predict_with_model(config, model, data: xr.Dataset) -> xr.Dataset:
+    """
+    run the prediction here, default crs='epsg:4326'
+    The sample of a feature:
+    :return: None
+    """
+    # step 1: select features
+    input_data = data[config.training_features]
+
+    # step 2: prediction
+    predicted = predict_xr(
+        model,
+        input_data,
+        clean=True,
+        proba=True,
+    )
+    return predicted.persist()
 
 
 # @click.command("tile-predict")
