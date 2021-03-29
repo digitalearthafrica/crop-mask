@@ -17,7 +17,7 @@ def parse_config(default: str = None) -> FeaturePathConfig:
         config_file_path = osp.join(cwd, "product_feature_paths.config")
     config = ConfigFactory.parse_file(config_file_path)
 
-    prd_properties = config.get("prd_properties").as_plain_ordered_dict()
+    prd_properties = dict(config.get("prd_properties").as_plain_ordered_dict())
     product_fields = config.get("product_fields").as_plain_ordered_dict()
     product_fields["properties"] = prd_properties
 
