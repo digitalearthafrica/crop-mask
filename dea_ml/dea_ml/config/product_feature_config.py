@@ -115,5 +115,5 @@ class FeaturePathConfig:
         href=f"https://explorer.digitalearth.africa/products/{PRODUCT_NAME}",
     )
 
-    def __str__(self):
+    def __repr__(self):
         return f"<{self.PRODUCT_NAME}>.<{self.PRODUCT_VERSION}>"
