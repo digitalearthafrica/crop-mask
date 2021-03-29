@@ -1,15 +1,12 @@
 import os
 import os.path as osp
 import re
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple
 
-import numpy as np
-import xarray as xr
-from datacube.testutils.io import rio_slurp_xarray
-from datacube.utils.geometry import assign_crs, GeoBox
+from datacube.utils.geometry import GeoBox
+
 from dea_ml.config.product_feature_config import FeaturePathConfig
-from odc.algo import xr_reproject
-from pyproj import Proj, transform
+
 
 def create_features(
     x: int,
@@ -23,7 +20,7 @@ def create_features(
     Given a dataset (xarray.DataArray or xr.Dataset) and feature layer
     function, return the feature layers as a xarray Dataset, ready for imput
     into the downstream prediction functions.
-    
+
     Parameters:
     -----------
 
@@ -31,24 +28,20 @@ def create_features(
     :param y: time inde y
     :param config: FeaturePathConfig containing the model path and product info`et al.
     :param geobox_dict: geobox will calculate the tile geometry from the tile index
-    
+
     Returns:
     --------
         subfolder path and the xarray dataset of the features
-        
-    """ 
+
+    """
     # this folder naming x, y will change
     subfld = "x{x:+04d}/y{y:+04d}".format(x=x, y=y)
     geobox = geobox_dict[(x, y)]
 
-    #call the function on the two 6-month gm+tmads
+    # call the function on the two 6-month gm+tmads
     model_input = feature_func(geobox).chunk(dask_chunks)
-    
-    return (
-        subfld,
-        geobox,
-        model_input
-    )
+
+    return (subfld, geobox, model_input)
 
 
 def get_xy_from_task(taskstr: str) -> Tuple[int, int]:
