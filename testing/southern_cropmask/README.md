@@ -1,4 +1,4 @@
-<img align="centre" src="../figs/Github_banner.jpg" width="100%">
+<img align="centre" src="../../figs/Github_banner.jpg" width="100%">
 
 # Southern Africa Cropland Mask
 
@@ -14,12 +14,12 @@ This definition will exclude non-planted grazing lands and perennial crops which
 
 _Figure 1: Study area for the notebooks in this workflow_
 
-<img align="center" src="../figs/study_area_southern.png" width="700">
+<img align="center" src="../../figs/study_area_southern.png" width="700">
 
 
 _Figure 2: The algorithm used to generate the cropland mask for Southern Africa_
 
-<img align="center" src="../figs/cropmask_algo_eastern.PNG" width="900">
+<img align="center" src="../../figs/cropmask_algo_eastern.PNG" width="900">
 
 
 ---

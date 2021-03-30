@@ -1,4 +1,4 @@
-<img align="centre" src="../figs/Github_banner.jpg" width="100%">
+<img align="centre" src="../../figs/Github_banner.jpg" width="100%">
 
 # Eastern Africa Cropland Mask
 
@@ -14,12 +14,12 @@ This definition will exclude non-planted grazing lands and perennial crops which
 
 _Figure 1: Study area for the notebooks in this workflow_
 
-<img align="center" src="../figs/study_area_east_africa.png" width="700">
+<img align="center" src="../../figs/study_area_east_africa.png" width="700">
 
 
 _Figure 2: The algorithm used to generate the cropland mask for Eastern Africa_
 
-<img align="center" src="../figs/cropmask_algo_eastern.PNG" width="900">
+<img align="center" src="../../figs/cropmask_algo_eastern.PNG" width="900">
 
 ---
 ## Getting Started
@@ -27,12 +27,12 @@ _Figure 2: The algorithm used to generate the cropland mask for Eastern Africa_
 There are six notebooks in this collection which, if run sequentially, will reproduce Digital Earth Africa's cropmask for the Eaastern region of Africa.
 To begin working through the notebooks in this `Eastern Africa Cropland Mask` workflow, go to the first notebook `Extracting_training_data.ipynb`.
 
-1. [Extracting_training_data](https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/1_Extract_training_data.ipynb) 
-2. [Inspect_training_data](https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/2_Inspect_training_data.ipynb)
-3. [Train_fit_evaluate_classifier](https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/3_Train_fit_evaluate_classifier.ipynb)
-4. [Predict](https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/4_Predict.ipynb)
-5. [Object-based_filtering](https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/5_Object-based_filtering.ipynb)
-6. [Accuracy_assessment](https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/6_Accuracy_assessment.ipynb)
+1. [Extracting_training_data](https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/1_Extract_training_data.ipynb) 
+2. [Inspect_training_data](https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/2_Inspect_training_data.ipynb)
+3. [Train_fit_evaluate_classifier](https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/3_Train_fit_evaluate_classifier.ipynb)
+4. [Predict](https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/4_Predict.ipynb)
+5. [Object-based_filtering](https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/5_Object-based_filtering.ipynb)
+6. [Accuracy_assessment](https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/6_Accuracy_assessment.ipynb)
 
 ***
 
