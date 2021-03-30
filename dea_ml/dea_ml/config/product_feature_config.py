@@ -1,19 +1,17 @@
 import os.path as osp
-from typing import Tuple, Dict
 
 from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
 
-__PROJ_VERSION__ = "v0.1.6"
+__PROJ_VERSION__ = "v0.1.7"
 
 
 @dataclass
 class FeaturePathConfig:
     """
-    This is a configureation data class for the prediction and result stac json.
+    This is a configuration dataclass for the prediction and result stac json.
     The product version will align to the project version in the pyproject.toml file.
     product version and name is critical for stac json
-
     """
 
     # change here if you have different version rules for the product name
@@ -23,8 +21,9 @@ class FeaturePathConfig:
     DATA_PATH = "/g/data/u23/data/"
     REMOTE_PATH = "s3://deafrica-data-dev-af/"
     TIF_path = osp.join(DATA_PATH, "tifs20")
-    model_path = "/g/data/u23/crop-mask/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib"
+    model_path = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib?raw=true"  # noqa
     model_type = "gm_mads_two_seasons"
+    tiles_geojson = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/data/s2_tiles_eastern_aez.geojson?raw=true"  # noqa
     # if you want to use alias of band keep this, otherwise use None
     rename_dict = {  # "nir_1": "nir",
         "B02": "blue",
@@ -46,20 +45,6 @@ class FeaturePathConfig:
     rainfall_path = {
         "_S1": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc",
         "_S2": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc",
-    }
-    # s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
-    resolution = (-20, 20)
-    # the time actually is the time range, required by datacube query
-    # the datetime_range is required by OutputProduct of odc-stats model
-    time = ("2019-01", "2019-12")
-    datetime_range = DateTimeRange(time[0], "P12M")
-    output_crs = "epsg:6933"
-    # query is required by open datacube
-    query = {
-        "time": time,
-        "resolution": resolution,
-        "output_crs": output_crs,
-        "group_by": "solar_day",
     }
     # list the requird feature here
     training_features = [
@@ -97,6 +82,20 @@ class FeaturePathConfig:
         "rain_S2",
         "slope",
     ]
+    # s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
+    resolution = (-20, 20)
+    # the time actually is the time range, required by datacube query
+    # the datetime_range is required by OutputProduct of odc-stats model
+    time = ("2019-01", "2019-12")
+    datetime_range = DateTimeRange(time[0], "P12M")
+    output_crs = "epsg:6933"
+    # query is required by open datacube
+    query = {
+        "time": time,
+        "resolution": resolution,
+        "output_crs": output_crs,
+        "group_by": "solar_day",
+    }
     # the prd_properties is required by the stac json
     prd_properties = {
         "odc:file_format": "GeoTIFF",
@@ -116,47 +115,5 @@ class FeaturePathConfig:
         href=f"https://explorer.digitalearth.africa/products/{PRODUCT_NAME}",
     )
 
-
-def prepare_the_io_path(
-    config: FeaturePathConfig, tile_indx: str
-) -> Tuple[str, Dict[str, str], str]:
-    """
-    use sandbox local path to mimic the target s3 prefixes. The path follow our nameing rule:
-    <product_name>/version/<x>/<y>/<year>/<product_name>_<x>_<y>_<timeperiod>_<band>.<extension>
-    the name in config a crop_mask_eastern_product.yaml and the github repo for those proudct config
-    @param config: configureation dataclass as the FeaturePathConfig
-    @param tile_indx: <x>/<y>
-    @return:
-    """
-
-    start_year = config.datetime_range.start.year
-    tile_year_prefix = f"{tile_indx}/{start_year}"
-    file_prefix = f"{config.product.name}/{tile_year_prefix}"
-
-    output_fld = osp.join(
-        config.DATA_PATH,
-        config.product.name,
-        config.product.version,
-        tile_year_prefix,
-    )
-
-    mask_path = osp.join(
-        output_fld,
-        file_prefix.replace("/", "_") + "_mask.tif",
-    )
-
-    prob_path = osp.join(
-        output_fld,
-        file_prefix.replace("/", "_") + "_prob.tif",
-    )
-
-    paths = {"mask": mask_path, "prob": prob_path}
-
-    metadata_path = mask_path.replace("_mask.tif", ".json")
-
-    assert set(paths.keys()) == set(
-        config.product.measurements
-    ), "file number can not cover the measurement number, \
-    each measurement a tif file. pls check the stac json schema requirements."
-
-    return output_fld, paths, metadata_path
+    def __repr__(self):
+        return f"<{self.PRODUCT_NAME}>.<{self.PRODUCT_VERSION}>"

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>dea_ml.core.product_feature_config API documentation</title>
+<title>dea_ml.config.product_feature_config API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>dea_ml.core.product_feature_config</code></h1>
+<h1 class="title">Module <code>dea_ml.config.product_feature_config</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -27,21 +27,19 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import os.path as osp
-from typing import Tuple, Dict
 
 from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
 
-__PROJ_VERSION__ = &#34;v0.1.6&#34;
+__PROJ_VERSION__ = &#34;v0.1.7&#34;
 
 
 @dataclass
 class FeaturePathConfig:
     &#34;&#34;&#34;
-    This is a configureation data class for the prediction and result stac json.
+    This is a configuration dataclass for the prediction and result stac json.
     The product version will align to the project version in the pyproject.toml file.
     product version and name is critical for stac json
-
     &#34;&#34;&#34;
 
     # change here if you have different version rules for the product name
@@ -51,8 +49,9 @@ class FeaturePathConfig:
     DATA_PATH = &#34;/g/data/u23/data/&#34;
     REMOTE_PATH = &#34;s3://deafrica-data-dev-af/&#34;
     TIF_path = osp.join(DATA_PATH, &#34;tifs20&#34;)
-    model_path = &#34;/g/data/u23/crop-mask/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib&#34;
+    model_path = &#34;https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib?raw=true&#34;  # noqa
     model_type = &#34;gm_mads_two_seasons&#34;
+    tiles_geojson = &#34;https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/data/s2_tiles_eastern_aez.geojson?raw=true&#34;  # noqa
     # if you want to use alias of band keep this, otherwise use None
     rename_dict = {  # &#34;nir_1&#34;: &#34;nir&#34;,
         &#34;B02&#34;: &#34;blue&#34;,
@@ -74,20 +73,6 @@ class FeaturePathConfig:
     rainfall_path = {
         &#34;_S1&#34;: &#34;/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc&#34;,
         &#34;_S2&#34;: &#34;/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc&#34;,
-    }
-    # s1_key, s2_key = &#34;2019-01--P6M&#34;, &#34;2019-07--P6M&#34;
-    resolution = (-20, 20)
-    # the time actually is the time range, required by datacube query
-    # the datetime_range is required by OutputProduct of odc-stats model
-    time = (&#34;2019-01&#34;, &#34;2019-12&#34;)
-    datetime_range = DateTimeRange(time[0], &#34;P12M&#34;)
-    output_crs = &#34;epsg:6933&#34;
-    # query is required by open datacube
-    query = {
-        &#34;time&#34;: time,
-        &#34;resolution&#34;: resolution,
-        &#34;output_crs&#34;: output_crs,
-        &#34;group_by&#34;: &#34;solar_day&#34;,
     }
     # list the requird feature here
     training_features = [
@@ -125,6 +110,20 @@ class FeaturePathConfig:
         &#34;rain_S2&#34;,
         &#34;slope&#34;,
     ]
+    # s1_key, s2_key = &#34;2019-01--P6M&#34;, &#34;2019-07--P6M&#34;
+    resolution = (-20, 20)
+    # the time actually is the time range, required by datacube query
+    # the datetime_range is required by OutputProduct of odc-stats model
+    time = (&#34;2019-01&#34;, &#34;2019-12&#34;)
+    datetime_range = DateTimeRange(time[0], &#34;P12M&#34;)
+    output_crs = &#34;epsg:6933&#34;
+    # query is required by open datacube
+    query = {
+        &#34;time&#34;: time,
+        &#34;resolution&#34;: resolution,
+        &#34;output_crs&#34;: output_crs,
+        &#34;group_by&#34;: &#34;solar_day&#34;,
+    }
     # the prd_properties is required by the stac json
     prd_properties = {
         &#34;odc:file_format&#34;: &#34;GeoTIFF&#34;,
@@ -144,50 +143,8 @@ class FeaturePathConfig:
         href=f&#34;https://explorer.digitalearth.africa/products/{PRODUCT_NAME}&#34;,
     )
 
-
-def prepare_the_io_path(
-    config: FeaturePathConfig, tile_indx: str
-) -&gt; Tuple[str, Dict[str, str], str]:
-    &#34;&#34;&#34;
-    use sandbox local path to mimic the target s3 prefixes. The path follow our nameing rule:
-    &lt;product_name&gt;/version/&lt;x&gt;/&lt;y&gt;/&lt;year&gt;/&lt;product_name&gt;_&lt;x&gt;_&lt;y&gt;_&lt;timeperiod&gt;_&lt;band&gt;.&lt;extension&gt;
-    the name in config a crop_mask_eastern_product.yaml and the github repo for those proudct config
-    @param config: configureation dataclass as the FeaturePathConfig
-    @param tile_indx: &lt;x&gt;/&lt;y&gt;
-    @return:
-    &#34;&#34;&#34;
-
-    start_year = config.datetime_range.start.year
-    tile_year_prefix = f&#34;{tile_indx}/{start_year}&#34;
-    file_prefix = f&#34;{config.product.name}/{tile_year_prefix}&#34;
-
-    output_fld = osp.join(
-        config.DATA_PATH,
-        config.product.name,
-        config.product.version,
-        tile_year_prefix,
-    )
-
-    mask_path = osp.join(
-        output_fld,
-        file_prefix.replace(&#34;/&#34;, &#34;_&#34;) + &#34;_mask.tif&#34;,
-    )
-
-    prob_path = osp.join(
-        output_fld,
-        file_prefix.replace(&#34;/&#34;, &#34;_&#34;) + &#34;_prob.tif&#34;,
-    )
-
-    paths = {&#34;mask&#34;: mask_path, &#34;prob&#34;: prob_path}
-
-    metadata_path = mask_path.replace(&#34;_mask.tif&#34;, &#34;.json&#34;)
-
-    assert set(paths.keys()) == set(
-        config.product.measurements
-    ), &#34;file number can not cover the measurement number, \
-    each measurement a tif file. pls check the stac json schema requirements.&#34;
-
-    return output_fld, paths, metadata_path</code></pre>
+    def __repr__(self):
+        return f&#34;&lt;{self.PRODUCT_NAME}&gt;.&lt;{self.PRODUCT_VERSION}&gt;&#34;</code></pre>
 </details>
 </section>
 <section>
@@ -195,77 +152,15 @@ def prepare_the_io_path(
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
-<dl>
-<dt id="dea_ml.core.product_feature_config.prepare_the_io_path"><code class="name flex">
-<span>def <span class="ident">prepare_the_io_path</span></span>(<span>config: <a title="dea_ml.core.product_feature_config.FeaturePathConfig" href="#dea_ml.core.product_feature_config.FeaturePathConfig">FeaturePathConfig</a>, tile_indx: str) ‑> Tuple[str, Dict[str, str], str]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>use sandbox local path to mimic the target s3 prefixes. The path follow our nameing rule:
-<product_name>/version/<x>/<y>/<year>/<product_name><em><x></em><y><em><timeperiod></em><band>.<extension>
-the name in config a crop_mask_eastern_product.yaml and the github repo for those proudct config
-@param config: configureation dataclass as the FeaturePathConfig
-@param tile_indx: <x>/<y>
-@return:</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def prepare_the_io_path(
-    config: FeaturePathConfig, tile_indx: str
-) -&gt; Tuple[str, Dict[str, str], str]:
-    &#34;&#34;&#34;
-    use sandbox local path to mimic the target s3 prefixes. The path follow our nameing rule:
-    &lt;product_name&gt;/version/&lt;x&gt;/&lt;y&gt;/&lt;year&gt;/&lt;product_name&gt;_&lt;x&gt;_&lt;y&gt;_&lt;timeperiod&gt;_&lt;band&gt;.&lt;extension&gt;
-    the name in config a crop_mask_eastern_product.yaml and the github repo for those proudct config
-    @param config: configureation dataclass as the FeaturePathConfig
-    @param tile_indx: &lt;x&gt;/&lt;y&gt;
-    @return:
-    &#34;&#34;&#34;
-
-    start_year = config.datetime_range.start.year
-    tile_year_prefix = f&#34;{tile_indx}/{start_year}&#34;
-    file_prefix = f&#34;{config.product.name}/{tile_year_prefix}&#34;
-
-    output_fld = osp.join(
-        config.DATA_PATH,
-        config.product.name,
-        config.product.version,
-        tile_year_prefix,
-    )
-
-    mask_path = osp.join(
-        output_fld,
-        file_prefix.replace(&#34;/&#34;, &#34;_&#34;) + &#34;_mask.tif&#34;,
-    )
-
-    prob_path = osp.join(
-        output_fld,
-        file_prefix.replace(&#34;/&#34;, &#34;_&#34;) + &#34;_prob.tif&#34;,
-    )
-
-    paths = {&#34;mask&#34;: mask_path, &#34;prob&#34;: prob_path}
-
-    metadata_path = mask_path.replace(&#34;_mask.tif&#34;, &#34;.json&#34;)
-
-    assert set(paths.keys()) == set(
-        config.product.measurements
-    ), &#34;file number can not cover the measurement number, \
-    each measurement a tif file. pls check the stac json schema requirements.&#34;
-
-    return output_fld, paths, metadata_path</code></pre>
-</details>
-</dd>
-</dl>
 </section>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig"><code class="flex name class">
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig"><code class="flex name class">
 <span>class <span class="ident">FeaturePathConfig</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>This is a configureation data class for the prediction and result stac json.
+<div class="desc"><p>This is a configuration dataclass for the prediction and result stac json.
 The product version will align to the project version in the pyproject.toml file.
 product version and name is critical for stac json</p></div>
 <details class="source">
@@ -274,10 +169,9 @@ product version and name is critical for stac json</p></div>
 </summary>
 <pre><code class="python">class FeaturePathConfig:
     &#34;&#34;&#34;
-    This is a configureation data class for the prediction and result stac json.
+    This is a configuration dataclass for the prediction and result stac json.
     The product version will align to the project version in the pyproject.toml file.
     product version and name is critical for stac json
-
     &#34;&#34;&#34;
 
     # change here if you have different version rules for the product name
@@ -287,8 +181,9 @@ product version and name is critical for stac json</p></div>
     DATA_PATH = &#34;/g/data/u23/data/&#34;
     REMOTE_PATH = &#34;s3://deafrica-data-dev-af/&#34;
     TIF_path = osp.join(DATA_PATH, &#34;tifs20&#34;)
-    model_path = &#34;/g/data/u23/crop-mask/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib&#34;
+    model_path = &#34;https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib?raw=true&#34;  # noqa
     model_type = &#34;gm_mads_two_seasons&#34;
+    tiles_geojson = &#34;https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/data/s2_tiles_eastern_aez.geojson?raw=true&#34;  # noqa
     # if you want to use alias of band keep this, otherwise use None
     rename_dict = {  # &#34;nir_1&#34;: &#34;nir&#34;,
         &#34;B02&#34;: &#34;blue&#34;,
@@ -310,20 +205,6 @@ product version and name is critical for stac json</p></div>
     rainfall_path = {
         &#34;_S1&#34;: &#34;/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc&#34;,
         &#34;_S2&#34;: &#34;/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc&#34;,
-    }
-    # s1_key, s2_key = &#34;2019-01--P6M&#34;, &#34;2019-07--P6M&#34;
-    resolution = (-20, 20)
-    # the time actually is the time range, required by datacube query
-    # the datetime_range is required by OutputProduct of odc-stats model
-    time = (&#34;2019-01&#34;, &#34;2019-12&#34;)
-    datetime_range = DateTimeRange(time[0], &#34;P12M&#34;)
-    output_crs = &#34;epsg:6933&#34;
-    # query is required by open datacube
-    query = {
-        &#34;time&#34;: time,
-        &#34;resolution&#34;: resolution,
-        &#34;output_crs&#34;: output_crs,
-        &#34;group_by&#34;: &#34;solar_day&#34;,
     }
     # list the requird feature here
     training_features = [
@@ -361,6 +242,20 @@ product version and name is critical for stac json</p></div>
         &#34;rain_S2&#34;,
         &#34;slope&#34;,
     ]
+    # s1_key, s2_key = &#34;2019-01--P6M&#34;, &#34;2019-07--P6M&#34;
+    resolution = (-20, 20)
+    # the time actually is the time range, required by datacube query
+    # the datetime_range is required by OutputProduct of odc-stats model
+    time = (&#34;2019-01&#34;, &#34;2019-12&#34;)
+    datetime_range = DateTimeRange(time[0], &#34;P12M&#34;)
+    output_crs = &#34;epsg:6933&#34;
+    # query is required by open datacube
+    query = {
+        &#34;time&#34;: time,
+        &#34;resolution&#34;: resolution,
+        &#34;output_crs&#34;: output_crs,
+        &#34;group_by&#34;: &#34;solar_day&#34;,
+    }
     # the prd_properties is required by the stac json
     prd_properties = {
         &#34;odc:file_format&#34;: &#34;GeoTIFF&#34;,
@@ -378,79 +273,86 @@ product version and name is critical for stac json</p></div>
         properties=prd_properties,
         measurements=(&#34;mask&#34;, &#34;prob&#34;),
         href=f&#34;https://explorer.digitalearth.africa/products/{PRODUCT_NAME}&#34;,
-    )</code></pre>
+    )
+
+    def __repr__(self):
+        return f&#34;&lt;{self.PRODUCT_NAME}&gt;.&lt;{self.PRODUCT_VERSION}&gt;&#34;</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.DATA_PATH"><code class="name">var <span class="ident">DATA_PATH</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.DATA_PATH"><code class="name">var <span class="ident">DATA_PATH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.PRODUCT_NAME"><code class="name">var <span class="ident">PRODUCT_NAME</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.PRODUCT_NAME"><code class="name">var <span class="ident">PRODUCT_NAME</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.PRODUCT_VERSION"><code class="name">var <span class="ident">PRODUCT_VERSION</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.PRODUCT_VERSION"><code class="name">var <span class="ident">PRODUCT_VERSION</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.REMOTE_PATH"><code class="name">var <span class="ident">REMOTE_PATH</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.REMOTE_PATH"><code class="name">var <span class="ident">REMOTE_PATH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.TIF_path"><code class="name">var <span class="ident">TIF_path</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.TIF_path"><code class="name">var <span class="ident">TIF_path</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.datetime_range"><code class="name">var <span class="ident">datetime_range</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.datetime_range"><code class="name">var <span class="ident">datetime_range</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.model_path"><code class="name">var <span class="ident">model_path</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.model_path"><code class="name">var <span class="ident">model_path</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.model_type"><code class="name">var <span class="ident">model_type</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.model_type"><code class="name">var <span class="ident">model_type</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.output_crs"><code class="name">var <span class="ident">output_crs</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.output_crs"><code class="name">var <span class="ident">output_crs</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.prd_properties"><code class="name">var <span class="ident">prd_properties</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.prd_properties"><code class="name">var <span class="ident">prd_properties</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.product"><code class="name">var <span class="ident">product</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.product"><code class="name">var <span class="ident">product</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.query"><code class="name">var <span class="ident">query</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.query"><code class="name">var <span class="ident">query</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.rainfall_path"><code class="name">var <span class="ident">rainfall_path</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.rainfall_path"><code class="name">var <span class="ident">rainfall_path</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.rename_dict"><code class="name">var <span class="ident">rename_dict</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.rename_dict"><code class="name">var <span class="ident">rename_dict</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.resolution"><code class="name">var <span class="ident">resolution</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.resolution"><code class="name">var <span class="ident">resolution</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.time"><code class="name">var <span class="ident">time</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.tiles_geojson"><code class="name">var <span class="ident">tiles_geojson</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.training_features"><code class="name">var <span class="ident">training_features</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.time"><code class="name">var <span class="ident">time</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="dea_ml.core.product_feature_config.FeaturePathConfig.url_slope"><code class="name">var <span class="ident">url_slope</span></code></dt>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.training_features"><code class="name">var <span class="ident">training_features</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="dea_ml.config.product_feature_config.FeaturePathConfig.url_slope"><code class="name">var <span class="ident">url_slope</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -467,37 +369,33 @@ product version and name is critical for stac json</p></div>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="dea_ml.core" href="index.html">dea_ml.core</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="dea_ml.core.product_feature_config.prepare_the_io_path" href="#dea_ml.core.product_feature_config.prepare_the_io_path">prepare_the_io_path</a></code></li>
+<li><code><a title="dea_ml.config" href="index.html">dea_ml.config</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig" href="#dea_ml.core.product_feature_config.FeaturePathConfig">FeaturePathConfig</a></code></h4>
+<h4><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig" href="#dea_ml.config.product_feature_config.FeaturePathConfig">FeaturePathConfig</a></code></h4>
 <ul class="two-column">
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.DATA_PATH" href="#dea_ml.core.product_feature_config.FeaturePathConfig.DATA_PATH">DATA_PATH</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.PRODUCT_NAME" href="#dea_ml.core.product_feature_config.FeaturePathConfig.PRODUCT_NAME">PRODUCT_NAME</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.PRODUCT_VERSION" href="#dea_ml.core.product_feature_config.FeaturePathConfig.PRODUCT_VERSION">PRODUCT_VERSION</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.REMOTE_PATH" href="#dea_ml.core.product_feature_config.FeaturePathConfig.REMOTE_PATH">REMOTE_PATH</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.TIF_path" href="#dea_ml.core.product_feature_config.FeaturePathConfig.TIF_path">TIF_path</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.datetime_range" href="#dea_ml.core.product_feature_config.FeaturePathConfig.datetime_range">datetime_range</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.model_path" href="#dea_ml.core.product_feature_config.FeaturePathConfig.model_path">model_path</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.model_type" href="#dea_ml.core.product_feature_config.FeaturePathConfig.model_type">model_type</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.output_crs" href="#dea_ml.core.product_feature_config.FeaturePathConfig.output_crs">output_crs</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.prd_properties" href="#dea_ml.core.product_feature_config.FeaturePathConfig.prd_properties">prd_properties</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.product" href="#dea_ml.core.product_feature_config.FeaturePathConfig.product">product</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.query" href="#dea_ml.core.product_feature_config.FeaturePathConfig.query">query</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.rainfall_path" href="#dea_ml.core.product_feature_config.FeaturePathConfig.rainfall_path">rainfall_path</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.rename_dict" href="#dea_ml.core.product_feature_config.FeaturePathConfig.rename_dict">rename_dict</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.resolution" href="#dea_ml.core.product_feature_config.FeaturePathConfig.resolution">resolution</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.time" href="#dea_ml.core.product_feature_config.FeaturePathConfig.time">time</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.training_features" href="#dea_ml.core.product_feature_config.FeaturePathConfig.training_features">training_features</a></code></li>
-<li><code><a title="dea_ml.core.product_feature_config.FeaturePathConfig.url_slope" href="#dea_ml.core.product_feature_config.FeaturePathConfig.url_slope">url_slope</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.DATA_PATH" href="#dea_ml.config.product_feature_config.FeaturePathConfig.DATA_PATH">DATA_PATH</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.PRODUCT_NAME" href="#dea_ml.config.product_feature_config.FeaturePathConfig.PRODUCT_NAME">PRODUCT_NAME</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.PRODUCT_VERSION" href="#dea_ml.config.product_feature_config.FeaturePathConfig.PRODUCT_VERSION">PRODUCT_VERSION</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.REMOTE_PATH" href="#dea_ml.config.product_feature_config.FeaturePathConfig.REMOTE_PATH">REMOTE_PATH</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.TIF_path" href="#dea_ml.config.product_feature_config.FeaturePathConfig.TIF_path">TIF_path</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.datetime_range" href="#dea_ml.config.product_feature_config.FeaturePathConfig.datetime_range">datetime_range</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.model_path" href="#dea_ml.config.product_feature_config.FeaturePathConfig.model_path">model_path</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.model_type" href="#dea_ml.config.product_feature_config.FeaturePathConfig.model_type">model_type</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.output_crs" href="#dea_ml.config.product_feature_config.FeaturePathConfig.output_crs">output_crs</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.prd_properties" href="#dea_ml.config.product_feature_config.FeaturePathConfig.prd_properties">prd_properties</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.product" href="#dea_ml.config.product_feature_config.FeaturePathConfig.product">product</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.query" href="#dea_ml.config.product_feature_config.FeaturePathConfig.query">query</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.rainfall_path" href="#dea_ml.config.product_feature_config.FeaturePathConfig.rainfall_path">rainfall_path</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.rename_dict" href="#dea_ml.config.product_feature_config.FeaturePathConfig.rename_dict">rename_dict</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.resolution" href="#dea_ml.config.product_feature_config.FeaturePathConfig.resolution">resolution</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.tiles_geojson" href="#dea_ml.config.product_feature_config.FeaturePathConfig.tiles_geojson">tiles_geojson</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.time" href="#dea_ml.config.product_feature_config.FeaturePathConfig.time">time</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.training_features" href="#dea_ml.config.product_feature_config.FeaturePathConfig.training_features">training_features</a></code></li>
+<li><code><a title="dea_ml.config.product_feature_config.FeaturePathConfig.url_slope" href="#dea_ml.config.product_feature_config.FeaturePathConfig.url_slope">url_slope</a></code></li>
 </ul>
 </li>
 </ul>

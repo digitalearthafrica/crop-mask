@@ -17,6 +17,9 @@ logger = getLogger(__name__)
 def extract_taskstr_from_geojson(time_range: str, geojson: Dict) -> List[str]:
     """
     transfer geojosn into task list
+    TODO: update the xy_str with new requirements
+    :param time_range: name pattern follow the odc-stats, 2019-01--P6M
+    :param: geojson: is the parsed dict from json containing the tile index
     """
     taskstr_set: Set[str] = set()
     for feat in geojson["features"]:
