@@ -1,0 +1,245 @@
+<VRTDataset rasterXSize="81084" rasterYSize="160039">
+  <SRS dataAxisToSRSAxisMapping="1,2">PROJCS["WGS 84 / NSIDC EASE-Grid 2.0 Global",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Cylindrical_Equal_Area"],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",0],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","6933"]]</SRS>
+  <GeoTransform>  2.8111000000000000e+06,  2.0000000000000000e+01,  0.0000000000000000e+00,  1.8220600000000000e+06,  0.0000000000000000e+00, -2.0000000000000000e+01</GeoTransform>
+  <VRTRasterBand dataType="Int16" band="1">
+    <ColorInterp>Gray</ColorInterp>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_A-16_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8171" RasterYSize="9407" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8171" ySize="9407" />
+      <DstRect xOff="0" yOff="103959" xSize="8171" ySize="9407" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_B-14_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8167" RasterYSize="9429" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8167" ySize="9429" />
+      <DstRect xOff="8110" yOff="85136" xSize="8167" ySize="9429" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_B-17_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8186" RasterYSize="9409" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8186" ySize="9409" />
+      <DstRect xOff="8170" yOff="113320" xSize="8186" ySize="9409" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_B-19_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8197" RasterYSize="9395" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8197" ySize="9395" />
+      <DstRect xOff="8211" yOff="132076" xSize="8197" ySize="9395" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_C-13_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8167" RasterYSize="9443" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8167" ySize="9443" />
+      <DstRect xOff="16225" yOff="75694" xSize="8167" ySize="9443" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_C-20_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8209" RasterYSize="9388" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8209" ySize="9388" />
+      <DstRect xOff="16407" yOff="141410" xSize="8209" ySize="9388" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_D-13_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8174" RasterYSize="9449" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8174" ySize="9449" />
+      <DstRect xOff="24359" yOff="75654" xSize="8174" ySize="9449" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_D-15_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8185" RasterYSize="9435" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8185" ySize="9435" />
+      <DstRect xOff="24423" yOff="94464" xSize="8185" ySize="9435" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_D-16_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8191" RasterYSize="9429" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8191" ySize="9429" />
+      <DstRect xOff="24455" yOff="103858" xSize="8191" ySize="9429" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_D-17_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8197" RasterYSize="9423" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8197" ySize="9423" />
+      <DstRect xOff="24487" yOff="113246" xSize="8197" ySize="9423" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_D-20_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8215" RasterYSize="9402" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8215" ySize="9402" />
+      <DstRect xOff="24583" yOff="141370" xSize="8215" ySize="9402" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_D-8_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8142" RasterYSize="9483" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8142" ySize="9483" />
+      <DstRect xOff="24203" yOff="28511" xSize="8142" ySize="9483" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_D-9_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8150" RasterYSize="9469" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8150" ySize="9469" />
+      <DstRect xOff="24232" yOff="37953" xSize="8150" ySize="9469" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_E-11_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8167" RasterYSize="9470" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8167" ySize="9470" />
+      <DstRect xOff="32419" yOff="56770" xSize="8167" ySize="9470" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_E-14_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8185" RasterYSize="9449" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8185" ySize="9449" />
+      <DstRect xOff="32532" yOff="85015" xSize="8185" ySize="9449" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_E-16_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8197" RasterYSize="9436" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8197" ySize="9436" />
+      <DstRect xOff="32607" yOff="103811" xSize="8197" ySize="9436" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_E-18_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8209" RasterYSize="9422" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8209" ySize="9422" />
+      <DstRect xOff="32683" yOff="122581" xSize="8209" ySize="9422" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_E-20_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8220" RasterYSize="9409" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8220" ySize="9409" />
+      <DstRect xOff="32759" yOff="141323" xSize="8220" ySize="9409" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_E-6_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8133" RasterYSize="9503" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8133" ySize="9503" />
+      <DstRect xOff="32237" yOff="9560" xSize="8133" ySize="9503" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_E-7_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8144" RasterYSize="9496" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8144" ySize="9496" />
+      <DstRect xOff="32269" yOff="19016" xSize="8144" ySize="9496" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_F-12_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8179" RasterYSize="9470" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8179" ySize="9470" />
+      <DstRect xOff="40585" yOff="66138" xSize="8179" ySize="9470" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_F-14_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8191" RasterYSize="9457" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8191" ySize="9457" />
+      <DstRect xOff="40672" yOff="84961" xSize="8191" ySize="9457" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_F-15_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8196" RasterYSize="9449" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8196" ySize="9449" />
+      <DstRect xOff="40716" yOff="94363" xSize="8196" ySize="9449" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_F-19_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8220" RasterYSize="9409" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8220" ySize="9409" />
+      <DstRect xOff="40891" yOff="131915" xSize="8220" ySize="9409" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_F-21_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8233" RasterYSize="9409" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8233" ySize="9409" />
+      <DstRect xOff="40978" yOff="150630" xSize="8233" ySize="9409" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_F-5_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8132" RasterYSize="9517" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8132" ySize="9517" />
+      <DstRect xOff="40289" yOff="44" xSize="8132" ySize="9517" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_F-9_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8162" RasterYSize="9489" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8162" ySize="9489" />
+      <DstRect xOff="40455" yOff="37853" xSize="8162" ySize="9489" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_G-15_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8203" RasterYSize="9456" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8203" ySize="9456" />
+      <DstRect xOff="48862" yOff="94303" xSize="8203" ySize="9456" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_G-5_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8144" RasterYSize="9507" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8144" ySize="9507" />
+      <DstRect xOff="48371" yOff="0" xSize="8144" ySize="9507" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_G-7_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8155" RasterYSize="9511" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8155" ySize="9511" />
+      <DstRect xOff="48469" yOff="18901" xSize="8155" ySize="9511" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_G-8_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8161" RasterYSize="9504" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8161" ySize="9504" />
+      <DstRect xOff="48518" yOff="28350" xSize="8161" ySize="9504" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_G-9_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8167" RasterYSize="9497" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8167" ySize="9497" />
+      <DstRect xOff="48567" yOff="37792" xSize="8167" ySize="9497" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_H-8_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8167" RasterYSize="9510" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8167" ySize="9510" />
+      <DstRect xOff="56623" yOff="28283" xSize="8167" ySize="9510" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">Eastern_tile_J-9_prediction_pixel_gm_mads_two_seasons_20201215.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="8184" RasterYSize="9508" DataType="Int16" BlockXSize="512" BlockYSize="512" />
+      <SrcRect xOff="0" yOff="0" xSize="8184" ySize="9508" />
+      <DstRect xOff="72900" yOff="37579" xSize="8184" ySize="9508" />
+    </SimpleSource>
+  </VRTRasterBand>
+</VRTDataset>
