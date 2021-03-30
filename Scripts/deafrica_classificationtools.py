@@ -38,6 +38,7 @@ from copy import deepcopy
 import multiprocessing as mp
 import dask.distributed as dd
 import matplotlib.pyplot as plt
+from odc.algo import xr_geomedian
 from matplotlib.patches import Patch
 from sklearn.cluster import KMeans
 from sklearn.base import clone
@@ -53,7 +54,6 @@ from rasterio.features import geometry_mask
 from dask_ml.wrappers import ParallelPostFit
 from sklearn.mixture import GaussianMixture
 from datacube.utils.geometry import assign_crs
-from datacube_stats.statistics import GeoMedian
 from datacube.utils.rio import configure_s3_access
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.model_selection import KFold, ShuffleSplit
@@ -502,7 +502,16 @@ def _get_training_data_for_shp(gdf,
         with HiddenPrints():
             data = custom_func(ds)
             data = data.where(mask)
-
+        
+        #Check that custom_func has removed time
+        if 'time' in data.dims:
+            t = data.dims['time']
+            if t > 1:
+                raise ValueError(
+                    "After running the custom_func, the dataset still has "+
+                     str(t) + " time-steps, dataset must only have"+
+                    " x and y dimensions."
+                    )
     else:
         # mask dataset
         ds = ds.where(mask)
@@ -537,7 +546,7 @@ def _get_training_data_for_shp(gdf,
                         data = method_to_call(dim='time')
 
                 elif reduce_func == 'geomedian':
-                    data = GeoMedian(num_threads=1).compute(ds)
+                    data = xr_geomedian(ds, num_threads=1).compute()
                     with HiddenPrints():
                         data = calculate_indices(data,
                                                  index=calc_indices,
@@ -564,7 +573,7 @@ def _get_training_data_for_shp(gdf,
             if len(ds.time.values) > 1:
 
                 if reduce_func == 'geomedian':
-                    data = GeoMedian().compute(ds, num_threads=1)
+                    data = xr_geomedian(ds, num_threads=1).compute()
 
                 elif reduce_func in ['mean', 'median', 'std', 'max', 'min']:
                     method_to_call = getattr(ds, reduce_func)
