@@ -14,7 +14,7 @@ from odc.stats._cli_common import setup_logging
 
 from dea_ml.core.predict_from_feature import PredictContext
 from dea_ml.core.feature_layer import extract_xy_from_title
-from dea_ml.core.product_feature_config import FeaturePathConfig
+from dea_ml.config.product_feature_config import FeaturePathConfig
 
 
 def get_max_mem() -> int:
