@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
 
+# remember to add the folder paths here
 packages = \
 ['dea_ml', 'dea_ml.config', 'dea_ml.core', 'dea_ml.helpers']
 
