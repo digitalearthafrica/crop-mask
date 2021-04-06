@@ -1,0 +1,105 @@
+---
+name: gm_s2_semiannual
+description: Surface Reflectance Semiannual Geometric Median and Median
+  Absolute Deviations, Sentinel-2
+metadata_type: eo3
+
+license: CC-BY-4.0
+
+metadata:
+  product:
+    name: gm_s2_semiannual
+
+storage:
+  crs: EPSG:6933
+  resolution:
+    x: 10
+    y: -10
+  tile_size:
+    x: 96000.0
+    y: 96000.0
+
+measurements:
+  - name: "B02"
+    aliases: [band_02, blue]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B03"
+    aliases: [band_03, green]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B04"
+    aliases: [band_04, red]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B05"
+    aliases: [band_05, red_edge_1]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B06"
+    aliases: [band_06, red_edge_2]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B07"
+    aliases: [band_07, red_edge_3]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B08"
+    aliases: [band_08, nir, nir_1]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B8A"
+    aliases: [band_8a, nir_narrow, nir_2]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B11"
+    aliases: [band_11, swir_1, swir_16]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "B12"
+    aliases: [band_12, swir_2, swir_22]
+    units: "1"
+    dtype: uint16
+    nodata: 0
+
+  - name: "SMAD"
+    aliases: [smad, sdev, SDEV]
+    units: "1"
+    dtype: float32
+    nodata: .nan
+
+  - name: "EMAD"
+    aliases: [emad, edev, EDEV]
+    units: "1"
+    dtype: float32
+    nodata: .nan
+
+  - name: "BCMAD"
+    aliases: [bcmad, bcdev, BCDEV]
+    units: "1"
+    dtype: float32
+    nodata: .nan
+
+  - name: "COUNT"
+    aliases: [count]
+    units: "1"
+    dtype: uint16
+    nodata: 0
