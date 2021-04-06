@@ -4,8 +4,6 @@ services:
     image: postgres:11.5-alpine
     ports:
       - "5432:5432"
-    volumes:
-      - ./docker/cache/postgres-data:/var/lib/postgresql/
     environment:
       POSTGRES_PASSWORD: opendatacubepassword
     restart: always
@@ -19,13 +17,9 @@ services:
     environment:
       - SERVICES=s3
       - DEBUG=1
-    volumes:
-      - ./docker/cache/s3:/docker-entrypoint-initaws.d
 
   stats:
     image: opendatacube/datacube-statistician:0.3.9
-    env_file:
-      - ./src/dea_ai_core/config/local_env.dev
     environment:
       - DB_HOSTNAME=postgres
       - DB_USERNAME=postgres
