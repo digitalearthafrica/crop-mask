@@ -35,13 +35,13 @@ def create_features(
 
     """
     # this folder naming x, y will change
-    subfld = "x{x:+04d}/y{y:+04d}".format(x=x, y=y)
+    subfld = "x{x:03d}/y{y:03d}".format(x=x, y=y)
     geobox = geobox_dict[(x, y)]
 
     # call the function on the two 6-month gm+tmads
     model_input = feature_func(geobox).chunk(dask_chunks)
 
-    return (subfld, geobox, model_input)
+    return subfld, geobox, model_input
 
 
 def get_xy_from_task(taskstr: str) -> Tuple[int, int]:
