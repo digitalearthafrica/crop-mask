@@ -19,11 +19,11 @@ from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
 from dea_ml.config.product_feature_config import FeaturePathConfig
-from dea_ml.core.cm_prediction import predict_xr
 from dea_ml.core.feature_layer import get_xy_from_task
 from dea_ml.core.stac_to_dc import StacIntoDc
 from dea_ml.helpers.io import prepare_the_io_path
 
+from deafrica_tools.classification import predict_xr
 
 def get_max_mem() -> int:
     """
@@ -149,6 +149,7 @@ def predict_with_model(config, model, data: xr.Dataset) -> xr.Dataset:
         input_data,
         clean=True,
         proba=True,
+        return_input=True
     )
     return predicted.persist()
 

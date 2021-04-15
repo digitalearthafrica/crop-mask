@@ -4,9 +4,7 @@ import re
 from typing import Dict, List, Tuple
 
 from datacube.utils.geometry import GeoBox
-
 from dea_ml.config.product_feature_config import FeaturePathConfig
-
 
 def create_features(
     x: int,
@@ -25,7 +23,7 @@ def create_features(
     -----------
 
     :param x: tile index x
-    :param y: time inde y
+    :param y: time index y
     :param config: FeaturePathConfig containing the model path and product info`et al.
     :param geobox_dict: geobox will calculate the tile geometry from the tile index
 
@@ -40,7 +38,7 @@ def create_features(
 
     # call the function on the two 6-month gm+tmads
     model_input = feature_func(geobox).chunk(dask_chunks)
-
+    
     return subfld, geobox, model_input
 
 
