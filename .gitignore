@@ -145,3 +145,6 @@ dask-worker-space/
 # seed
 src/seed
 docker/cache
+.gitsecret/keys/random_seed
+!*.secret
+#.gitsecret

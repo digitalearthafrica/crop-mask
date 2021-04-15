@@ -13,7 +13,7 @@ ignore=archive
 
 # Add files or directories matching the regex patterns to the blacklist. The
 # regex matches against base names, not paths.
-ignore-patterns=dea_ai_core/archive
+ignore-patterns=Scripts,*.ipynb
 
 # Pickle collected data for later comparisons.
 persistent=no

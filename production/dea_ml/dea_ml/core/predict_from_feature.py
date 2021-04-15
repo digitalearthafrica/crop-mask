@@ -85,7 +85,7 @@ class PredictContext:
     ):
         """
         save the prediction results to local folder, prepare stac json
-        :param subfld: local subfolder to save the prediction tifs`
+        :param subfld: local subfolder to save the prediction tifs, x{x:03d}/y{y:03d}
         :param predict: predicted binary class label array
         :param probabilites: prediction probabilities array
         :param geobox_used: geobox used for the features for prediction

@@ -17,6 +17,7 @@ The `pre-post_processing` folder contains notebooks used for various miscellaneo
 The `Scripts` folder is duplicated from the `deafrica-sandbox-notebooks` repo and contains useful function for running remote sensing analysis.
 
 
+
 _figure 1: Simplified Agro-Ecological Zones. Seperate cropland models are produced for each region._
 <img align="centre" src="figs/AEZs.png" width="35%">
 

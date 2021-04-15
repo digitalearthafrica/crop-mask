@@ -10,7 +10,7 @@ from pyproj import Proj, transform
 import os.path as osp
 cwd = osp.dirname(__file__)
 
-sys.path.append(osp.join(cwd, "../../Scripts"))
+sys.path.append(osp.join(cwd, "../Scripts"))
 from deafrica_bandindices import (  # noqa pylint: disable=wrong-import-position,wrong-import-position
     calculate_indices,
 )
