@@ -8,15 +8,15 @@ services:
       POSTGRES_PASSWORD: opendatacubepassword
     restart: always
 
-#  localstack:
-#    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
-#    image: localstack/localstack
-#    # network_mode: bridge
-#    ports:
-#      - "4566:4566"
-#    environment:
-#      - SERVICES=s3
-#      - DEBUG=1
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack
+    # network_mode: bridge
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
 
   stats:
     image: opendatacube/datacube-statistician:0.3.9
@@ -27,18 +27,10 @@ services:
       - DB_DATABASE=datacube
       - AWS_NO_SIGN_REQUEST=true
       - STAC_API_URL=https://earth-search.aws.element84.com/v0/
-      - AWS_VAULT=${AWS_VAULT}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-      - AWS_NO_SIGN_REQUEST=${AWS_NO_SIGN_REQUEST}
-      - AWS_REGION=${AWS_REGION}
-      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-
     restart: always
     depends_on:
       - postgres
-#      - localstack
+      - localstack
     command: tail -f /dev/null
     volumes:
       - ./:/code/
