@@ -13,7 +13,7 @@ class AfricaGeobox:
     y_new = y_old + 77
     """
 
-    def __init__(self, resolution: Tuple[int, int] = (-20, 20), crs: str = "epsg:6933"):
+    def __init__(self, resolution: Tuple[int, int] = (-10, 10), crs: str = "epsg:6933"):
         target_crs = CRS(crs)
         self.albers_africa_N = GridSpec(
             crs=target_crs,

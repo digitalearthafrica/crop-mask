@@ -14,16 +14,17 @@ from datacube.utils.cog import write_cog
 from datacube.utils.dask import start_local_dask
 from datacube.utils.geometry import GeoBox
 from datacube.utils.rio import configure_s3_access
+from datacube.utils.geometry import assign_crs
 from distributed import Client
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
 
 from dea_ml.config.product_feature_config import FeaturePathConfig
-from dea_ml.core.cm_prediction import predict_xr
 from dea_ml.core.feature_layer import get_xy_from_task
 from dea_ml.core.stac_to_dc import StacIntoDc
 from dea_ml.helpers.io import prepare_the_io_path
 
+from deafrica_tools.classification import predict_xr
 
 def get_max_mem() -> int:
     """
@@ -81,6 +82,7 @@ class PredictContext:
         subfld: str,
         predict: xr.DataArray,
         probabilites: xr.DataArray,
+        filtered: xr.DataArray,
         geobox_used: GeoBox,
     ):
         """
@@ -98,15 +100,22 @@ class PredictContext:
 
         self._log.info("collecting mask and write cog.")
         write_cog(
-            predict.astype(np.uint8).compute(),
+            assign_crs(predict.compute(), crs=geobox_used.crs),
             paths["mask"],
             overwrite=True,
         )
 
         self._log.info("collecting prob and write cog.")
         write_cog(
-            probabilites.astype(np.uint8).compute(),
+            assign_crs(probabilites.compute(), crs=geobox_used.crs),
             paths["prob"],
+            overwrite=True,
+        )
+        
+        self._log.info("collecting filtered and write cog.")
+        write_cog(
+            assign_crs(filtered.compute(), crs=geobox_used.crs),
+            paths["filtered"],
             overwrite=True,
         )
 
@@ -134,11 +143,9 @@ class PredictContext:
             json.dump(stac_doc, fh, indent=2)
 
 
-def predict_with_model(config, model, data: xr.Dataset) -> xr.Dataset:
+def predict_with_model(config, model, data: xr.Dataset, chunk_size=None) -> xr.Dataset:
     """
-    run the prediction here, default crs='epsg:4326'
-    The sample of a feature:
-    :return: None
+    run the prediction here
     """
     # step 1: select features
     input_data = data[config.training_features]
@@ -147,10 +154,16 @@ def predict_with_model(config, model, data: xr.Dataset) -> xr.Dataset:
     predicted = predict_xr(
         model,
         input_data,
+        chunk_size=chunk_size,
         clean=True,
         proba=True,
+        return_input=True
     )
-    return predicted.persist()
+    
+    predicted['Predictions'] = predicted['Predictions'].astype('int8')
+    predicted['Probabilities'] = predicted['Probabilities'].astype('float32')
+    
+    return predicted
 
 
 # @click.command("tile-predict")

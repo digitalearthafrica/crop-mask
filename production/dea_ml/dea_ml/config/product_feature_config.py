@@ -3,7 +3,7 @@ import os.path as osp
 from dataclasses import dataclass
 from odc.stats.model import DateTimeRange, OutputProduct
 
-__PROJ_VERSION__ = "v0.1.7"
+__PROJ_VERSION__ = "v0.1.8"
 
 
 @dataclass
@@ -18,12 +18,13 @@ class FeaturePathConfig:
     PRODUCT_VERSION = __PROJ_VERSION__
     PRODUCT_NAME = "crop_mask_eastern"
     # data path
-    DATA_PATH = "/g/data/u23/data/"
+    DATA_PATH = "/g/data/crop_mask_eastern_data/"
     REMOTE_PATH = "s3://deafrica-data-dev-af/"
-    TIF_path = osp.join(DATA_PATH, "tifs20")
-    model_path = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210301.joblib?raw=true"  # noqa
+    TIF_path = osp.join(DATA_PATH, "tifs10")
+    model_path = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210401.joblib?raw=true"  # noqa
     model_type = "gm_mads_two_seasons"
     tiles_geojson = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/data/s2_tiles_eastern_aez.geojson?raw=true"  # noqa
+    
     # if you want to use alias of band keep this, otherwise use None
     rename_dict = {  # "nir_1": "nir",
         "B02": "blue",
@@ -43,8 +44,8 @@ class FeaturePathConfig:
 
     url_slope = "https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
     rainfall_path = {
-        "_S1": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc",
-        "_S2": "/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc",
+        "_S1": "/g/data/u23/raw_data/CHIRPS/CHPclim_jan_jun_cumulative_rainfall.nc",
+        "_S2": "/g/data/u23/raw_data/CHIRPS/CHPclim_jul_dec_cumulative_rainfall.nc",
     }
     # list the requird feature here
     training_features = [
@@ -83,7 +84,7 @@ class FeaturePathConfig:
         "slope",
     ]
     # s1_key, s2_key = "2019-01--P6M", "2019-07--P6M"
-    resolution = (-20, 20)
+    resolution = (-10, 10)
     # the time actually is the time range, required by datacube query
     # the datetime_range is required by OutputProduct of odc-stats model
     time = ("2019-01", "2019-12")
@@ -111,7 +112,7 @@ class FeaturePathConfig:
         short_name=PRODUCT_NAME,
         location=REMOTE_PATH,  # place holder
         properties=prd_properties,
-        measurements=("mask", "prob"),
+        measurements=("mask", "prob", "filtered"),
         href=f"https://explorer.digitalearth.africa/products/{PRODUCT_NAME}",
     )
 
