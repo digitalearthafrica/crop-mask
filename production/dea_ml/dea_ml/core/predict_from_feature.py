@@ -14,6 +14,7 @@ from datacube.utils.cog import write_cog
 from datacube.utils.dask import start_local_dask
 from datacube.utils.geometry import GeoBox
 from datacube.utils.rio import configure_s3_access
+from datacube.utils.geometry import assign_crs
 from distributed import Client
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
 from odc.stats._cli_common import setup_logging
@@ -81,6 +82,7 @@ class PredictContext:
         subfld: str,
         predict: xr.DataArray,
         probabilites: xr.DataArray,
+        filtered: xr.DataArray,
         geobox_used: GeoBox,
     ):
         """
@@ -98,15 +100,22 @@ class PredictContext:
 
         self._log.info("collecting mask and write cog.")
         write_cog(
-            predict.astype(np.uint8).compute(),
+            assign_crs(predict.compute(), crs=geobox_used.crs),
             paths["mask"],
             overwrite=True,
         )
 
         self._log.info("collecting prob and write cog.")
         write_cog(
-            probabilites.astype(np.uint8).compute(),
+            assign_crs(probabilites.compute(), crs=geobox_used.crs),
             paths["prob"],
+            overwrite=True,
+        )
+        
+        self._log.info("collecting filtered and write cog.")
+        write_cog(
+            assign_crs(filtered.compute(), crs=geobox_used.crs),
+            paths["filtered"],
             overwrite=True,
         )
 

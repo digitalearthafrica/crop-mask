@@ -12,7 +12,7 @@ def create_features(
     config: FeaturePathConfig,
     geobox_dict: Dict[Tuple, GeoBox],
     feature_func=None,
-    dask_chunks={},
+    dask_chunks={}
 ):
     """
     Given a dataset (xarray.DataArray or xr.Dataset) and feature layer
@@ -37,7 +37,7 @@ def create_features(
     geobox = geobox_dict[(x, y)]
 
     # call the function on the two 6-month gm+tmads
-    model_input = feature_func(geobox).chunk(dask_chunks)
+    model_input = feature_func(geobox, dask_chunks)
     
     return subfld, geobox, model_input
 

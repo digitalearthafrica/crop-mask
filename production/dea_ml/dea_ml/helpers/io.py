@@ -37,8 +37,13 @@ def prepare_the_io_path(
         output_fld,
         file_prefix.replace("/", "_") + "_prob.tif",
     )
+    
+    filtered_path = osp.join(
+        output_fld,
+        file_prefix.replace("/", "_") + "_filtered.tif",
+    )
 
-    paths = {"mask": mask_path, "prob": prob_path}
+    paths = {"mask": mask_path, "prob": prob_path, "filtered": filtered_path}
 
     metadata_path = mask_path.replace("_mask.tif", ".json")
 

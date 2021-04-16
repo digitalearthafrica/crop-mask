@@ -56,7 +56,7 @@ def post_processing(
     predicted = predicted.where(mask).astype('float32')
     
     #write out ndvi for image seg
-    ndvi = predicted[['NDVI_S1', 'NDVI_S2']]
+    ndvi = assign_crs(predicted[['NDVI_S1', 'NDVI_S2']], crs=predicted.geobox.crs)
     write_cog(ndvi.to_array(), 'Eastern_tile_NDVI.tif',overwrite=True)
     
     #grab predictions and proba for post process filtering
@@ -65,7 +65,7 @@ def post_processing(
     proba=proba.where(predict==1, 100-proba) #crop proba only
     
     #-----------------image seg---------------------------------------------
-    print('   image segmentation...')
+    print('  image segmentation...')
     #store temp files somewhere
     directory='tmp'
     if not os.path.exists(directory):
@@ -96,7 +96,7 @@ def post_processing(
     segments=xr.open_rasterio(segmented_kea_file).squeeze().values
     
     #calculate mode
-    print('   calculating mode...')
+    print('  calculating mode...')
     count, _sum =_stats(predict, labels=segments, index=segments)
     mode = _sum > (count/2)
     mode = xr.DataArray(mode, coords=predict.coords, dims=predict.dims, attrs=predict.attrs)
@@ -108,13 +108,13 @@ def post_processing(
     os.remove(tiff_to_segment)
     
     #--Post processing---------------------------------------------------------------
-    print("     post processing")
+    print("  post processing")
     #mask with WOFS
-    wofs=dc.load(product='ga_ls8c_wofs_2_summary',like=data.geobox)
-    wofs=wofs.frequency > 0.2 # threshold
-    predict=predict.where(~wofs, 0)
-    proba=proba.where(~wofs, 0)
-    mode=mode.where(~wofs, 0)
+#     wofs=dc.load(product='ga_ls8c_wofs_2_summary',like=data.geobox)
+#     wofs=wofs.frequency > 0.2 # threshold
+#     predict=predict.where(~wofs, 0)
+#     proba=proba.where(~wofs, 0)
+#     mode=mode.where(~wofs, 0)
 
     #mask steep slopes
     url_slope="https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
