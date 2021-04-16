@@ -134,11 +134,9 @@ class PredictContext:
             json.dump(stac_doc, fh, indent=2)
 
 
-def predict_with_model(config, model, data: xr.Dataset) -> xr.Dataset:
+def predict_with_model(config, model, data: xr.Dataset, chunk_size=None) -> xr.Dataset:
     """
-    run the prediction here, default crs='epsg:4326'
-    The sample of a feature:
-    :return: None
+    run the prediction here
     """
     # step 1: select features
     input_data = data[config.training_features]
@@ -147,11 +145,16 @@ def predict_with_model(config, model, data: xr.Dataset) -> xr.Dataset:
     predicted = predict_xr(
         model,
         input_data,
+        chunk_size=chunk_size,
         clean=True,
         proba=True,
         return_input=True
     )
-    return predicted.persist()
+    
+    predicted['Predictions'] = predicted['Predictions'].astype('int8')
+    predicted['Probabilities'] = predicted['Probabilities'].astype('float32')
+    
+    return predicted
 
 
 # @click.command("tile-predict")

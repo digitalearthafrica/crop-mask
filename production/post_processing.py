@@ -1,4 +1,6 @@
 import xarray as xr
+import geopandas as gpd
+import pandas as pd
 from datacube import Datacube
 from datacube.utils.geometry import GeoBox
 from datacube.utils.geometry import Geometry
@@ -20,7 +22,6 @@ from datacube.testutils.io import rio_slurp_xarray
 from dea_ml.config.product_feature_config import FeaturePathConfig
 from deafrica_tools.spatial import xr_rasterize
 from deafrica_tools.classification import HiddenPrints
-
 
 def post_processing(
     data: xr.Dataset,
@@ -44,9 +45,14 @@ def post_processing(
     query["geopolygon"] = geom
     dc = Datacube(app=__name__)
     
+    #create gdf from geom to help with masking
+    df=pd.DataFrame({'col1':[0]})
+    df['geometry'] = geobox_used.extent.geom
+    gdf=gpd.GeoDataFrame(df, geometry=df['geometry'], crs=geobox_used.crs)
+    
     # Mask dataset to set pixels outside the polygon to `NaN`
     with HiddenPrints():
-        mask = xr_rasterize(geobox_used.extent.geom, data)
+        mask = xr_rasterize(gdf, data)
     predicted = predicted.where(mask).astype('float32')
     
     #write out ndvi for image seg
@@ -82,7 +88,7 @@ def post_processing(
     with HiddenPrints():
         segutils.runShepherdSegmentation(inputImg=kea_file,
                                              outputClumps=segmented_kea_file,
-                                             tmpath=results+tmp,
+                                             tmpath=tmp,
                                              numClusters=60,
                                              minPxls=50)
     
@@ -96,7 +102,7 @@ def post_processing(
     mode = xr.DataArray(mode, coords=predict.coords, dims=predict.dims, attrs=predict.attrs)
     
     #remove the tmp folder
-    shutil.rmtree(results+tmp)
+    shutil.rmtree(tmp)
     os.remove(kea_file)
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
