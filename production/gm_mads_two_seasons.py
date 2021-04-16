@@ -12,7 +12,7 @@ cwd = osp.dirname(__file__)
 
 from deafrica_tools.bandindices import calculate_indices
 
-def gm_mads_two_seasons(geobox, dask_chunks):
+def gm_mads_two_seasons_prediction(geobox, dask_chunks):
     """
     Feature layer function for production run of
     eastern crop-mask
@@ -20,6 +20,7 @@ def gm_mads_two_seasons(geobox, dask_chunks):
 
     """
     dc = datacube.Datacube(app="prediction")
+    
     # load the data
     measurements = [
         "blue",

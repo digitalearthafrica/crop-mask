@@ -922,3 +922,50 @@ def xr_geomedian_tmad_new(ds, **kw):
     return assign_crs(ds_out, crs=ds.geobox.crs)
 
 
+def merge_tifs_into_ds(
+    root_fld: str,
+    tifs: List[str],
+    rename_dict: Optional[Dict] = None,
+    tifs_min_num=8,
+) -> xr.Dataset:
+    """
+    Will be replaced with dc.load(gm_6month) once they've been produced.
+    
+    use os.walk to get the all files under a folder, it just merge the half year tifs.
+    We need combine two half-year tifs ds and add (calculated indices, rainfall, and slope)
+    @param tifs: tifs with the bands
+    @param root_fld: the parent folder for the sub_fld
+    @param tifs_min_num: geo-median tifs is 16 a tile idx
+    @param rename_dict: we can put the rename dictionary here
+    @return:
+    """
+    assert len(tifs) > tifs_min_num
+    cache = []
+    for tif in tifs:
+        if tif.endswith(".tif"):
+            band_name = re.search(r"_([A-Za-z0-9]+).tif", tif).groups()[0]
+            if band_name in ["rgba", "COUNT"]:
+                continue
+
+            band_array = assign_crs(xr.open_rasterio(osp.join(root_fld, tif)).squeeze().to_dataset(name=band_name), crs='epsg:6933')
+            cache.append(band_array)
+    # clean up output
+    output = xr.merge(cache).squeeze()
+    output = output.drop(["band"])
+    
+    return output.rename(rename_dict) if rename_dict else output
+
+def get_tifs_paths(dirname, subfld):
+    """
+    generated src tifs dictionnary, season on and two, or more seasons
+    @param dirname:
+    @param subfld:
+    @return:
+    """
+    all_tifs = os.walk(osp.join(dirname, subfld))
+    
+    return dict(
+        (l1_dir, l1_files)
+        for level, (l1_dir, _, l1_files) in enumerate(all_tifs)
+        if level > 0
+    )
