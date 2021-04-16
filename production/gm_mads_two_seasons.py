@@ -10,13 +10,9 @@ from pyproj import Proj, transform
 import os.path as osp
 cwd = osp.dirname(__file__)
 
-sys.path.append(osp.join(cwd, "../Scripts"))
-from deafrica_bandindices import (  # noqa pylint: disable=wrong-import-position,wrong-import-position
-    calculate_indices,
-)
+from deafrica_tools.bandindices import calculate_indices
 
-
-def gm_mads_two_seasons(geobox):
+def gm_mads_two_seasons(geobox, dask_chunks):
     """
     Feature layer function for production run of
     eastern crop-mask
@@ -40,10 +36,12 @@ def gm_mads_two_seasons(geobox):
         "sdev",
     ]
     ds1 = dc.load(
-        product="ga_s2_gm", time="2019", measurements=measurements, like=geobox
+        product="gm_s2_semiannual", time="2019-01", measurements=measurements, like=geobox,
+        dask_chunks=dask_chunks
     )
     ds2 = dc.load(
-        product="ga_s2_gm", time="2019", measurements=measurements, like=geobox
+        product="gm_s2_semiannual", time="2019-07", measurements=measurements, like=geobox,
+        dask_chunks=dask_chunks
     )
 
     dss = {"S1": ds1, "S2": ds2}
@@ -70,14 +68,14 @@ def gm_mads_two_seasons(geobox):
         if era == "_S1":
             chirps = assign_crs(
                 xr.open_rasterio(
-                    "/g/data/CHIRPS/cumulative_alltime/CHPclim_jan_jun_cumulative_rainfall.nc"
+                    "/g/data/u23/raw_data/CHIRPS/CHPclim_jan_jun_cumulative_rainfall.nc"
                 ),
                 crs="epsg:4326",
             )
         if era == "_S2":
             chirps = assign_crs(
                 xr.open_rasterio(
-                    "/g/data/CHIRPS/cumulative_alltime/CHPclim_jul_dec_cumulative_rainfall.nc"
+                    "/g/data/u23/raw_data/CHIRPS/CHPclim_jul_dec_cumulative_rainfall.nc"
                 ),
                 crs="epsg:4326",
             )
@@ -107,6 +105,7 @@ def gm_mads_two_seasons(geobox):
         # fill any NaNs in CHIRPS with local (s2-tile bbox) mean
         chirps = chirps.fillna(chirps.mean())
         chirps = xr_reproject(chirps, ds.geobox, "bilinear")
+        chirps = chirps.chunk(dask_chunks)
         gm_mads["rain"] = chirps
 
         for band in gm_mads.data_vars:
@@ -120,7 +119,7 @@ def gm_mads_two_seasons(geobox):
     # slope
     url_slope = "https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
     slope = rio_slurp_xarray(url_slope, gbox=ds1.geobox)
-    slope = slope.to_dataset(name="slope")
+    slope = slope.to_dataset(name="slope").chunk(dask_chunks)
 
     result = xr.merge([epoch1, epoch2, slope], compat="override")
 
