@@ -1,7 +1,7 @@
 import os
 import os.path as osp
 import re
-from typing import Dict, List, Tuple, Optional, Any
+from typing import Dict, List, Tuple, Optional
 
 import numpy as np
 import xarray as xr
@@ -10,7 +10,6 @@ from datacube.utils.geometry import assign_crs, GeoBox
 from dea_ml.config.product_feature_config import FeaturePathConfig
 from odc.algo import xr_reproject
 from pyproj import Proj, transform
-from datacube import Datacube
 
 
 def merge_tile_ds(
@@ -144,7 +143,6 @@ def chirp_clip(ds: xr.Dataset, chirps: xr.DataArray) -> xr.DataArray:
     xmax, ymax = transform(inProj, outProj, xmax, ymax)
 
     # create lat/lon indexing slices - buffer S2 bbox by 0.05deg
-    # Todo: xmin < 0 and xmax < 0,  x_slice = [], unit tests
     if (xmin < 0) & (xmax < 0):
         x_slice = list(np.arange(xmin + 0.05, xmax - 0.05, -0.05))
     else:
@@ -156,10 +154,12 @@ def chirp_clip(ds: xr.Dataset, chirps: xr.DataArray) -> xr.DataArray:
         y_slice = list(np.arange(ymin - 0.05, ymax + 0.05, 0.05))
 
     # index global chirps using buffered s2 tile bbox
-    chirps = assign_crs(chirps.sel(x=y_slice, y=x_slice, method="nearest"))
+    chirps = assign_crs(
+        chirps.sel(longitude=y_slice, latitude=x_slice, method="nearest")
+    )
 
     # fill any NaNs in CHIRPS with local (s2-tile bbox) mean
-    return chirps.fillna(chirps.mean())
+    return xr_reproject(chirps, ds.geobox, "bilinear").drop(["spatial_ref"]).squeeze()
 
 
 def complete_gm_mads(era_base_ds: xr.Dataset, geobox: GeoBox, era: str) -> xr.Dataset:
@@ -253,40 +253,11 @@ def get_tifs_paths(dirname: str, subfld: str) -> Dict[str, List[str]]:
 
 
 def gm_rainfall_single_season(
-    dc: Datacube,
-    query: Dict[str, Any],
-    season_time_dict: Dict[str, Tuple],
-    rainfall_dict: Dict[str, xr.DataArray],
-    season_key="_S1",
+    geomedian_with_mads: xr.Dataset,
+    rainfall: xr.DataArray,
 ) -> xr.Dataset:
     """
     generate gm-semiannual with rainfall, query sample see bellow
-    #set up our inputs to collect_training_data
-    dc = Datacube(app='feature_build')
-
-    products = ['gm_s2_semiannual']
-    # time = ('2019-01', '2019-12')
-    measurements = [
-        'red', 'blue', 'green', 'nir', 'swir_1', 'swir_2', 'red_edge_1',
-        'red_edge_2', 'red_edge_3', 'sdev', 'bcdev', 'edev'
-    ]
-    resolution = (-10, 10)
-    output_crs = 'epsg:6933'
-
-    geom = Geometry(input_data['geometry'][0], crs='epsg:4326')
-
-    #generate a new datacube query object
-    query = {
-    #     'time': time,
-        'product': products[0],
-        'measurements': measurements,
-        'resolution': resolution,
-        'output_crs': output_crs,
-        'geopolygon': geom,
-        'group_by' : 'solar_day',
-        'dask_chunks': {}
-    }
-
     :param dc: Datacube context
     :param query: require fields above
     :param season_time_dict: define the time range for each crop season
@@ -294,30 +265,23 @@ def gm_rainfall_single_season(
     :param season_key: one of {'_S1', '_S2'}
     :return: gm with rainfall
     """
-    gm = dc.load(**query, time=season_time_dict[season_key]).compute()
+
     # remove time dim
-    gm = gm.drop("time")
+    geomedian_with_mads = geomedian_with_mads.drop("time")
     # scale
-    gm = down_scale_gm_band(gm)
-    gm = assign_crs(calculate_indices(gm))
+    geomedian_with_mads = down_scale_gm_band(geomedian_with_mads)
+    geomedian_with_mads = assign_crs(calculate_indices(geomedian_with_mads))
 
     # rainfall
-    rainfall = assign_crs(rainfall_dict[season_key], crs="epsg:4326")
-    rainfall = chirp_clip(gm, rainfall)
+    rainfall = chirp_clip(geomedian_with_mads, rainfall)
 
-    rainfall = (
-        xr_reproject(rainfall, gm.geobox, "bilinear")
-        .drop(["band", "spatial_ref"])
-        .squeeze()
-    )
+    geomedian_with_mads["rain"] = rainfall
 
-    gm["rain"] = rainfall
-
-    return gm.drop("spatial_ref").squeeze()
+    return geomedian_with_mads.drop("spatial_ref").squeeze()
 
 
 def merge_two_season_feature(
-    seasoned_ds: Dict[str, xr.Dataset], config: FeaturePathConfig
+    seasoned_ds: Dict[str, xr.Dataset], url_slope: str
 ) -> xr.Dataset:
     """
     combine the two season datasets and add slope to build the machine learning feature
@@ -326,11 +290,17 @@ def merge_two_season_feature(
     :return: merged xr Dataset
     """
     slope = (
-        rio_slurp_xarray(config.url_slope, gbox=seasoned_ds["_S1"].geobox)
+        rio_slurp_xarray(url_slope, gbox=seasoned_ds["_S1"].geobox)
         .drop("spatial_ref")
         .to_dataset(name="slope")
     )
+    renamed_seasoned_ds = {}
+    for k, v in seasoned_ds.items():
+        renamed_seasoned_ds[k] = v.rename(
+            dict((str(band), str(band) + k) for band in v.data_vars)
+        )
 
     return xr.merge(
-        [seasoned_ds["_S1"], seasoned_ds["_S2"], slope], compat="override"
+        [renamed_seasoned_ds["_S1"], renamed_seasoned_ds["_S2"], slope],
+        compat="override",
     ).chunk({"x": -1, "y": -1})
