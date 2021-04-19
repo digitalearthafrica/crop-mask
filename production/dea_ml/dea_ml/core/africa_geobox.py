@@ -4,7 +4,6 @@ from typing import Tuple, Dict
 from datacube.model import GridSpec
 from datacube.utils.geometry import GeoBox, CRS, box
 
-
 class AfricaGeobox:
     """
     generate the geobox for each tile according to the longitude ande latitude bounds.
