@@ -102,11 +102,11 @@ def post_processing(
     #--Post processing---------------------------------------------------------------
     print("  masking with WOfS,slope,elevation")
     #mask with WOFS
-#     wofs=dc.load(product='ga_ls8c_wofs_2_summary',like=data.geobox)
-#     wofs=wofs.frequency > 0.2 # threshold
-#     predict=predict.where(~wofs, 0)
-#     proba=proba.where(~wofs, 0)
-#     mode=mode.where(~wofs, 0)
+    wofs=dc.load(product='ga_ls8c_wofs_2_summary',like=predicted.geobox)
+    wofs=wofs.frequency > 0.2 # threshold
+    predict=predict.where(~wofs, 0)
+    proba=proba.where(~wofs, 0)
+    mode=mode.where(~wofs, 0)
 
     #mask steep slopes
     url_slope="https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
@@ -117,7 +117,7 @@ def post_processing(
     mode=mode.where(~slope, 0)
 
     #mask where the elevation is above 3600m
-    elevation=dc.load(product='srtm', like=predicted.geobox)
+    elevation=dc.load(product='dem_srtm', like=predicted.geobox)
     elevation=elevation.elevation > 3600 # threshold
     predict=predict.where(~elevation.squeeze(), 0)
     proba=proba.where(~elevation.squeeze(), 0)
