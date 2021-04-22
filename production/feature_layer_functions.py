@@ -42,23 +42,16 @@ def add_chirps(ds,
    
     # load rainfall climatology
     if era == "_S1":
-        chirps = assign_crs(
-            xr.open_rasterio(
-                "/g/data/u23/raw_data/CHIRPS/CHPclim_jan_jun_cumulative_rainfall.nc"
-            ),
-            crs="epsg:4326",
+        chirps = rio_slurp_xarray(
+                "s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.nc"
         )
     if era == "_S2":
-        chirps = assign_crs(
-            xr.open_rasterio(
-                "/g/data/u23/raw_data/CHIRPS/CHPclim_jul_dec_cumulative_rainfall.nc"
-            ),
-            crs="epsg:4326",
+        chirps = rio_slurp_xarray(
+                "s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.nc"
         )
     
     if training:
         chirps = xr_reproject(chirps, ds.geobox, "bilinear")
-        ds["rain"] = chirps
         ds["rain"] = chirps
     
     else:
