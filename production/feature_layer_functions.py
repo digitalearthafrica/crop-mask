@@ -43,11 +43,11 @@ def add_chirps(ds,
     # load rainfall climatology
     if era == "_S1":
         chirps = rio_slurp_xarray(
-                "s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.nc"
+                "s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.tif"
         )
     if era == "_S2":
         chirps = rio_slurp_xarray(
-                "s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.nc"
+                "s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif"
         )
     
     if training:
