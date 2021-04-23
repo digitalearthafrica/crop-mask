@@ -75,7 +75,7 @@ def add_chirps(ds,
             y_slice = list(np.arange(ymin - 0.05, ymax + 0.05, 0.05))
 
         # index global chirps using buffered s2 tile bbox
-        chirps = assign_crs(chirps.sel(x=y_slice, y=x_slice, method="nearest"))
+        chirps = assign_crs(chirps.sel(longitude=y_slice, latitude=x_slice, method="nearest"))
 
         # fill any NaNs in CHIRPS with local (s2-tile bbox) mean
         chirps = chirps.fillna(chirps.mean())

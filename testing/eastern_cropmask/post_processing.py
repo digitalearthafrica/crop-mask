@@ -128,4 +128,4 @@ def post_processing(
     proba=proba.astype(np.float32)
     mode=mode.astype(np.int8)
 
-    return predict, proba, mode
+    return predict#, proba, mode
