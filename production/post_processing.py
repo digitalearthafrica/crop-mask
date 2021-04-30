@@ -1,6 +1,5 @@
 import os
 import shutil
-from typing import Tuple
 
 import gdal
 import geopandas as gpd
@@ -11,35 +10,25 @@ from datacube import Datacube
 from datacube.testutils.io import rio_slurp_xarray
 from datacube.utils.cog import write_cog
 from datacube.utils.geometry import GeoBox
-from datacube.utils.geometry import Geometry
 from datacube.utils.geometry import assign_crs
-from dea_ml.config.product_feature_config import FeaturePathConfig
 from deafrica_tools.classification import HiddenPrints
 from deafrica_tools.spatial import xr_rasterize
+from odc.algo import xr_reproject
 from rsgislib.segmentation import segutils
 from scipy.ndimage.measurements import _stats
 
 
 def post_processing(
-    data: xr.Dataset,
     predicted: xr.Dataset,
-    config: FeaturePathConfig,
     geobox_used: GeoBox,
-) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
+) -> xr.DataArray:
     """
     filter prediction results with post processing filters.
-    :param data: raw data with all features to run prediction
     :param predicted: The prediction results
-    :param config:  FeaturePathConfig configureation
     :param geobox_used: Geobox used to generate the prediciton feature
-    :return: only predicted binary class label
+
     """
 
-    query = config.query.copy()
-    # Update dc query with geometry
-    # geobox_used = self.geobox_dict[(x, y)]
-    geom = Geometry(geobox_used.extent.geom, crs=geobox_used.crs)
-    query["geopolygon"] = geom
     dc = Datacube(app=__name__)
 
     # create gdf from geom to help with masking
@@ -49,8 +38,14 @@ def post_processing(
 
     # Mask dataset to set pixels outside the polygon to `NaN`
     with HiddenPrints():
-        mask = xr_rasterize(gdf, data)
+        mask = xr_rasterize(gdf, predicted)
     predicted = predicted.where(mask).astype("float32")
+
+    # mask with WDPA
+    wdpa = xr.open_rasterio("/g/data/crop_mask_eastern_data/WDPA_eastern.tif").squeeze()
+    wdpa = xr_reproject(wdpa, predicted.geobox, "nearest")
+    wdpa = wdpa.astype(bool)
+    predicted = predicted.compute().where(~wdpa).astype("float32")
 
     # write out ndvi for image seg
     ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]], crs=predicted.geobox.crs)
@@ -87,7 +82,7 @@ def post_processing(
             outputClumps=segmented_kea_file,
             tmpath=tmp,
             numClusters=60,
-            minPxls=50,
+            minPxls=100,
         )
 
     # open segments
@@ -108,7 +103,7 @@ def post_processing(
     os.remove(tiff_to_segment)
 
     # --Post processing---------------------------------------------------------------
-    print("  post processing")
+    print("  masking with WOfS,slope,elevation")
     # mask with WOFS
     wofs = dc.load(product="ga_ls8c_wofs_2_summary", like=geobox_used)
     wofs = wofs.frequency > 0.2  # threshold
@@ -118,14 +113,14 @@ def post_processing(
 
     # mask steep slopes
     url_slope = "https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
-    slope = rio_slurp_xarray(url_slope, gbox=data.geobox)
+    slope = rio_slurp_xarray(url_slope, gbox=predicted.geobox)
     slope = slope > 35
     predict = predict.where(~slope, 0)
     proba = proba.where(~slope, 0)
     mode = mode.where(~slope, 0)
 
     # mask where the elevation is above 3600m
-    elevation = dc.load(product="srtm", like=data.geobox)
+    elevation = dc.load(product="dem_srtm", like=predicted.geobox)
     elevation = elevation.elevation > 3600  # threshold
     predict = predict.where(~elevation.squeeze(), 0)
     proba = proba.where(~elevation.squeeze(), 0)

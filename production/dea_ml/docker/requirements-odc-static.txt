@@ -1,0 +1,21 @@
+# ODC/DEA: these are installed in builder stage
+--extra-index-url="https://packages.dea.ga.gov.au"
+otps>=0.3.1
+hdmedians
+
+eodatasets3
+
+# rsgislib is conda only, but was manually packaged as a binary wheel compatible
+# with geobase docker images
+rsgislib
+
+# Dale's s2cloudmask
+#  https://github.com/daleroberts/s2cloudmask
+s2cloudmask
+
+# need to be installed after to override libs with non-gl ones
+opencv-python-headless
+opencv-contrib-python-headless
+
+--no-binary=\
+,hdmedians
