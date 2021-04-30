@@ -1,0 +1,57 @@
+---
+chirps_paths:
+  - s3://deafrica-data-dev-af/crop_mask_references/rainfall/CHPclim_jan_jun_cumulative_rainfall.tif
+  - s3://deafrica-data-dev-af/crop_mask_references/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif
+model_path: s3://deafrica-data-dev-af/crop_mask_references/ml_models/gm_mads_two_seasons_ml_model_20210401.joblib
+url_slope: https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif
+
+datetime_range: 2019--P1Y
+
+rename_dict:
+  B02: blue
+  B03: green
+  B04: red
+  B05: red_edge_1
+  B06: red_edge_2
+  B07: red_edge_3
+  B08: nir
+  B11: swir_1
+  B12: swir_2
+  B8A: nir_narrow
+  BCMAD: bcdev
+  EMAD: edev
+  SMAD: sdev
+training_features:
+  - red_S1
+  - blue_S1
+  - green_S1
+  - nir_S1
+  - swir_1_S1
+  - swir_2_S1
+  - red_edge_1_S1
+  - red_edge_2_S1
+  - red_edge_3_S1
+  - edev_S1
+  - sdev_S1
+  - bcdev_S1
+  - NDVI_S1
+  - LAI_S1
+  - MNDWI_S1
+  - rain_S1
+  - red_S2
+  - blue_S2
+  - green_S2
+  - nir_S2
+  - swir_1_S2
+  - swir_2_S2
+  - red_edge_1_S2
+  - red_edge_2_S2
+  - red_edge_3_S2
+  - edev_S2
+  - sdev_S2
+  - bcdev_S2
+  - NDVI_S2
+  - LAI_S2
+  - MNDWI_S2
+  - rain_S2
+  - slope

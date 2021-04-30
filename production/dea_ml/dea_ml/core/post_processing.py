@@ -1,6 +1,6 @@
 import os
 import shutil
-
+from typing import Tuple
 import gdal
 import geopandas as gpd
 import numpy as np
@@ -13,7 +13,6 @@ from datacube.utils.geometry import GeoBox
 from datacube.utils.geometry import assign_crs
 from deafrica_tools.classification import HiddenPrints
 from deafrica_tools.spatial import xr_rasterize
-from odc.algo import xr_reproject
 from rsgislib.segmentation import segutils
 from scipy.ndimage.measurements import _stats
 
@@ -21,7 +20,7 @@ from scipy.ndimage.measurements import _stats
 def post_processing(
     predicted: xr.Dataset,
     geobox_used: GeoBox,
-) -> xr.DataArray:
+) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     """
     filter prediction results with post processing filters.
     :param predicted: The prediction results
@@ -40,12 +39,6 @@ def post_processing(
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
     predicted = predicted.where(mask).astype("float32")
-
-    # mask with WDPA
-    wdpa = xr.open_rasterio("/g/data/crop_mask_eastern_data/WDPA_eastern.tif").squeeze()
-    wdpa = xr_reproject(wdpa, predicted.geobox, "nearest")
-    wdpa = wdpa.astype(bool)
-    predicted = predicted.where(~wdpa).astype("float32")
 
     # write out ndvi for image seg
     ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]], crs=predicted.geobox.crs)

@@ -3,16 +3,17 @@ import os.path as osp
 import re
 from typing import Dict, List, Tuple
 
-from datacube.utils.geometry import GeoBox
 from dea_ml.config.product_feature_config import FeaturePathConfig
+from dea_ml.core.africa_geobox import AfricaGeobox
+
 
 def create_features(
     x: int,
     y: int,
     config: FeaturePathConfig,
-    geobox_dict: Dict[Tuple, GeoBox],
+    geobox_dict: AfricaGeobox,
     feature_func=None,
-    dask_chunks={}
+    dask_chunks={},
 ):
     """
     Given a dataset (xarray.DataArray or xr.Dataset) and feature layer
@@ -23,7 +24,7 @@ def create_features(
     -----------
 
     :param x: tile index x
-    :param y: time index y
+    :param y: time inde y
     :param config: FeaturePathConfig containing the model path and product info`et al.
     :param geobox_dict: geobox will calculate the tile geometry from the tile index
 
@@ -37,8 +38,8 @@ def create_features(
     geobox = geobox_dict[(x, y)]
 
     # call the function on the two 6-month gm+tmads
-    model_input = feature_func(geobox, dask_chunks)
-    
+    model_input = feature_func(geobox).chunk(dask_chunks)
+
     return subfld, geobox, model_input
 
 

@@ -20,6 +20,31 @@ The version '0.1.6' will be changed according to the crop-mask development.
 
 After the install ```dea-ml``` in your python environment, you can use package through python imports.
 
+The sample command to run command line with AWS SQS,
+```bash
+cm-pred run \
+s3://deafrica-data-dev-af/crop_mask_eastern/0-1-0/gm_s2_semiannual_all.db \
+--config=./dea_ml/config/plugin_product.yaml \
+--plugin-config=./dea_ml/config/ml_config.yaml \
+--from-sqs=deafrica-dev-eks-stats-geomedian-semiannual \
+--resolution=10 \
+--threads=4 \
+--memory-limit=4Gi \
+--location=s3://deafrica-data-dev-af/{product}/{versoin}
+```
+
+It is also possible to use local db file on dev server to test run the task,
+```bash
+cm-pred run ../../../gm_s2_semiannual_all.db \
+--config=./dea_ml/config/plugin_product.yaml \
+--plugin-config=./dea_ml/config/ml_config.yaml \
+--resolution=10 \
+--threads=62 \
+--memory-limit=400Gi \
+--location=s3://deafrica-data-dev-af/{product}/{version} 4005:4010
+```
+The `--location` also can be assigned to a local location: `--location=file:///home/<data>/<path>`.
+
 ## Additional information
 
 **License:** The code in this notebook is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
