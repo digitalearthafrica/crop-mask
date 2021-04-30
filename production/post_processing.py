@@ -47,6 +47,12 @@ def post_processing(
         mask = xr_rasterize(gdf, predicted)
     predicted = predicted.where(mask).astype('float32')
     
+    # mask with WDPA
+    wdpa = xr.open_rasterio('/g/data/crop_mask_eastern_data/WDPA_eastern.tif').squeeze()
+    wdpa = xr_reproject(wdpa, predicted.geobox, "nearest")
+    wdpa = wdpa.astype(bool)
+    predicted = predicted.where(~wdpa).astype("float32")
+    
     #write out ndvi for image seg
     ndvi = assign_crs(predicted[['NDVI_S1', 'NDVI_S2']], crs=predicted.geobox.crs)
     write_cog(ndvi.to_array(), 'Eastern_tile_NDVI.tif',overwrite=True)
