@@ -1,13 +1,22 @@
 import os.path as osp
 from io import BytesIO
-from typing import Tuple, Dict, Optional
+from pathlib import Path
+from typing import Tuple, Dict, Any, Optional, Union
 
 import boto3
+import fsspec
 import joblib
 import requests
 from botocore import UNSIGNED
 from botocore.config import Config
 from dea_ml.config.product_feature_config import FeaturePathConfig
+
+try:
+    from ruamel.yaml import YAML
+
+    _YAML_C = YAML(typ="safe", pure=False)
+except ImportError:
+    _YAML_C = None
 
 
 def prepare_the_io_path(
@@ -106,3 +115,61 @@ def read_joblib(path):
             model = joblib.load(f)
 
     return model
+
+
+PathLike = Union[str, Path]
+RawDoc = Union[str, bytes]
+
+
+def slurp(fname: PathLike, binary: bool = False) -> RawDoc:
+    """fname -> str|bytes.
+
+    binary=True -- read bytes not text
+    """
+    mode = "rb" if binary else "rt"
+
+    with open(fname, mode) as f:
+        return f.read()
+
+
+def _parse_yaml_yaml(s: str) -> Dict[str, Any]:
+    import yaml
+
+    return yaml.load(s, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader))
+
+
+def _parse_yaml_ruamel(s: str) -> Dict[str, Any]:
+    return _YAML_C.load(s)
+
+
+parse_yaml = _parse_yaml_yaml if _YAML_C is None else _parse_yaml_ruamel
+
+
+def _guess_is_file(s: str):
+    try:
+        return Path(s).exists()
+    except IOError:
+        return False
+
+
+def parse_yaml_file_or_inline(s: str) -> Dict[str, Any]:
+    """
+    Accept on input either a path to yaml file or yaml text, return parsed yaml document.
+    """
+    if "git" in s:
+        with fsspec.open(s) as fh:
+            txt = fh.read()
+            result = parse_yaml(txt)
+            return result
+
+    if _guess_is_file(s):
+        txt = slurp(s, binary=False)
+        assert isinstance(txt, str)
+    else:
+        txt = s
+
+    result = parse_yaml(txt)
+    if isinstance(result, str):
+        raise IOError(f"No such file: {s}")
+
+    return result

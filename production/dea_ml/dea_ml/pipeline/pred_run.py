@@ -3,24 +3,27 @@ import logging
 import sys
 
 import click
-from odc.stats._cli_common import main, setup_logging, click_resolution, click_yaml_cfg
+from odc.stats._cli_common import main, setup_logging, click_resolution
 from odc.stats.model import TaskRunnerConfig
 from odc.stats.proc import TaskRunner
 
+
 # Todo: upgrade this into fsspec link can access git raw file.
-# def click_yaml_cfg(*args, **kw):
-#     """
-#     @click_yaml_cfg("--custom-flag", help="Whatever help")
-#     """
-#     def _parse(ctx, param, value):
-#         if value is not None:
-#             from odc.io.text import parse_yaml_file_or_inline
-#
-#             try:
-#                 return parse_yaml_file_or_inline(value)
-#             except Exception as e:
-#                 raise click.ClickException(str(e)) from None
-#     return click.option(*args, callback=_parse, **kw)
+def click_yaml_cfg(*args, **kw):
+    """
+    @click_yaml_cfg("--custom-flag", help="Whatever help")
+    """
+
+    def _parse(ctx, param, value):
+        if value is not None:
+            from dea_ml.helpers.io import parse_yaml_file_or_inline
+
+            try:
+                return parse_yaml_file_or_inline(value)
+            except Exception as e:
+                raise click.ClickException(str(e)) from None
+
+    return click.option(*args, callback=_parse, **kw)
 
 
 @main.command("run")

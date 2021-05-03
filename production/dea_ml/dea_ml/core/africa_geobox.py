@@ -3,6 +3,7 @@ from typing import Tuple
 from datacube.utils.geometry import GeoBox
 from odc.dscache.tools.tiling import GRIDS
 
+
 class AfricaGeobox:
     """
     generate the geobox for each tile according to the longitude ande latitude bounds.
@@ -10,7 +11,6 @@ class AfricaGeobox:
     x_new = x_old  + 181
     y_new = y_old + 77
     """
-
 
     def __init__(self, resolution: int = 10):
         self.albers_africa_N = GRIDS[f"africa_{resolution}"]
