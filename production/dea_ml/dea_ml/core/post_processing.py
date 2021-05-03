@@ -42,7 +42,7 @@ def post_processing(
 
     # write out ndvi for image seg
     ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]], crs=predicted.geobox.crs)
-    write_cog(ndvi.to_array(), "Eastern_tile_NDVI.tif", overwrite=True)
+    write_cog(ndvi.compute().to_array(), "Eastern_tile_NDVI.tif", overwrite=True)
 
     # grab predictions and proba for post process filtering
     predict = predicted.Predictions
