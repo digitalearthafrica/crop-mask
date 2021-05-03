@@ -56,12 +56,6 @@ pandas==1.1.2
 xarray==0.16.1
 numpy
 zarr
-### plotting
-bokeh==2.1.1
-matplotlib==3.2.1
-descartes
-seaborn
-https://dl.google.com/coral/python/tflite_runtime-2.1.0.post1-cp36-cp36m-linux_x86_64.whl
 
 # Geo stack
 geojson
@@ -89,9 +83,6 @@ owslib
 rioxarray
 python-geohash
 geohash2
-richdem
-cmocean
-
 
 --no-binary=aiohttp\
 ,cffi\
@@ -108,8 +99,4 @@ cmocean
 ,yarl\
 ,msgpack\
 ,multidict\
-,statsmodels\
-,typed_ast\
-,tables\
-,zstandard\
-,richdem\
+,statsmodels

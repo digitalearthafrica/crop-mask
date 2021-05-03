@@ -12,7 +12,7 @@ from datacube.utils.rio import configure_s3_access
 configure_s3_access(aws_unsigned=True, cloud_defaults=True)
 
 from dea_ml.config.product_feature_config import FeaturePathConfig
-from dea_ml.core.feature_layer_default import gm_rainfall_single_season
+from dea_ml.core.feature_layer import gm_rainfall_single_season
 from datacube.testutils.io import rio_slurp_xarray
 
 

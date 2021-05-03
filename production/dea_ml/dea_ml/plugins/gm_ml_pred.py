@@ -4,7 +4,7 @@ from typing import Tuple, List, Dict, Optional
 import xarray as xr
 from datacube import Datacube
 from datacube.testutils.io import rio_slurp_xarray
-from dea_ml.core.feature_layer_default import (
+from dea_ml.core.feature_layer import (
     gm_rainfall_single_season,
     merge_two_season_feature,
 )

@@ -40,6 +40,7 @@ setup_kwargs = {
         "pystac",
         "joblib",
         "dask_ml",
+        "fsspec",
     ],
 }
 
