@@ -57,14 +57,18 @@ class PredGMS2(StatsPluginInterface):
         This method work as pipeline
         """
         dc = Datacube(app=self.target_product)
-        ds = dc.load_data(task.datasets, dask_chunks={})
-        # ds = dc.load(
-        #     product=self.source_product,
-        #     time=str(self.datetime_range.start.year),
-        #     measurements=list(self.rename_dict.values()),
-        #     like=task.geobox,
-        #     dask_chunks={},
-        # )
+        # TODO: fix and validate tasks.datasets call
+        # ds = dc.load_data(task.datasets,
+        #                   like=task.geobox,
+        #                   measurements=list(self.rename_dict.values()),
+        #                   dask_chunks={})
+        ds = dc.load(
+            product=self.source_product,
+            time=str(self.datetime_range.start.year),
+            measurements=list(self.rename_dict.values()),
+            like=task.geobox,
+            dask_chunks={},
+        )
 
         dss = {"_S1": ds.isel(time=0), "_S2": ds.isel(time=1)}
 
