@@ -25,33 +25,15 @@ from deafrica_tools.classification import HiddenPrints
 
 def post_processing(
     predicted: xr.Dataset,
-    geobox_used: GeoBox,
     
 ) -> xr.DataArray:
     """
     filter prediction results with post processing filters.
     :param predicted: The prediction results
-    :param geobox_used: Geobox used to generate the prediciton feature
 
     """
     
     dc = Datacube(app=__name__)
-    
-    #create gdf from geom to help with masking
-    df=pd.DataFrame({'col1':[0]})
-    df['geometry'] = geobox_used.extent.geom
-    gdf=gpd.GeoDataFrame(df, geometry=df['geometry'], crs=geobox_used.crs)
-    
-    # Mask dataset to set pixels outside the polygon to `NaN`
-    with HiddenPrints():
-        mask = xr_rasterize(gdf, predicted)
-    predicted = predicted.where(mask).astype('float32')
-    
-    # mask with WDPA
-    wdpa = xr.open_rasterio('/g/data/crop_mask_eastern_data/WDPA_eastern.tif').squeeze()
-    wdpa = xr_reproject(wdpa, predicted.geobox, "nearest")
-    wdpa = wdpa.astype(bool)
-    predicted = predicted.where(~wdpa).astype("float32")
     
     #write out ndvi for image seg
     ndvi = assign_crs(predicted[['NDVI_S1', 'NDVI_S2']], crs=predicted.geobox.crs)
@@ -105,8 +87,25 @@ def post_processing(
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
     
-    #--Post processing---------------------------------------------------------------
-    print("  masking with WOfS,slope,elevation")
+    #--Post process masking---------------------------------------------------------------
+    print("  masking with AEZ,WDPA,WOfS,slope & elevation")    
+    
+    # mask out classification beyond AEZ boundary
+    gdf = gpd.read_file('data/Eastern.shp').to_crs('EPSG:6933')
+    with HiddenPrints():
+        mask = xr_rasterize(gdf, predicted)
+    predict = predict.where(mask)
+    proba = proba.where(mask)
+    mode = mode.where(mask)
+    
+    # mask with WDPA
+    wdpa = xr.open_rasterio('/g/data/crop_mask_eastern_data/WDPA_eastern.tif').squeeze()
+    wdpa = xr_reproject(wdpa, predicted.geobox, "nearest")
+    wdpa = wdpa.astype(bool)
+    predict = predict.where(~wdpa)
+    proba = proba.where(~wdpa)
+    mode = mode.where(~wdpa)
+    
     #mask with WOFS
     wofs=dc.load(product='ga_ls8c_wofs_2_summary',like=predicted.geobox)
     wofs=wofs.frequency > 0.2 # threshold
@@ -134,4 +133,4 @@ def post_processing(
     proba=proba.astype(np.float32)
     mode=mode.astype(np.int8)
 
-    return predict#, proba, mode
+    return predict, proba, mode
