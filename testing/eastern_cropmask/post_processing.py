@@ -12,6 +12,7 @@ import shutil
 import numpy as np
 import subprocess as sp
 from joblib import load
+from odc.algo import xr_reproject
 from datacube.utils import geometry
 from datacube.utils.cog import write_cog
 from rsgislib.segmentation import segutils
@@ -94,17 +95,17 @@ def post_processing(
     gdf = gpd.read_file('data/Eastern.shp').to_crs('EPSG:6933')
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
-    predict = predict.where(mask)
-    proba = proba.where(mask)
-    mode = mode.where(mask)
+    predict = predict.where(mask,0)
+    proba = proba.where(mask, 0)
+    mode = mode.where(mask,0)
     
     # mask with WDPA
     wdpa = xr.open_rasterio('/g/data/crop_mask_eastern_data/WDPA_eastern.tif').squeeze()
     wdpa = xr_reproject(wdpa, predicted.geobox, "nearest")
     wdpa = wdpa.astype(bool)
-    predict = predict.where(~wdpa)
-    proba = proba.where(~wdpa)
-    mode = mode.where(~wdpa)
+    predict = predict.where(~wdpa, 0)
+    proba = proba.where(~wdpa, 0)
+    mode = mode.where(~wdpa, 0)
     
     #mask with WOFS
     wofs=dc.load(product='ga_ls8c_wofs_2_summary',like=predicted.geobox)
