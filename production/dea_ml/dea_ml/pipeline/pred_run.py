@@ -57,7 +57,6 @@ def click_yaml_cfg(*args, **kw):
 @click.option("--max-processing-time", type=int, help="Max seconds per task")
 @click.option("--from-sqs", type=str, help="Read tasks from SQS", default="")
 @click_yaml_cfg("--config", help="Runner Config")
-# @click_yaml_cfg("--ml-config", help="machine learning configurations")
 @click.option(
     "--plugin",
     type=str,

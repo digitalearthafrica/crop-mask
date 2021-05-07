@@ -1,5 +1,5 @@
-from dea_ml.helpers.io import parse_yaml_file_or_inline
 import pytest
+from dea_ml.helpers.io import parse_yaml_file_or_inline
 
 
 @pytest.fixture

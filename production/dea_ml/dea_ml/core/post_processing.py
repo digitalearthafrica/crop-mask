@@ -1,5 +1,6 @@
 import os
 import shutil
+from typing import Tuple
 
 import gdal
 import geopandas as gpd
@@ -17,7 +18,7 @@ from scipy.ndimage.measurements import _stats
 
 def post_processing(
     predicted: xr.Dataset,
-) -> xr.DataArray:
+) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     """
     filter prediction results with post processing filters.
     :param predicted: The prediction results

@@ -44,7 +44,10 @@ def create_features(
     geobox = geobox_dict[(x, y)]
 
     # call the function on the two 6-month gm+tmads
-    model_input = feature_func(geobox).chunk(dask_chunks)
+    if dask_chunks is not None:
+        model_input = feature_func(geobox, dask_chunks)
+    else:
+        model_input = feature_func(geobox).chunk(dask_chunks)
 
     return subfld, geobox, model_input
 
