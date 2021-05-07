@@ -4,48 +4,27 @@ import shutil
 import gdal
 import geopandas as gpd
 import numpy as np
-import pandas as pd
 import xarray as xr
 from datacube import Datacube
 from datacube.testutils.io import rio_slurp_xarray
 from datacube.utils.cog import write_cog
-from datacube.utils.geometry import GeoBox
 from datacube.utils.geometry import assign_crs
 from deafrica_tools.classification import HiddenPrints
 from deafrica_tools.spatial import xr_rasterize
-from odc.algo import xr_reproject
 from rsgislib.segmentation import segutils
 from scipy.ndimage.measurements import _stats
 
 
 def post_processing(
     predicted: xr.Dataset,
-    geobox_used: GeoBox,
 ) -> xr.DataArray:
     """
     filter prediction results with post processing filters.
     :param predicted: The prediction results
-    :param geobox_used: Geobox used to generate the prediciton feature
 
     """
 
     dc = Datacube(app=__name__)
-
-    # create gdf from geom to help with masking
-    df = pd.DataFrame({"col1": [0]})
-    df["geometry"] = geobox_used.extent.geom
-    gdf = gpd.GeoDataFrame(df, geometry=df["geometry"], crs=geobox_used.crs)
-
-    # Mask dataset to set pixels outside the polygon to `NaN`
-    with HiddenPrints():
-        mask = xr_rasterize(gdf, predicted)
-    predicted = predicted.where(mask).astype("float32")
-
-    # mask with WDPA
-    wdpa = xr.open_rasterio("/g/data/crop_mask_eastern_data/WDPA_eastern.tif").squeeze()
-    wdpa = xr_reproject(wdpa, predicted.geobox, "nearest")
-    wdpa = wdpa.astype(bool)
-    predicted = predicted.compute().where(~wdpa).astype("float32")
 
     # write out ndvi for image seg
     ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]], crs=predicted.geobox.crs)
@@ -102,10 +81,27 @@ def post_processing(
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
 
-    # --Post processing---------------------------------------------------------------
-    print("  masking with WOfS,slope,elevation")
+    # --Post process masking---------------------------------------------------------------
+    print("  masking with AEZ,WDPA,WOfS,slope & elevation")
+
+    # mask out classification beyond AEZ boundary
+    gdf = gpd.read_file("../testing/eastern_cropmask/data/Eastern.geojson")
+    with HiddenPrints():
+        mask = xr_rasterize(gdf, predicted)
+    predict = predict.where(mask, 0)
+    proba = proba.where(mask, 0)
+    mode = mode.where(mask, 0)
+
+    # mask with WDPA
+    url_wdpa = "s3://deafrica-input-datasets/protected_areas/WDPA_eastern.tif"
+    wdpa = rio_slurp_xarray(url_wdpa, gbox=predicted.geobox)
+    wdpa = wdpa.astype(bool)
+    predict = predict.where(~wdpa, 0)
+    proba = proba.where(~wdpa, 0)
+    mode = mode.where(~wdpa, 0)
+
     # mask with WOFS
-    wofs = dc.load(product="ga_ls8c_wofs_2_summary", like=geobox_used)
+    wofs = dc.load(product="ga_ls8c_wofs_2_summary", like=predicted.geobox)
     wofs = wofs.frequency > 0.2  # threshold
     predict = predict.where(~wofs, 0)
     proba = proba.where(~wofs, 0)
