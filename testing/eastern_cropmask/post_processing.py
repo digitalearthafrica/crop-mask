@@ -1,26 +1,17 @@
-import xarray as xr
-import geopandas as gpd
-import pandas as pd
-from datacube import Datacube
-from datacube.utils.geometry import GeoBox
-from datacube.utils.geometry import Geometry
 
-import sys
 import os
 import gdal
 import shutil
 import numpy as np
-import subprocess as sp
-from joblib import load
+import xarray as xr
+import geopandas as gpd
+from datacube import Datacube
 from odc.algo import xr_reproject
-from datacube.utils import geometry
 from datacube.utils.cog import write_cog
 from rsgislib.segmentation import segutils
 from scipy.ndimage.measurements import _stats
 from datacube.utils.geometry import assign_crs
 from datacube.testutils.io import rio_slurp_xarray
-
-from dea_ml.config.product_feature_config import FeaturePathConfig
 from deafrica_tools.spatial import xr_rasterize
 from deafrica_tools.classification import HiddenPrints
 
@@ -100,8 +91,8 @@ def post_processing(
     mode = mode.where(mask,0)
     
     # mask with WDPA
-    wdpa = xr.open_rasterio('/g/data/crop_mask_eastern_data/WDPA_eastern.tif').squeeze()
-    wdpa = xr_reproject(wdpa, predicted.geobox, "nearest")
+    url_wdpa="s3://deafrica-input-datasets/protected_areas/WDPA_eastern.tif"
+    wdpa=rio_slurp_xarray(url_wdpa, gbox=predicted.geobox)
     wdpa = wdpa.astype(bool)
     predict = predict.where(~wdpa, 0)
     proba = proba.where(~wdpa, 0)
