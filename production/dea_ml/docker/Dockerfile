@@ -18,31 +18,6 @@ RUN echo "Building python environment: stage 2" \
 
 ENV PATH=${py_env_path}/bin:$PATH
 
-# COPY requirements-jupyter.txt /conf/
-# RUN echo "Building python environment: stage Jupyter" \
-#   && env-build-tool extend /conf/requirements-jupyter.txt ${py_env_path}
-#
-# COPY jupyter-extensions.txt /conf/
-# # TAB_NAME -- name to appear in the browser tab
-# ARG TAB_NAME="DEA Sandbox"
-# RUN echo "Adding jupyter lab extensions" \
-#   && while read ext; do \
-#       if [ -n "${ext}" ]; then \
-#         echo "Installing ${ext}"; \
-#         jupyter labextension install --no-build "${ext}"; \
-#       fi; \
-#      done < /conf/jupyter-extensions.txt \
-#   && jupyter lab build --name="${TAB_NAME}" \
-#   && jupyter lab clean \
-#   && jupyter labextension list \
-#   && echo "...done"
-#
-# RUN echo "Enable server extensions" \
-#   && jupyter serverextension enable --py --sys-prefix nbresuse \
-#   && jupyter serverextension enable --py --sys-prefix jupyterlab_code_formatter \
-#   && jupyter serverextension enable --py --sys-prefix jupyterlab_iframe \
-#   && echo done
-
 COPY requirements-odc-static.txt /conf/
 RUN echo "Adding odc-dependencies (static)" \
   && env-build-tool extend /conf/requirements-odc-static.txt ${py_env_path}
@@ -141,16 +116,6 @@ RUN echo "Adding crop-mask-dependencies" \
   && ${py_env_path}/bin/pip install \
   --no-cache-dir \
   --requirement=/conf/dea-tools-ml.txt
-#
-# USER root
-# # Patch env when needed here
-# # RUN echo "Patching python env" \
-# #   && pip install --no-cache-dir \
-# #   --extra-index-url="https://packages.dea.ga.gov.au" \
-# #   --no-deps --upgrade odc-algo odc-ui 'datacube[performance,s3]'
-#
-# COPY assets/sync_repo assets/with_bootstrap assets/jupyterhub-singleuser /usr/local/bin/
-# COPY assets/overrides.json $py_env_path/share/jupyter/lab/settings/
 
 WORKDIR "/home/$nb_user"
 
@@ -159,16 +124,4 @@ RUN if [ "$WITH_SUDO" = "yes" ]; then \
   echo "${nb_user} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
 ;fi
 
-# ARG BUILD_INFO=""
-# RUN if [ -z "${BUILD_INFO}" ]; then \
-#   BUILD_INFO="$(date)" \
-# ;fi \
-#   && echo "${BUILD_INFO}" > /build.info
-
 USER $nb_user
-
-# ENTRYPOINT ["/bin/tini", "-s", "--", "with_bootstrap"]
-# CMD ["jupyter", "lab", \
-# "--ip=0.0.0.0", \
-# "--port=9988", \
-# "--no-browser"]
