@@ -14,45 +14,6 @@ from pyproj import Proj, transform
 from deafrica_tools.bandindices import calculate_indices
 
 
-def create_features(
-    x: int,
-    y: int,
-    config: FeaturePathConfig,
-    geobox_dict: AfricaGeobox,
-    feature_func=None,
-    dask_chunks={},
-):
-    """
-    Given a dataset (xarray.DataArray or xr.Dataset) and feature layer
-    function, return the feature layers as a xarray Dataset, ready for imput
-    into the downstream prediction functions.
-
-    Parameters:
-    -----------
-
-    :param x: tile index x
-    :param y: time inde y
-    :param config: FeaturePathConfig containing the model path and product info`et al.
-    :param geobox_dict: geobox will calculate the tile geometry from the tile index
-
-    Returns:
-    --------
-        subfolder path and the xarray dataset of the features
-
-    """
-    # this folder naming x, y will change
-    subfld = "x{x:03d}/y{y:03d}".format(x=x, y=y)
-    geobox = geobox_dict[(x, y)]
-
-    # call the function on the two 6-month gm+tmads
-    if dask_chunks is not None:
-        model_input = feature_func(geobox, dask_chunks)
-    else:
-        model_input = feature_func(geobox).chunk(dask_chunks)
-
-    return subfld, geobox, model_input
-
-
 def get_xy_from_task(taskstr: str) -> Tuple[int, int]:
     """
     extract the x y from task string
@@ -61,25 +22,6 @@ def get_xy_from_task(taskstr: str) -> Tuple[int, int]:
     """
     x_str, y_str = taskstr.split("/")[:2]
     return int(x_str.replace("x", "")), int(y_str.replace("y", ""))
-
-
-def extract_dt_from_model_path(path: str) -> str:
-    """
-    extract date string from the file name
-    :param path:
-    :return:
-    """
-    return re.search(r"_(\d{8})", path).groups()[0]
-
-
-def extract_xy_from_title(title: str) -> Tuple[int, int]:
-    """
-    split the x, y out from title
-    :param title:
-    :return:
-    """
-    x_str, y_str = title.split(",")
-    return int(x_str), int(y_str)
 
 
 def common_ops(ds, era):
@@ -209,3 +151,4 @@ def gm_mads_two_seasons_prediction(product, query, dask_chunks={}):
 
     result = result.astype(np.float32)
     return result.squeeze()
+
