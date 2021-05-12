@@ -9,7 +9,6 @@ packages = [
     "dea_ml.helpers",
     "dea_ml.pipeline",
     "dea_ml.plugins",
-    "dea_ml.cli",
 ]
 
 package_data = {"": ["*"], "dea_ml": ["samples/*"]}
