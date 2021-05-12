@@ -21,7 +21,7 @@ class FeaturePathConfig:
     DATA_PATH = "/g/data/crop_mask_eastern_data/"
     REMOTE_PATH = "s3://deafrica-data-dev-af/"
     TIF_path = osp.join(DATA_PATH, "tifs10")
-    model_path = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210401.joblib?raw=true"  # noqa
+    model_path = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib?raw=true"  # noqa
     model_type = "gm_mads_two_seasons"
     tiles_geojson = "https://github.com/digitalearthafrica/crop-mask/blob/main/eastern_cropmask/data/s2_tiles_eastern_aez.geojson?raw=true"  # noqa
 

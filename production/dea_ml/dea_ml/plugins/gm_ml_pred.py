@@ -53,13 +53,13 @@ class PredGMS2(StatsPluginInterface):
         """
         #assemble datacube query
         query={
-            time=str(self.datetime_range.start.year),
-            measurements=list(self.rename_dict.values()),
-            like=task.geobox
+            'time':str(self.datetime_range.start.year),
+            'measurements':list(self.rename_dict.values()),
+            'like':task.geobox
         }
         
         #create the features
-        pred_input_data=gm_mads_two_seasons_prediction(self.source_product,**query)
+        pred_input_data=gm_mads_two_seasons_prediction(self.source_product,query)
         
         #read in model
         model = read_joblib(self.model_path)
@@ -68,9 +68,9 @@ class PredGMS2(StatsPluginInterface):
         predicted = predict_with_model(
             self.training_features, model, pred_input_data, {}
         )
-        
+        print(predicted)
         #post-process the predictions
-        predict, proba, mode = post_processing(predicted, task.geobox)
+        predict, proba, mode = post_processing(predicted)
 
         return xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
 

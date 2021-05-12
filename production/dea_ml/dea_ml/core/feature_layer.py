@@ -188,7 +188,7 @@ def gm_mads_two_seasons_prediction(product, query, dask_chunks={}):
     and dask chunks are used.
     """
     #load semi-annual geomedians
-    dc = datacube.Datacube(app=self.target_product)
+    dc = datacube.Datacube(app='feature_time')
     ds = dc.load(product, **query, dask_chunks=dask_chunks)
     
     dss = {"S1": ds.isel(time=0),
