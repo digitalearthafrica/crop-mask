@@ -6,6 +6,7 @@ import datacube
 import numpy as np
 import xarray as xr
 from datacube.testutils.io import rio_slurp_xarray
+from odc.algo.io import load_with_native_transform
 from datacube.utils.geometry import assign_crs, GeoBox
 from dea_ml.config.product_feature_config import FeaturePathConfig
 from dea_ml.core.africa_geobox import AfricaGeobox
@@ -122,19 +123,27 @@ def gm_mads_two_seasons_training(ds):
     return result.astype(np.float32).squeeze()
 
 
-def gm_mads_two_seasons_prediction(product, query, dask_chunks={}):
+def gm_mads_two_seasons_prediction(task, measurements, dask_chunks={}):
     """
     Feature layer function for production run of
     eastern crop-mask. Similar to the training function
     but data is loaded internally, CHIRPS is reprojected differently,
     and dask chunks are used.
     """
-    #load semi-annual geomedians
-    dc = datacube.Datacube(app='feature_time')
-    ds = dc.load(product, **query, dask_chunks=dask_chunks)
     
-    dss = {"S1": ds.isel(time=0),
-           "S2": ds.isel(time=1)}
+    #load semi-annual geomedians
+    ds = load_with_native_transform(
+            task.datasets,
+            geobox=task.geobox,
+            native_transform=lambda x: x,
+            bands=measurements,
+            chunks=dask_chunks,
+            groupby="solar_day",
+            resampling='bilinear'
+        )
+    
+    dss = {"S1": ds.isel(spec=0).drop(["spatial_ref", "spec"]),
+           "S2": ds.isel(spec=1).drop(["spatial_ref", "spec"])}
         
     #create features
     epoch1 = common_ops(dss["S1"], era="_S1")
@@ -152,3 +161,4 @@ def gm_mads_two_seasons_prediction(product, query, dask_chunks={}):
     result = result.astype(np.float32)
     return result.squeeze()
 
+ 

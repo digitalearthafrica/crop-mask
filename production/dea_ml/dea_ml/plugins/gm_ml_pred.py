@@ -1,6 +1,6 @@
 import logging
 from typing import Tuple, List, Dict, Optional
-
+import numpy as np
 import xarray as xr
 from datacube import Datacube
 from datacube.testutils.io import rio_slurp_xarray
@@ -51,16 +51,11 @@ class PredGMS2(StatsPluginInterface):
         assemble the input data and do prediction here.
         This method works as pipeline
         """
-        #assemble datacube query
-        query={
-            'time':str(self.datetime_range.start.year),
-            'measurements':list(self.rename_dict.values()),
-            'like':task.geobox
-        }
-        
         #create the features
-        pred_input_data=gm_mads_two_seasons_prediction(self.source_product,query)
+        measurements = list(self.rename_dict.values())
+        pred_input_data=gm_mads_two_seasons_prediction(task, measurements)
         
+        pred_input_data.compute()
         #read in model
         model = read_joblib(self.model_path)
         
@@ -68,11 +63,9 @@ class PredGMS2(StatsPluginInterface):
         predicted = predict_with_model(
             self.training_features, model, pred_input_data, {}
         )
-        print(predicted)
-        #post-process the predictions
         predict, proba, mode = post_processing(predicted)
-
-        return xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
+        output_ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
+        return output_ds
 
     def reduce(self, xx: xr.Dataset) -> xr.Dataset:
         return xx
