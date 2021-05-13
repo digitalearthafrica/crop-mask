@@ -67,7 +67,6 @@ def post_processing(
 
     # open segments
     segments = xr.open_rasterio(segmented_kea_file).squeeze().values
-    print("computing predict to test")
 
     # calculate mode
     print("  calculating mode...")
@@ -90,7 +89,7 @@ def post_processing(
     ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
 
     # mask out classification beyond AEZ boundary
-    gdf = gpd.read_file(urls["eastern_geojson"])
+    gdf = gpd.read_file(urls["aez"])
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
     ds = ds.where(mask, 0)

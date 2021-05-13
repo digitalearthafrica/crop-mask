@@ -123,7 +123,8 @@ def drop_nan_nodata(xx):
     """
     We pass this function to the
     native_transform parameter of
-
+    load_with_native_transform in order
+    to strip off the no-data values
     """
     for dv in xx.data_vars.values():
         if dv.attrs.get("nodata", "") == "NaN":
