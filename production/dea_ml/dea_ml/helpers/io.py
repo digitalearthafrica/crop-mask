@@ -99,7 +99,7 @@ def read_joblib(path):
     """
 
     # Path is an s3 bucket
-    if path[:5] == "s3://":
+    if path.startswith("s3://"):
         s3_bucket, s3_key = path.split("/")[2], path.split("/")[3:]
         s3_key = "/".join(s3_key)
         with BytesIO() as f:
@@ -107,14 +107,14 @@ def read_joblib(path):
                 "s3", config=Config(signature_version=UNSIGNED)
             ).download_fileobj(Bucket=s3_bucket, Key=s3_key, Fileobj=f)
             f.seek(0)
-            model = joblib.load(f)
-
+            return joblib.load(f)
+    elif path.startswith("https://"):
+        with fsspec.open(path) as fh:
+            return joblib.load(fh)
     # Path is a local directory
     else:
         with open(path, "rb") as f:
-            model = joblib.load(f)
-
-    return model
+            return joblib.load(f)
 
 
 PathLike = Union[str, Path]

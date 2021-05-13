@@ -15,7 +15,7 @@ package_data = {"": ["*"], "dea_ml": ["samples/*"]}
 
 setup_kwargs = {
     "name": "dea-ml",
-    "version": "0.1.8",
+    "version": "0.2.0",
     "description": "crop mask prediction",
     "long_description": None,
     "author": "deafrica team",

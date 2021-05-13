@@ -1,9 +1,7 @@
 import logging
-from typing import Tuple, List, Dict, Optional
-import numpy as np
+from typing import Tuple, List, Dict, Optional, Any
+
 import xarray as xr
-from datacube import Datacube
-from datacube.testutils.io import rio_slurp_xarray
 from dea_ml.core.feature_layer import gm_mads_two_seasons_prediction
 from dea_ml.core.post_processing import post_processing
 from dea_ml.core.predict_from_feature import predict_with_model
@@ -27,16 +25,14 @@ class PredGMS2(StatsPluginInterface):
 
     def __init__(
         self,
-        chirps_paths: List[str],
-        model_path: str,
-        url_slope: str,
+        urls: Dict[str, Any],
         datetime_range: str,
         rename_dict: Dict[str, str],
         training_features: List[str],
         bands: Optional[Tuple] = None,
     ):
         # target band to be saved
-        self.model_path = model_path
+        self.urls = urls
         self.datetime_range = DateTimeRange(datetime_range)
         self.rename_dict = rename_dict
         self.training_features = training_features
@@ -51,24 +47,22 @@ class PredGMS2(StatsPluginInterface):
         assemble the input data and do prediction here.
         This method works as pipeline
         """
-        #create the features
+        # create the features
         measurements = list(self.rename_dict.values())
-        pred_input_data=gm_mads_two_seasons_prediction(task, measurements)
-        
-        #read in model
-        model = read_joblib(self.model_path)
-        
-        #run predictions
+        pred_input_data = gm_mads_two_seasons_prediction(task, measurements, self.urls)
+
+        # read in model
+        model = read_joblib(self.urls["model"])
+
+        # run predictions
         predicted = predict_with_model(
             self.training_features, model, pred_input_data, {}
         )
-        
+
         return predicted
 
     def reduce(self, xx: xr.Dataset) -> xr.Dataset:
-        out = post_processing(xx) 
-        
-        return out
+        return post_processing(xx, self.urls)
 
 
 _plugins.register("pred-gm-s2", PredGMS2)
