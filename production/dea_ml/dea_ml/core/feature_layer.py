@@ -123,6 +123,13 @@ def gm_mads_two_seasons_training(ds):
     return result.astype(np.float32).squeeze()
 
 
+def drop_nan_nodata(xx):
+    for dv in xx.data_vars.values():
+        if dv.attrs.get('nodata', '') == 'NaN':
+            dv.attrs.pop('nodata')
+    return xx
+    
+
 def gm_mads_two_seasons_prediction(task, measurements, dask_chunks={}):
     """
     Feature layer function for production run of
@@ -135,19 +142,19 @@ def gm_mads_two_seasons_prediction(task, measurements, dask_chunks={}):
     ds = load_with_native_transform(
             task.datasets,
             geobox=task.geobox,
-            native_transform=lambda x: x,
+            native_transform=lambda x: drop_nan_nodata(x),
             bands=measurements,
             chunks=dask_chunks,
-            groupby="solar_day",
             resampling='bilinear'
         )
-    
+
     dss = {"S1": ds.isel(spec=0).drop(["spatial_ref", "spec"]),
            "S2": ds.isel(spec=1).drop(["spatial_ref", "spec"])}
         
     #create features
     epoch1 = common_ops(dss["S1"], era="_S1")
     epoch1 = add_chirps(epoch1, era='_S1',training=False, dask_chunks=dask_chunks)
+    
     epoch2 = common_ops(dss["S2"], era="_S2")
     epoch2 = add_chirps(epoch2, era='_S2', training=False, dask_chunks=dask_chunks)
 

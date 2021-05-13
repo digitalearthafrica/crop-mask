@@ -55,7 +55,6 @@ class PredGMS2(StatsPluginInterface):
         measurements = list(self.rename_dict.values())
         pred_input_data=gm_mads_two_seasons_prediction(task, measurements)
         
-        pred_input_data.compute()
         #read in model
         model = read_joblib(self.model_path)
         
@@ -63,12 +62,13 @@ class PredGMS2(StatsPluginInterface):
         predicted = predict_with_model(
             self.training_features, model, pred_input_data, {}
         )
-        predict, proba, mode = post_processing(predicted)
-        output_ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
-        return output_ds
+        
+        return predicted
 
     def reduce(self, xx: xr.Dataset) -> xr.Dataset:
-        return xx
+        predict, proba, mode = post_processing(xx) 
+        
+        return xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
 
 
 _plugins.register("pred-gm-s2", PredGMS2)

@@ -68,7 +68,7 @@ def post_processing(
     # open segments
     segments = xr.open_rasterio(segmented_kea_file).squeeze().values
     print('computing predict to test')
-    predict.compute()
+    
     # calculate mode
     print("  calculating mode...")
     count, _sum = _stats(predict, labels=segments, index=segments)
