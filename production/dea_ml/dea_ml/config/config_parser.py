@@ -1,7 +1,8 @@
-from pyhocon import ConfigFactory
 import os.path as osp
+
 from dea_ml.config.product_feature_config import FeaturePathConfig
 from odc.stats.model import OutputProduct, DateTimeRange
+from pyhocon import ConfigFactory
 
 
 def parse_config(default: str = None) -> FeaturePathConfig:

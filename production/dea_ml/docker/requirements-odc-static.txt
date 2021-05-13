@@ -1,0 +1,6 @@
+# ODC/DEA: these are installed in builder stage
+--extra-index-url="https://packages.dea.ga.gov.au"
+
+# rsgislib is conda only, but was manually packaged as a binary wheel compatible
+# with geobase docker images
+rsgislib
