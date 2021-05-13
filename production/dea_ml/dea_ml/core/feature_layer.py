@@ -124,6 +124,11 @@ def gm_mads_two_seasons_training(ds):
 
 
 def drop_nan_nodata(xx):
+    """
+    We pass this function to the 
+    native_transform parameter of 
+    
+    """
     for dv in xx.data_vars.values():
         if dv.attrs.get('nodata', '') == 'NaN':
             dv.attrs.pop('nodata')
