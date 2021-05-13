@@ -66,9 +66,9 @@ class PredGMS2(StatsPluginInterface):
         return predicted
 
     def reduce(self, xx: xr.Dataset) -> xr.Dataset:
-        predict, proba, mode = post_processing(xx) 
+        out = post_processing(xx) 
         
-        return xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
+        return out
 
 
 _plugins.register("pred-gm-s2", PredGMS2)
