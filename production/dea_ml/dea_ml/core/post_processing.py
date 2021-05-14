@@ -1,6 +1,6 @@
 import os
 import shutil
-from typing import Tuple
+from typing import Tuple, Dict, Any
 
 import gdal
 import geopandas as gpd
@@ -17,7 +17,7 @@ from scipy.ndimage.measurements import _stats
 
 
 def post_processing(
-    predicted: xr.Dataset,
+    predicted: xr.Dataset, urls: Dict[str, Any]
 ) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     """
     filter prediction results with post processing filters.
@@ -67,8 +67,7 @@ def post_processing(
 
     # open segments
     segments = xr.open_rasterio(segmented_kea_file).squeeze().values
-    print('computing predict to test')
-    
+
     # calculate mode
     print("  calculating mode...")
     count, _sum = _stats(predict, labels=segments, index=segments)
@@ -85,41 +84,39 @@ def post_processing(
 
     # --Post process masking---------------------------------------------------------------
     print("  masking with AEZ,WDPA,WOfS,slope & elevation")
-    
-    #merge back together for masking
-    ds=xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
-    
+
+    # merge back together for masking
+    ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
+
     # mask out classification beyond AEZ boundary
-    gdf = gpd.read_file("https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/data/Eastern.geojson?raw=true")
+    gdf = gpd.read_file(urls["aez"])
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
-    ds=ds.where(mask, 0)
+    ds = ds.where(mask, 0)
 
     # mask with WDPA
-    url_wdpa = "s3://deafrica-input-datasets/protected_areas/WDPA_eastern.tif"
-    wdpa = rio_slurp_xarray(url_wdpa, gbox=predicted.geobox)
+    wdpa = rio_slurp_xarray(urls["wdpa"], gbox=predicted.geobox)
     wdpa = wdpa.astype(bool)
-    ds=ds.where(~wdpa, 0)
+    ds = ds.where(~wdpa, 0)
 
     # mask with WOFS
     wofs = dc.load(product="ga_ls8c_wofs_2_summary", like=predicted.geobox)
     wofs = wofs.frequency > 0.2  # threshold
-    ds=ds.where(~wofs, 0)
+    ds = ds.where(~wofs, 0)
 
     # mask steep slopes
-    url_slope = "https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
-    slope = rio_slurp_xarray(url_slope, gbox=predicted.geobox)
+    slope = rio_slurp_xarray(urls["slope"], gbox=predicted.geobox)
     slope = slope > 35
-    ds=ds.where(~slope, 0)
+    ds = ds.where(~slope, 0)
 
     # mask where the elevation is above 3600m
     elevation = dc.load(product="dem_srtm", like=predicted.geobox)
     elevation = elevation.elevation > 3600  # threshold
-    ds=ds.where(~elevation.squeeze(), 0)
+    ds = ds.where(~elevation.squeeze(), 0)
 
     # set dtype
-    ds['mask'] = ds['mask'].astype(np.int8)
-    ds['prob'] = ds['prob'].astype(np.float32)
-    ds['filtered'] = ds['filtered'].astype(np.int8)
+    ds["mask"] = ds["mask"].astype(np.int8)
+    ds["prob"] = ds["prob"].astype(np.float32)
+    ds["filtered"] = ds["filtered"].astype(np.int8)
 
     return ds
