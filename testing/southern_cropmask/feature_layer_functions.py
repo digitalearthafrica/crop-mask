@@ -69,18 +69,14 @@ def add_chirps(ds,
         else:
             x_slice = list(np.arange(xmax - 0.05, xmin + 0.05, 0.05))
 
-        if (ymin < 0) & (ymax < 0):
-            y_slice = list(np.arange(ymin + 0.05, ymax - 0.05, -0.05))
-        else:
-            y_slice = list(np.arange(ymin - 0.05, ymax + 0.05, 0.05))
+        y_slice = list(np.arange(ymin - 0.05, ymax + 0.1, 0.05))
 
         # index global chirps using buffered s2 tile bbox
         chirps = assign_crs(chirps.sel(longitude=y_slice, latitude=x_slice, method="nearest"))
-
         # fill any NaNs in CHIRPS with local (s2-tile bbox) mean
         chirps = chirps.fillna(chirps.mean())
         chirps = xr_reproject(chirps, ds.geobox, "bilinear")
-        chirps = chirps.chunk(dask_chunks)
+        #chirps = chirps.chunk(dask_chunks)
         ds["rain"] = chirps
     
     #rename bands to include era
@@ -111,7 +107,7 @@ def gm_mads_two_seasons_training(ds):
     return result.astype(np.float32).squeeze()
 
 
-def gm_mads_two_seasons_prediction(geobox, dask_chunks):
+def gm_mads_two_seasons_prediction(geobox):
     """
     Feature layer function for production run of
     eastern crop-mask. Similar to the training function
@@ -131,23 +127,23 @@ def gm_mads_two_seasons_prediction(geobox, dask_chunks):
         time="2019",
         measurements=measurements,
         like=geobox,
-        dask_chunks=dask_chunks,
+        #dask_chunks=dask_chunks,
         resampling='bilinear'
     )
     
     dss = {"S1": ds.isel(time=0),
            "S2": ds.isel(time=1)}
-        
+      
     #create features
     epoch1 = common_ops(dss["S1"], era="_S1")
-    epoch1 = add_chirps(epoch1, era='_S1',training=False, dask_chunks=dask_chunks)
+    epoch1 = add_chirps(epoch1, era='_S1',training=False)
     epoch2 = common_ops(dss["S2"], era="_S2")
-    epoch2 = add_chirps(epoch2, era='_S2', training=False, dask_chunks=dask_chunks)
+    epoch2 = add_chirps(epoch2, era='_S2', training=False)
 
     # add slope
     url_slope = "https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
     slope = rio_slurp_xarray(url_slope, gbox=ds.geobox)
-    slope = slope.to_dataset(name="slope").chunk(dask_chunks)
+    slope = slope.to_dataset(name="slope")#.chunk(dask_chunks)
 
     result = xr.merge([epoch1, epoch2, slope], compat="override")
 
