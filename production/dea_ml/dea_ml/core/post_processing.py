@@ -3,6 +3,7 @@ import shutil
 from typing import Tuple, Dict, Any
 
 import gdal
+import dask
 import geopandas as gpd
 import numpy as np
 import xarray as xr
@@ -16,15 +17,15 @@ from rsgislib.segmentation import segutils
 from scipy.ndimage.measurements import _stats
 
 
-def post_processing(
+@dask.delayed
+def post_processing_delayed(
     predicted: xr.Dataset, urls: Dict[str, Any]
 ) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     """
-    filter prediction results with post processing filters.
-    :param predicted: The prediction results
-
+    Decorate the post processing operations with
+    dask delayed so they work with the input-->reduce
+    model of odc-stats
     """
-
     dc = Datacube(app=__name__)
 
     # write out ndvi for image seg
@@ -38,7 +39,7 @@ def post_processing(
 
     # -----------------image seg---------------------------------------------
     print("  image segmentation...")
-    # store temp files somewhere
+
     directory = "tmp"
     if not os.path.exists(directory):
         os.mkdir(directory)
@@ -82,35 +83,38 @@ def post_processing(
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
 
-    # --Post process masking---------------------------------------------------------------
+    # --Post process masking----------------------------------------
     print("  masking with AEZ,WDPA,WOfS,slope & elevation")
 
     # merge back together for masking
     ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
-
+    ds = ds.chunk({})
     # mask out classification beyond AEZ boundary
     gdf = gpd.read_file(urls["aez"])
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
+    mask = mask.chunk({})
     ds = ds.where(mask, 0)
 
     # mask with WDPA
     wdpa = rio_slurp_xarray(urls["wdpa"], gbox=predicted.geobox)
-    wdpa = wdpa.astype(bool)
+    wdpa = wdpa.astype(bool).chunk({})
     ds = ds.where(~wdpa, 0)
 
     # mask with WOFS
-    wofs = dc.load(product="ga_ls8c_wofs_2_summary", like=predicted.geobox)
+    wofs = dc.load(
+        product="ga_ls8c_wofs_2_summary", like=predicted.geobox, dask_chunks={}
+    )
     wofs = wofs.frequency > 0.2  # threshold
     ds = ds.where(~wofs, 0)
 
     # mask steep slopes
     slope = rio_slurp_xarray(urls["slope"], gbox=predicted.geobox)
     slope = slope > 35
-    ds = ds.where(~slope, 0)
+    ds = ds.where(~slope.chunk({}), 0)
 
     # mask where the elevation is above 3600m
-    elevation = dc.load(product="dem_srtm", like=predicted.geobox)
+    elevation = dc.load(product="dem_srtm", like=predicted.geobox, dask_chunks={})
     elevation = elevation.elevation > 3600  # threshold
     ds = ds.where(~elevation.squeeze(), 0)
 
@@ -119,4 +123,12 @@ def post_processing(
     ds["prob"] = ds["prob"].astype(np.float32)
     ds["filtered"] = ds["filtered"].astype(np.int8)
 
-    return ds
+
+def post_processing(
+    predicted: xr.Dataset, urls: Dict[str, Any]
+) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
+
+    """
+    Run the delayed post_processing functions
+    """
+    return dask.delayed(post_processing_delayed(predicted, urls))

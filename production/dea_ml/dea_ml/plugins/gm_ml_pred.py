@@ -58,10 +58,14 @@ class PredGMS2(StatsPluginInterface):
         predicted = predict_with_model(
             self.training_features, model, pred_input_data, {}
         )
-
+        
+        #rechunk
+        predicted = predicted.chunk({'x':-1, 'y':-1})
+        print(predicted)
         return predicted
 
     def reduce(self, xx: xr.Dataset) -> xr.Dataset:
+        print('starting pp')
         return post_processing(xx, self.urls)
 
 
