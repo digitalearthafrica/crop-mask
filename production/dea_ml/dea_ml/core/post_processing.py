@@ -29,10 +29,6 @@ def post_processing_delayed(
     """
     dc = Datacube(app=__name__)
     
-    #rechunk so all arrays have same size (comes out of
-    #predict_xr with differet chunksizes)
-    predicted = predicted.chunk({'x':-1, 'y':-1})
-    
     # write out ndvi for image seg
     ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]],
                       crs=predicted.geobox.crs)
