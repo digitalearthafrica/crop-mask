@@ -19,18 +19,25 @@ from scipy.ndimage.measurements import _stats
 
 @dask.delayed
 def post_processing_delayed(
-    predicted: xr.Dataset, urls: Dict[str, Any]
-) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
+        predicted: xr.Dataset,
+        urls: Dict[str,
+                   Any]) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     """
     Decorate the post processing operations with
     dask delayed so they work with the input-->reduce
     model of odc-stats
     """
     dc = Datacube(app=__name__)
-
+    
+    #rechunk so all arrays have same size (comes out of
+    #predict_xr with differet chunksizes)
+    predicted = predicted.chunk({'x':-1, 'y':-1})
+    
     # write out ndvi for image seg
-    ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]], crs=predicted.geobox.crs)
-    write_cog(ndvi.to_array(), "Eastern_tile_NDVI.tif", overwrite=True).compute()
+    ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]],
+                      crs=predicted.geobox.crs)
+    write_cog(ndvi.to_array().compute(), "Eastern_tile_NDVI.tif",
+              overwrite=True)
 
     # grab predictions and proba for post process filtering
     predict = predicted.Predictions
@@ -52,9 +59,10 @@ def post_processing_delayed(
     segmented_kea_file = "Eastern_tile_segmented.kea"
 
     # convert tiff to kea
-    gdal.Translate(
-        destName=kea_file, srcDS=tiff_to_segment, format="KEA", outputSRS="EPSG:6933"
-    )
+    gdal.Translate(destName=kea_file,
+                   srcDS=tiff_to_segment,
+                   format="KEA",
+                   outputSRS="EPSG:6933")
 
     # run image seg
     with HiddenPrints():
@@ -73,9 +81,10 @@ def post_processing_delayed(
     print("  calculating mode...")
     count, _sum = _stats(predict, labels=segments, index=segments)
     mode = _sum > (count / 2)
-    mode = xr.DataArray(
-        mode, coords=predict.coords, dims=predict.dims, attrs=predict.attrs
-    )
+    mode = xr.DataArray(mode,
+                        coords=predict.coords,
+                        dims=predict.dims,
+                        attrs=predict.attrs)
 
     # remove the tmp folder
     shutil.rmtree(tmp)
@@ -98,37 +107,66 @@ def post_processing_delayed(
 
     # mask with WDPA
     wdpa = rio_slurp_xarray(urls["wdpa"], gbox=predicted.geobox)
-    wdpa = wdpa.astype(bool).chunk({})
+    wdpa = wdpa.chunk({})
+    wdpa = wdpa.astype(bool)
     ds = ds.where(~wdpa, 0)
 
     # mask with WOFS
-    wofs = dc.load(
-        product="ga_ls8c_wofs_2_summary", like=predicted.geobox, dask_chunks={}
-    )
+    wofs = dc.load(product="ga_ls8c_wofs_2_summary",
+                   like=predicted.geobox,
+                   dask_chunks={})
     wofs = wofs.frequency > 0.2  # threshold
     ds = ds.where(~wofs, 0)
 
     # mask steep slopes
     slope = rio_slurp_xarray(urls["slope"], gbox=predicted.geobox)
+    slope = slope.chunk({})
     slope = slope > 35
-    ds = ds.where(~slope.chunk({}), 0)
+    ds = ds.where(~slope, 0)
 
     # mask where the elevation is above 3600m
-    elevation = dc.load(product="dem_srtm", like=predicted.geobox, dask_chunks={})
+    elevation = dc.load(product="dem_srtm",
+                        like=predicted.geobox,
+                        dask_chunks={})
     elevation = elevation.elevation > 3600  # threshold
     ds = ds.where(~elevation.squeeze(), 0)
-
-    # set dtype
-    ds["mask"] = ds["mask"].astype(np.int8)
-    ds["prob"] = ds["prob"].astype(np.float32)
-    ds["filtered"] = ds["filtered"].astype(np.int8)
-
+    
+    return ds
 
 def post_processing(
-    predicted: xr.Dataset, urls: Dict[str, Any]
-) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
+        predicted: xr.Dataset,
+        urls: Dict[str,
+                   Any]) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
+    """
+    Run the delayed post_processing functions, then create a lazy
+    xr.Dataset to satisfy odc-stats
+    """
+    # call function with dask delayed
+    ds = dask.delayed(post_processing_delayed(predicted, urls))
+    
+    # convert delayed object to dask arrays
+    band=[i for i in predicted.data_vars][0]
+    shape = predicted[band].shape
+    mask = dask.array.from_delayed(ds["mask"].squeeze(),
+                                   shape=shape,
+                                   dtype=np.float32)
+    prob = dask.array.from_delayed(ds["prob"].squeeze(),
+                                   shape=shape,
+                                   dtype=np.float32)
+    filtered = dask.array.from_delayed(ds["filtered"].squeeze(),
+                                       shape=shape,
+                                       dtype=np.float32)
 
-    """
-    Run the delayed post_processing functions
-    """
-    return dask.delayed(post_processing_delayed(predicted, urls))
+    # convert dask arrays to xr.Datarrays
+    mask = xr.DataArray(mask, coords=predicted.coords, attrs=predicted.attrs)
+    prob = xr.DataArray(prob, coords=predicted.coords, attrs=predicted.attrs)
+    filtered = xr.DataArray(filtered,coords=predicted.coords,attrs=predicted.attrs)
+
+    # convert to xr.dataset and set dtypes
+    ds = xr.Dataset({
+        "mask": mask.astype(np.int8),
+        "prob": prob.astype(np.float32),
+        "filtered": filtered.astype(np.int8),
+    })
+    
+    return ds

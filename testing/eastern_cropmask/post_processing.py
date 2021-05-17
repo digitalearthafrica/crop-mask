@@ -55,7 +55,7 @@ def image_segmentation_et_al(predicted):
             outputClumps=segmented_kea_file,
             tmpath=tmp,
             numClusters=60,
-            minPxls=100,
+            minPxls=20,
         )
 
     # open segments
@@ -80,39 +80,37 @@ def image_segmentation_et_al(predicted):
 
     # merge back together for masking
     ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
-
+    
     # mask out classification beyond AEZ boundary
     gdf = gpd.read_file('https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/data/Eastern.geojson?raw=true')
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
+    mask = mask.chunk({})
     ds = ds.where(mask, 0)
 
     # mask with WDPA
     wdpa = rio_slurp_xarray("s3://deafrica-input-datasets/protected_areas/WDPA_eastern.tif",
                             gbox=predicted.geobox)
+    wdpa = wdpa.chunk({})
     wdpa = wdpa.astype(bool)
     ds = ds.where(~wdpa, 0)
 
     # mask with WOFS
-    wofs = dc.load(product="ga_ls8c_wofs_2_summary", like=predicted.geobox)
+    wofs = dc.load(product="ga_ls8c_wofs_2_summary", like=predicted.geobox, dask_chunks={})
     wofs = wofs.frequency > 0.2  # threshold
     ds = ds.where(~wofs, 0)
 
     # mask steep slopes
     slope = rio_slurp_xarray('https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif',
                              gbox=predicted.geobox)
+    slope = slope.chunk({})
     slope = slope > 35
     ds = ds.where(~slope, 0)
 
     # mask where the elevation is above 3600m
-    elevation = dc.load(product="dem_srtm", like=predicted.geobox)
+    elevation = dc.load(product="dem_srtm", like=predicted.geobox, dask_chunks={})
     elevation = elevation.elevation > 3600  # threshold
     ds = ds.where(~elevation.squeeze(), 0)
-
-    # set dtype
-    ds["mask"] = ds["mask"].astype(np.int8)
-    ds["prob"] = ds["prob"].astype(np.float32)
-    ds["filtered"] = ds["filtered"].astype(np.int8)
 
     return ds
 
@@ -123,9 +121,38 @@ def post_processing(predicted):
     :param predicted: The prediction results
 
     """
-    
-    return dask.delayed(image_segmentation_et_al(predicted))
+    # call function with dask delayed
+    ds = dask.delayed(image_segmentation_et_al(predicted))
 
+    # convert delayed object to dask arrays
+    band=[i for i in predicted.data_vars][0]
+    shape = predicted[band].shape
+    mask = dask.array.from_delayed(ds["mask"].squeeze(),
+                                   shape=shape,
+                                   dtype=np.float32)
+    prob = dask.array.from_delayed(ds["prob"].squeeze(),
+                                   shape=shape,
+                                   dtype=np.float32)
+    filtered = dask.array.from_delayed(ds["filtered"].squeeze(),
+                                       shape=shape,
+                                       dtype=np.float32)
+
+    # convert dask arrays to xr.Datarrays
+    mask = xr.DataArray(mask, coords=predicted.coords, attrs=predicted.attrs)
+    prob = xr.DataArray(prob, coords=predicted.coords, attrs=predicted.attrs)
+    filtered = xr.DataArray(filtered,
+                            coords=predicted.coords,
+                            attrs=predicted.attrs)
+
+    # convert to xr.dataset and set dtypes
+    ds = xr.Dataset({
+        "mask": mask.astype(np.int8),
+        "prob": prob.astype(np.float32),
+        "filtered": filtered.astype(np.int8),
+    })
+
+    return ds
+    
 
 
 #-----------------------------------------------------
