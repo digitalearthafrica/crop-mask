@@ -160,8 +160,8 @@ def predict_with_model(
         return_input=True,
     )
 
-    predicted["Predictions"] = predicted["Predictions"].astype("int8")
-    predicted["Probabilities"] = predicted["Probabilities"].astype("float32")
+    predicted["Predictions"] = predicted["Predictions"].astype("uint8")
+    predicted["Probabilities"] = predicted["Probabilities"].astype("uint8")
 
     return predicted
 

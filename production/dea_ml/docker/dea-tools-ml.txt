@@ -1,4 +1,6 @@
 # use minty-fresh-sandbox branch
 git+https://github.com/digitalearthafrica/deafrica-sandbox-notebooks.git@minty-fresh-sandbox#subdirectory=Tools
 # use main branch here
-git+https://github.com/digitalearthafrica/crop-mask.git@main#subdirectory=production/dea_ml
+# git+https://github.com/digitalearthafrica/crop-mask.git@main#subdirectory=production/dea_ml
+# branch with heartbeat
+git+https://github.com/digitalearthafrica/crop-mask.git@feature/add-heart-beat-back#subdirectory=production/dea_ml

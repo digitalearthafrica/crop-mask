@@ -5,7 +5,7 @@ import sys
 import click
 from odc.stats._cli_common import main, setup_logging, click_resolution
 from odc.stats.model import TaskRunnerConfig
-from odc.stats.proc import TaskRunner
+from dea_ml.pipeline.proc import CMTaskRunner
 
 
 # Todo: upgrade this into fsspec link can access git raw file.
@@ -42,6 +42,7 @@ def click_yaml_cfg(*args, **kw):
 )
 @click.option(
     "--heartbeat-filepath",
+    default="/tmp/cm-heartbeat.txt",
     type=str,
     help="Path to store pod's heartbeats when running stats as K8 jobs",
 )
@@ -165,7 +166,7 @@ def run(
     # prepare _cfg and used here
     cfg = TaskRunnerConfig(**_cfg)
     _log.info(f"Using this config: {cfg}")
-    runner = TaskRunner(cfg, resolution=resolution)
+    runner = CMTaskRunner(cfg, resolution=resolution)
     if dryrun:
         check_exists = runner.verify_setup()
         for task in runner.dry_run(tasks, check_exists=check_exists):
