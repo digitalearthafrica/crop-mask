@@ -59,10 +59,8 @@ class PredGMS2(StatsPluginInterface):
             self.training_features, model, pred_input_data, {}
         )
         
-        #rechunk
-        predicted = predicted.chunk({'x':-1, 'y':-1})
-        
-        return predicted
+        #rechunk on the way out
+        return predicted.chunk({'x':-1, 'y':-1})
 
     def reduce(self, xx: xr.Dataset) -> xr.Dataset:
         return post_processing(xx, self.urls)

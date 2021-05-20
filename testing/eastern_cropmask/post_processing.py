@@ -17,19 +17,11 @@ from rsgislib.segmentation import segutils
 from scipy.ndimage.measurements import _stats
 
 @dask.delayed
-def image_segmentation_et_al(predicted):   
-    dc = Datacube(app='whatever')
+def image_segmentation(ndvi, predict):   
 
-    # write out ndvi for image seg
-    ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]], crs=predicted.geobox.crs)
-    write_cog(ndvi.to_array().compute(), "Eastern_tile_NDVI.tif", overwrite=True)
-    
-    # grab predictions and proba for post process filtering
-    predict = predicted.Predictions
-    proba = predicted.Probabilities
-    proba = proba.where(predict == 1, 100 - proba)  # crop proba only
-
-    print("  image segmentation...")
+    write_cog(ndvi.to_array().compute(),
+              "Eastern_tile_NDVI.tif",
+              overwrite=True)
 
     # store temp files somewhere
     directory = "tmp"
@@ -62,7 +54,6 @@ def image_segmentation_et_al(predicted):
     segments = xr.open_rasterio(segmented_kea_file).squeeze().values
 
     # calculate mode
-    print("  calculating mode...")
     count, _sum = _stats(predict, labels=segments, index=segments)
     mode = _sum > (count / 2)
     mode = xr.DataArray(
@@ -74,12 +65,46 @@ def image_segmentation_et_al(predicted):
     os.remove(kea_file)
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
+    
+    return mode.chunk({})
 
-    # --Post process masking---------------------------------------------------------------
-    print("  masking with AEZ,WDPA,WOfS,slope & elevation")
+
+def post_processing(predicted):
+    """
+    filter prediction results with post processing filters.
+    :param predicted: The prediction results
+
+    """
+    
+    dc = Datacube(app='whatever')
+    
+    # grab predictions and proba for post process filtering
+    predict = predicted.Predictions
+    proba = predicted.Probabilities
+    proba = proba.where(predict == 1, 100 - proba)  # crop proba only
+    
+    #------image seg and filtering -------------
+    # write out ndvi for image seg
+    ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]],
+                      crs=predicted.geobox.crs)
+    
+    # call function with dask delayed
+    filtered = image_segmentation(ndvi, predict)
+    
+    # convert delayed object to dask array
+    filtered = dask.array.from_delayed(filtered.squeeze(),
+                                       shape=predict.shape,
+                                       dtype=np.int8)
+
+    # convert dask array to xr.Datarray
+    filtered = xr.DataArray(filtered,
+                            coords=predict.coords,
+                            attrs=predict.attrs)
+    
+    # --Post process masking------------------------------------------------
 
     # merge back together for masking
-    ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": mode})
+    ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": filtered})
     
     # mask out classification beyond AEZ boundary
     gdf = gpd.read_file('https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/data/Eastern.geojson?raw=true')
@@ -112,47 +137,7 @@ def image_segmentation_et_al(predicted):
     elevation = elevation.elevation > 3600  # threshold
     ds = ds.where(~elevation.squeeze(), 0)
 
-    return ds
-
-
-def post_processing(predicted):
-    """
-    filter prediction results with post processing filters.
-    :param predicted: The prediction results
-
-    """
-    # call function with dask delayed
-    ds = dask.delayed(image_segmentation_et_al(predicted))
-
-    # convert delayed object to dask arrays
-    band=[i for i in predicted.data_vars][0]
-    shape = predicted[band].shape
-    mask = dask.array.from_delayed(ds["mask"].squeeze(),
-                                   shape=shape,
-                                   dtype=np.float32)
-    prob = dask.array.from_delayed(ds["prob"].squeeze(),
-                                   shape=shape,
-                                   dtype=np.float32)
-    filtered = dask.array.from_delayed(ds["filtered"].squeeze(),
-                                       shape=shape,
-                                       dtype=np.float32)
-
-    # convert dask arrays to xr.Datarrays
-    mask = xr.DataArray(mask, coords=predicted.coords, attrs=predicted.attrs)
-    prob = xr.DataArray(prob, coords=predicted.coords, attrs=predicted.attrs)
-    filtered = xr.DataArray(filtered,
-                            coords=predicted.coords,
-                            attrs=predicted.attrs)
-
-    # convert to xr.dataset and set dtypes
-    ds = xr.Dataset({
-        "mask": mask.astype(np.int8),
-        "prob": prob.astype(np.float32),
-        "filtered": filtered.astype(np.int8),
-    })
-
-    return ds
-    
+    return ds.squeeze()
 
 
 #-----------------------------------------------------
