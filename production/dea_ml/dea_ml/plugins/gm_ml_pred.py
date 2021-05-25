@@ -50,7 +50,8 @@ class PredGMS2(StatsPluginInterface):
         # create the features
         measurements = list(self.rename_dict.values())
         pred_input_data = gm_mads_two_seasons_prediction(task, measurements, self.urls)
-
+        if not pred_input_data:
+            return None
         # read in model
         model = read_joblib(self.urls["model"])
 
@@ -58,9 +59,9 @@ class PredGMS2(StatsPluginInterface):
         predicted = predict_with_model(
             self.training_features, model, pred_input_data, {}
         )
-        
-        #rechunk on the way out
-        return predicted.chunk({'x':-1, 'y':-1})
+
+        # rechunk on the way out
+        return predicted.chunk({"x": -1, "y": -1})
 
     def reduce(self, xx: xr.Dataset) -> xr.Dataset:
         return post_processing(xx, self.urls)
