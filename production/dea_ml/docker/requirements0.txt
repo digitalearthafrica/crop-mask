@@ -1,4 +1,0 @@
-Cython --no-binary=Cython
-numpy==1.18.5  # because of tensorflow==2.2.1
-wheel
-setuptools

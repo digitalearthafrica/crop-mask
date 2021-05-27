@@ -1,0 +1,8 @@
+# Note that this file is used by Dask configuration
+distributed:
+  worker:
+    memory:
+      target: False
+      spill: False
+      pause: 0.95
+      terminate: 0.97

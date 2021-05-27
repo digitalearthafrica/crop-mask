@@ -1,0 +1,23 @@
+name : Statistician Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docker/**'
+      - '.github/workflows/cropmask-*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Statistician image
+      timeout-minutes: 20
+      shell: bash
+      run: |
+        cd docker
+        docker . --tag digitalearthafrica/crop-mask
