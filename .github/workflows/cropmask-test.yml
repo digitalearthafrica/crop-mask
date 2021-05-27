@@ -20,4 +20,4 @@ jobs:
       shell: bash
       run: |
         cd docker
-        docker . --tag digitalearthafrica/crop-mask
+        docker build .
