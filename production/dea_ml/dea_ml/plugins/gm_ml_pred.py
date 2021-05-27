@@ -7,7 +7,6 @@ from dea_ml.core.post_processing import post_processing
 from dea_ml.core.predict_from_feature import predict_with_model
 from dea_ml.helpers.io import read_joblib
 from odc.stats import _plugins
-from odc.stats.model import DateTimeRange
 from odc.stats.model import Task, StatsPluginInterface
 
 _log = logging.getLogger(__name__)
@@ -26,14 +25,12 @@ class PredGMS2(StatsPluginInterface):
     def __init__(
         self,
         urls: Dict[str, Any],
-        datetime_range: str,
         rename_dict: Dict[str, str],
         training_features: List[str],
         bands: Optional[Tuple] = None,
     ):
         # target band to be saved
         self.urls = urls
-        self.datetime_range = DateTimeRange(datetime_range)
         self.rename_dict = rename_dict
         self.training_features = training_features
         self.bands = bands if bands else ("mask", "prob", "filtered")

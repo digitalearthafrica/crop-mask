@@ -42,6 +42,7 @@ def click_yaml_cfg(*args, **kw):
 )
 @click.option(
     "--heartbeat-filepath",
+    default="/tmp/cm-heartbeat.txt",
     type=str,
     help="Path to store pod's heartbeats when running stats as K8 jobs",
 )
