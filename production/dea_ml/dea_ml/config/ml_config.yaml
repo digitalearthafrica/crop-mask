@@ -8,8 +8,6 @@ urls:
   wdpa: s3://deafrica-input-datasets/protected_areas/WDPA_eastern.tif
   aez: https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/data/Eastern.geojson?raw=true
 
-datetime_range: 2019--P1Y
-
 rename_dict:
   B02: blue
   B03: green
