@@ -70,8 +70,8 @@ class CMTaskRunner(TaskRunner):
             cancelled = False
 
             for (dt, t_now) in wait_for_future(cog, cfg.future_poll_interval, t0=t0):
-                # if cfg.heartbeat_filepath is not None:
-                #     self._register_heartbeat(cfg.heartbeat_filepath)
+                if cfg.heartbeat_filepath is not None:
+                    self._register_heartbeat(cfg.heartbeat_filepath)
                 if tk:
                     tk.extend_if_needed(
                         cfg.job_queue_max_lease, cfg.renew_safety_margin

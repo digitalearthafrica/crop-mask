@@ -16,12 +16,11 @@ from deafrica_tools.spatial import xr_rasterize
 from rsgislib.segmentation import segutils
 from scipy.ndimage.measurements import _stats
 
-@dask.delayed
-def image_segmentation(ndvi, predict):   
 
-    write_cog(ndvi.to_array().compute(),
-              "Eastern_tile_NDVI.tif",
-              overwrite=True)
+@dask.delayed
+def image_segmentation(ndvi, predict):
+
+    write_cog(ndvi.to_array().compute(), "Eastern_tile_NDVI.tif", overwrite=True)
 
     # store temp files somewhere
     directory = "tmp"
@@ -65,48 +64,44 @@ def image_segmentation(ndvi, predict):
     os.remove(kea_file)
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
-    
+
     return mode.chunk({})
 
 
 def post_processing(
-        predicted: xr.Dataset,
-        urls: Dict[str,
-                   Any]) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
+    predicted: xr.Dataset, urls: Dict[str, Any]
+) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     """
     Run the delayed post_processing functions, then create a lazy
     xr.Dataset to satisfy odc-stats
     """
-    dc = Datacube(app='whatever')
-    
+    dc = Datacube(app="whatever")
+
     # grab predictions and proba for post process filtering
     predict = predicted.Predictions
     proba = predicted.Probabilities
     proba = proba.where(predict == 1, 100 - proba)  # crop proba only
-    
-    #------image seg and filtering -------------
+
+    # ------image seg and filtering -------------
     # write out ndvi for image seg
-    ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]],
-                      crs=predicted.geobox.crs)
-    
+    ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]], crs=predicted.geobox.crs)
+
     # call function with dask delayed
     filtered = image_segmentation(ndvi, predict)
-    
+
     # convert delayed object to dask array
-    filtered = dask.array.from_delayed(filtered.squeeze(),
-                                       shape=predict.shape,
-                                       dtype=np.int8)
+    filtered = dask.array.from_delayed(
+        filtered.squeeze(), shape=predict.shape, dtype=np.uint8
+    )
 
     # convert dask array to xr.Datarray
-    filtered = xr.DataArray(filtered,
-                            coords=predict.coords,
-                            attrs=predict.attrs)
-    
+    filtered = xr.DataArray(filtered, coords=predict.coords, attrs=predict.attrs)
+
     # --Post process masking----------------------------------------
 
     # merge back together for masking
     ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": filtered})
-    
+
     # mask out classification beyond AEZ boundary
     gdf = gpd.read_file(urls["aez"])
     with HiddenPrints():
@@ -121,9 +116,9 @@ def post_processing(
     ds = ds.where(~wdpa, 0)
 
     # mask with WOFS
-    wofs = dc.load(product="ga_ls8c_wofs_2_summary",
-                   like=predicted.geobox,
-                   dask_chunks={})
+    wofs = dc.load(
+        product="ga_ls8c_wofs_2_summary", like=predicted.geobox, dask_chunks={}
+    )
     wofs = wofs.frequency > 0.2  # threshold
     ds = ds.where(~wofs, 0)
 
@@ -134,10 +129,8 @@ def post_processing(
     ds = ds.where(~slope, 0)
 
     # mask where the elevation is above 3600m
-    elevation = dc.load(product="dem_srtm",
-                        like=predicted.geobox,
-                        dask_chunks={})
+    elevation = dc.load(product="dem_srtm", like=predicted.geobox, dask_chunks={})
     elevation = elevation.elevation > 3600  # threshold
     ds = ds.where(~elevation.squeeze(), 0)
-    
+
     return ds.squeeze()
