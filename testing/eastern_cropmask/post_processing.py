@@ -16,57 +16,57 @@ from deafrica_tools.spatial import xr_rasterize
 from rsgislib.segmentation import segutils
 from scipy.ndimage.measurements import _stats
 
-@dask.delayed
-def image_segmentation(ndvi, predict):   
+# @dask.delayed
+# def image_segmentation(ndvi, predict):   
 
-    write_cog(ndvi.to_array().compute(),
-              "Eastern_tile_NDVI.tif",
-              overwrite=True)
+#     write_cog(ndvi.to_array().compute(),
+#               "Eastern_tile_NDVI.tif",
+#               overwrite=True)
 
-    # store temp files somewhere
-    directory = "tmp"
-    if not os.path.exists(directory):
-        os.mkdir(directory)
+#     # store temp files somewhere
+#     directory = "tmp"
+#     if not os.path.exists(directory):
+#         os.mkdir(directory)
 
-    tmp = "tmp/"
+#     tmp = "tmp/"
 
-    # inputs to image seg
-    tiff_to_segment = "Eastern_tile_NDVI.tif"
-    kea_file = "Eastern_tile_NDVI.kea"
-    segmented_kea_file = "Eastern_tile_segmented.kea"
+#     # inputs to image seg
+#     tiff_to_segment = "Eastern_tile_NDVI.tif"
+#     kea_file = "Eastern_tile_NDVI.kea"
+#     segmented_kea_file = "Eastern_tile_segmented.kea"
 
-    # convert tiff to kea
-    gdal.Translate(
-        destName=kea_file, srcDS=tiff_to_segment, format="KEA", outputSRS="EPSG:6933"
-    )
+#     # convert tiff to kea
+#     gdal.Translate(
+#         destName=kea_file, srcDS=tiff_to_segment, format="KEA", outputSRS="EPSG:6933"
+#     )
 
-    # run image seg
-    with HiddenPrints():
-        segutils.runShepherdSegmentation(
-            inputImg=kea_file,
-            outputClumps=segmented_kea_file,
-            tmpath=tmp,
-            numClusters=60,
-            minPxls=20,
-        )
+#     # run image seg
+#     with HiddenPrints():
+#         segutils.runShepherdSegmentation(
+#             inputImg=kea_file,
+#             outputClumps=segmented_kea_file,
+#             tmpath=tmp,
+#             numClusters=60,
+#             minPxls=20,
+#         )
 
-    # open segments
-    segments = xr.open_rasterio(segmented_kea_file).squeeze().values
+#     # open segments
+#     segments = xr.open_rasterio(segmented_kea_file).squeeze().values
 
-    # calculate mode
-    count, _sum = _stats(predict, labels=segments, index=segments)
-    mode = _sum > (count / 2)
-    mode = xr.DataArray(
-        mode, coords=predict.coords, dims=predict.dims, attrs=predict.attrs
-    )
+#     # calculate mode
+#     count, _sum = _stats(predict, labels=segments, index=segments)
+#     mode = _sum > (count / 2)
+#     mode = xr.DataArray(
+#         mode, coords=predict.coords, dims=predict.dims, attrs=predict.attrs
+#     )
 
-    # remove the tmp folder
-    shutil.rmtree(tmp)
-    os.remove(kea_file)
-    os.remove(segmented_kea_file)
-    os.remove(tiff_to_segment)
+#     # remove the tmp folder
+#     shutil.rmtree(tmp)
+#     os.remove(kea_file)
+#     os.remove(segmented_kea_file)
+#     os.remove(tiff_to_segment)
     
-    return mode.chunk({})
+#     return mode.chunk({})
 
 
 def post_processing(predicted):
@@ -80,31 +80,31 @@ def post_processing(predicted):
     
     # grab predictions and proba for post process filtering
     predict = predicted.Predictions
-    proba = predicted.Probabilities
-    proba = proba.where(predict == 1, 100 - proba)  # crop proba only
+#     proba = predicted.Probabilities
+#     proba = proba.where(predict == 1, 100 - proba)  # crop proba only
     
-    #------image seg and filtering -------------
-    # write out ndvi for image seg
-    ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]],
-                      crs=predicted.geobox.crs)
+#     #------image seg and filtering -------------
+#     # write out ndvi for image seg
+#     ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]],
+#                       crs=predicted.geobox.crs)
     
-    # call function with dask delayed
-    filtered = image_segmentation(ndvi, predict)
+#     # call function with dask delayed
+#     filtered = image_segmentation(ndvi, predict)
     
-    # convert delayed object to dask array
-    filtered = dask.array.from_delayed(filtered.squeeze(),
-                                       shape=predict.shape,
-                                       dtype=np.int8)
+#     # convert delayed object to dask array
+#     filtered = dask.array.from_delayed(filtered.squeeze(),
+#                                        shape=predict.shape,
+#                                        dtype=np.int8)
 
-    # convert dask array to xr.Datarray
-    filtered = xr.DataArray(filtered,
-                            coords=predict.coords,
-                            attrs=predict.attrs)
+#     # convert dask array to xr.Datarray
+#     filtered = xr.DataArray(filtered,
+#                             coords=predict.coords,
+#                             attrs=predict.attrs)
     
     # --Post process masking------------------------------------------------
 
     # merge back together for masking
-    ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": filtered})
+    ds = xr.Dataset({"mask": predict})#, "prob": proba, "filtered": filtered})
     
     # mask out classification beyond AEZ boundary
     gdf = gpd.read_file('https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/data/Eastern.geojson?raw=true')
