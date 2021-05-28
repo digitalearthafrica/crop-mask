@@ -18,7 +18,6 @@ rename_dict:
   B08: nir
   B11: swir_1
   B12: swir_2
-  B8A: nir_narrow
   BCMAD: bcdev
   EMAD: edev
   SMAD: sdev

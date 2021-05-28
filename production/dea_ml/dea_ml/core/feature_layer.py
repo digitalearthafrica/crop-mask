@@ -145,6 +145,9 @@ def gm_mads_two_seasons_prediction(
     and dask chunks are used.
     """
     # load semi-annual geomedians
+    print('!!!!!!tasks datasets!!!!!!!!!')
+    print(task.datasets)
+    
     ds = load_with_native_transform(
         task.datasets,
         geobox=task.geobox,
@@ -153,7 +156,8 @@ def gm_mads_two_seasons_prediction(
         chunks=dask_chunks,
         resampling="bilinear",
     )
-
+    print('!!!DS!!!')
+    print(ds)
     dss = {
         "S1": ds.isel(spec=0).drop(["spatial_ref", "spec"]),
         "S2": ds.isel(spec=1).drop(["spatial_ref", "spec"]),
