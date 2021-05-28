@@ -1,7 +1,7 @@
 ---
 urls:
   slope: https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif
-  model: https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib?raw=true
+  model: https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427rerun.joblib?raw=true
   chirps:
     - s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.tif
     - s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif
