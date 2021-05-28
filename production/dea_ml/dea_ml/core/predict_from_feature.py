@@ -47,13 +47,26 @@ def get_max_cpu() -> int:
 
 
 def predict_with_model(
-    training_features: List[str], model, data: xr.Dataset, chunk_size: Dict = None
+    training_features: List[str],
+    model,
+    data: xr.Dataset,
+    chunk_size: Dict = None
+    urls: Dict[Any, Any],
 ) -> xr.Dataset:
     """
     run the prediction here
     """
     # step 1: select features
-    input_data = data[training_features]
+
+    # load the column_names to ensure
+    # the bands are in the right order
+    with open(urls['td'], 'r') as file:
+        header = file.readline()
+    
+    column_names = header.split()[1:][1:]
+    
+    input_data = data[column_names]
+    
     print('!!!!input_data!!!!!!!')
     print(input_data)
     # step 2: prediction

@@ -46,20 +46,19 @@ class PredGMS2(StatsPluginInterface):
         """
         # create the features
         measurements = ["blue","green","red","nir","swir_1",
-                    "swir_2","red_edge_1","red_edge_2","red_edge_3",
-                    "bcdev","edev","sdev"]
+                        "swir_2","red_edge_1","red_edge_2","red_edge_3",
+                        "bcdev","edev","sdev"]
         
         pred_input_data = gm_mads_two_seasons_prediction(task, measurements, self.urls)
+        
         if not pred_input_data:
             return None
         # read in model
         model = read_joblib(self.urls["model"])
-        print('!!!!MODEL!!!')
-        print(self.urls["model"])
-        print(model)
+        
         # run predictions
         predicted = predict_with_model(
-            self.training_features, model, pred_input_data, {}
+            self.training_features, model, pred_input_data, {}, self.urls["td"]
         )
 
         # rechunk on the way out
