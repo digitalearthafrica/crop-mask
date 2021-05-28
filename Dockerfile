@@ -1,8 +1,5 @@
+FROM opendatacube/geobase:wheels-3.0.4 as env_builder
 ARG py_env_path=/env
-ARG V_BASE=3.3.0
-
-FROM opendatacube/geobase-builder:${V_BASE} as env_builder
-ARG py_env_path
 
 ENV LC_ALL=C.UTF-8
 
@@ -10,18 +7,18 @@ ENV LC_ALL=C.UTF-8
 RUN mkdir -p /conf
 COPY docker/requirements.txt docker/constraints.txt docker/version.txt /conf/
 RUN cat /conf/version.txt && \
-  env-build-tool new /conf/requirements.txt /conf/constraints.txt ${py_env_path} \
-  && rm -rf /root/.cache/pip \
-  && echo done
+  env-build-tool new /conf/requirements.txt ${py_env_path} /wheels \
+  && rm -rf /root/.cache/pip
 
 ADD production/dea_ml /tmp/dea_ml
 
-RUN pip install /tmp/dea_ml && \
-    rm -rf /tmp/dea_ml
+RUN pip install -c /conf/constraints.txt \
+  --extra-index-url="https://packages.dea.ga.gov.au" /tmp/dea_ml && \
+  rm -rf /tmp/dea_ml
 
 # Below is the actual image that does the running
-FROM opendatacube/geobase-runner:${V_BASE}
-ARG py_env_path
+FROM opendatacube/geobase:runner
+ARG py_env_path=/env
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PATH="${py_env_path}/bin:${PATH}" \

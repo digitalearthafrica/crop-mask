@@ -1,4 +1,4 @@
-name : Statistician Test
+name : Crop-mask Test
 
 on:
   pull_request:
