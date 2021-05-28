@@ -1,4 +1,4 @@
-name : Statistician Push
+name : Crop-mask Push
 
 on:
   push:
