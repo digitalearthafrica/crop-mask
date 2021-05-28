@@ -18,6 +18,7 @@ from datacube.utils.rio import configure_s3_access
 
 from dea_ml.core.feature_layer import get_xy_from_task
 from dea_ml.core.stac_to_dc import StacIntoDc
+from dea_ml.helpers.io import download_file
 
 from deafrica_tools.classification import predict_xr
 from distributed import Client
@@ -51,29 +52,27 @@ def predict_with_model(
     model,
     data,
     chunk_size,
-    urls
+    td_url
 ) -> xr.Dataset:
     """
     run the prediction here
     """
     # step 1: select features
 
-    # load the column_names from the
+    # load the column names from the
     # training data file to ensure
     # the bands are in the right order
-    
-    with requests.get(urls['td']) as response:
-        file = response.text
+    response = requests.get(td_url)
+    with open("td.txt", "w") as f:
+        f.write(response.text)
+    with open('td.txt', 'r') as file:
         header = file.readline()
-    print('header time')
-    print(header)
     column_names = header.split()[1:][1:]
-    print(column_names)
+    os.remove('td.txt')
     
+    #reorder input data according to column names
     input_data = data[column_names]
     
-    print('!!!!input_data!!!!!!!')
-    print(input_data)
     # step 2: prediction
     predicted = predict_xr(
         model,

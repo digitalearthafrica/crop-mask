@@ -56,7 +56,7 @@ class PredGMS2(StatsPluginInterface):
         
         # run predictions
         predicted = predict_with_model(
-            model=model, data=pred_input_data, chunk_size={}, urls=self.urls["td"]
+            model=model, data=pred_input_data, chunk_size={}, td_url=self.urls["td"]
         )
 
         # rechunk on the way out
