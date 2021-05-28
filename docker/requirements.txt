@@ -1,8 +1,11 @@
 --extra-index-url="https://packages.dea.ga.gov.au"
 git+https://github.com/digitalearthafrica/deafrica-sandbox-notebooks.git@minty-fresh-sandbox#subdirectory=Tools
-
 datacube[performance,s3]==1.8.4.dev81+g80d466a2
-odc-stats
-# For user convenience
-awscli
-rio-cogeo
+click<8.0.0
+morecantile==1.2.0
+odc_stats
+aiobotocore[boto3,awscli]==1.0.7
+pyyaml==5.3.1
+botocore==1.15.32
+s3transfer==0.3.7
+boto3==1.12.30
