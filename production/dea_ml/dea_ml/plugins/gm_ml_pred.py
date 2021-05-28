@@ -26,13 +26,11 @@ class PredGMS2(StatsPluginInterface):
         self,
         urls: Dict[str, Any],
         rename_dict: Dict[str, str],
-        training_features: List[str],
         bands: Optional[Tuple] = None,
     ):
         # target band to be saved
         self.urls = urls
         self.rename_dict = rename_dict
-        self.training_features = training_features
         self.bands = bands if bands else ("mask", "prob", "filtered")
 
     @property
@@ -58,7 +56,7 @@ class PredGMS2(StatsPluginInterface):
         
         # run predictions
         predicted = predict_with_model(
-            self.training_features, model, pred_input_data, {}, self.urls["td"]
+            model=model, data=pred_input_data, chunk_size={}, urls=self.urls["td"]
         )
 
         # rechunk on the way out

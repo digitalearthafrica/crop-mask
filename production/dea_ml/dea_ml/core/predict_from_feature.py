@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+import requests
 import math
 import os
 import os.path as osp
@@ -47,23 +48,27 @@ def get_max_cpu() -> int:
 
 
 def predict_with_model(
-    training_features: List[str],
     model,
-    data: xr.Dataset,
-    chunk_size: Dict = None
-    urls: Dict[Any, Any],
+    data,
+    chunk_size,
+    urls
 ) -> xr.Dataset:
     """
     run the prediction here
     """
     # step 1: select features
 
-    # load the column_names to ensure
+    # load the column_names from the
+    # training data file to ensure
     # the bands are in the right order
-    with open(urls['td'], 'r') as file:
-        header = file.readline()
     
+    with requests.get(urls['td']) as response:
+        file = response.text
+        header = file.readline()
+    print('header time')
+    print(header)
     column_names = header.split()[1:][1:]
+    print(column_names)
     
     input_data = data[column_names]
     
