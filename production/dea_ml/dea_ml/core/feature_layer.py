@@ -10,6 +10,7 @@ from odc.algo.io import load_with_native_transform
 from odc.stats.model import Task
 from pyproj import Proj, transform
 
+
 def get_xy_from_task(taskstr: str) -> Tuple[int, int]:
     """
     extract the x y from task string
@@ -55,7 +56,7 @@ def add_chirps(
         chirps = rio_slurp_xarray(urls["chirps"][0])
     if era == "_S2":
         chirps = rio_slurp_xarray(urls["chirps"][1])
-    
+
     if chirps.size >= 2:
         if training:
             chirps = xr_reproject(chirps, ds.geobox, "bilinear")
@@ -144,7 +145,7 @@ def gm_mads_two_seasons_prediction(
     but data is loaded internally, CHIRPS is reprojected differently,
     and dask chunks are used.
     """
-                  
+
     ds = load_with_native_transform(
         task.datasets,
         geobox=task.geobox,
@@ -153,12 +154,12 @@ def gm_mads_two_seasons_prediction(
         chunks=dask_chunks,
         resampling="bilinear",
     )
-    
+
     dss = {
         "S1": ds.isel(spec=0).drop(["spatial_ref", "spec"]),
         "S2": ds.isel(spec=1).drop(["spatial_ref", "spec"]),
     }
-    
+
     # create features
     epoch1 = common_ops(dss["S1"], era="_S1")
     epoch1 = add_chirps(

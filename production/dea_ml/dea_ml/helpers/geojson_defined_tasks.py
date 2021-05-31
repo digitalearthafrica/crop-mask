@@ -32,16 +32,13 @@ def gen_args():
     return parse.parse_args()
 
 
-def publish_task(
-    task_slices: Sequence[Tuple],
-    db_url: str = "s3://deafrica-data-dev-af/crop_mask_eastern/0-1-0/gm_s2_semiannual_all.db",
-    sqs: str = "deafrica-dev-eks-stats-geomedian-semiannual",
-):
+def publish_task(task_slices: Sequence[Tuple], db_url: str, sqs: str):
     """
     publish the task_df index onto SQS defined
     odc-stats publish-tasks s3://deafrica-data-dev-af/crop_mask_eastern/0-1-0/gm_s2_semiannual_all.db \
     deafrica-dev-eks-stats-geomedian-semiannual 4005:4010
     """
+    assert all([db_url, sqs]), "must have all required arguments, db_url, sqs"
     template = ["odc-stats", "publish-tasks", db_url, sqs]
     for start, end in task_slices:
         cmd = template.copy()
@@ -53,8 +50,10 @@ def publish_task(
 
 def gen_slices(task_df: pd.DataFrame) -> Sequence[Tuple]:
     tasks_slices = []
-    start: int = task_df["Index"][0]
-    for cur, next in zip(task_df["Index"][:-1], task_df["Index"][1:]):
+    # sorted the indices first, then extract related indices
+    indices = sorted(task_df["Index"])
+    start: int = indices[0]
+    for cur, next in zip(indices[:-1], indices[1:]):
         if next - cur > 1:
             tasks_slices.append((start, cur + 1))
             start = next
@@ -90,7 +89,7 @@ def main():
     print("Generated tasks from geojson.")
     if args.publish:
         tasks_slices = gen_slices(output_df)
-        publish_task(tasks_slices)
+        publish_task(tasks_slices, args.db, args.sqs)
 
 
 if __name__ == "__main__":

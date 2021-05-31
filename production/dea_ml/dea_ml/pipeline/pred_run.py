@@ -3,9 +3,9 @@ import logging
 import sys
 
 import click
+from dea_ml.pipeline.proc import CMTaskRunner
 from odc.stats._cli_common import main, setup_logging, click_resolution
 from odc.stats.model import TaskRunnerConfig
-from dea_ml.pipeline.proc import CMTaskRunner
 
 
 # Todo: upgrade this into fsspec link can access git raw file.
