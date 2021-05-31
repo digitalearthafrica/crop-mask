@@ -1,6 +1,6 @@
-from dea_ml.helpers.geojson_defined_tasks import gen_slices
-import pytest
 import pandas as pd
+import pytest
+from dea_ml.helpers.geojson_defined_tasks import gen_slices
 
 
 @pytest.fixture
