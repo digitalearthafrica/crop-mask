@@ -40,7 +40,10 @@ setup_kwargs = {
         "joblib",
         "dask_ml",
         "fsspec",
-        "rsgislib"
+        "requests",
+        "aiohttp",
+        "s3fs"
+        # "rsgislib" ## use conda to install
     ],
 }
 
