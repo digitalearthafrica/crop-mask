@@ -10,4 +10,5 @@ def github_config_path():
 def test_parse_remote_config_file(github_config_path):
     result = parse_yaml_file_or_inline(github_config_path)
     assert isinstance(result, dict)
-    assert {"chirps_paths", "model_path", "url_slope"}.issubset(set(result.keys()))
+    assert {"rename_dict", "urls"}.issubset(set(result.keys()))
+    assert {"slope", "model", "chirps"}.issubset(result["urls"])

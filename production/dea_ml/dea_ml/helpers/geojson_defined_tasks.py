@@ -53,8 +53,10 @@ def publish_task(
 
 def gen_slices(task_df: pd.DataFrame) -> Sequence[Tuple]:
     tasks_slices = []
-    start: int = task_df["Index"][0]
-    for cur, next in zip(task_df["Index"][:-1], task_df["Index"][1:]):
+    # sorted the indices first, then extract related indices
+    indices = sorted(task_df["Index"])
+    start: int = indices[0]
+    for cur, next in zip(indices[:-1], indices[1:]):
         if next - cur > 1:
             tasks_slices.append((start, cur + 1))
             start = next
