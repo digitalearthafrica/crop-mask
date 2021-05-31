@@ -40,7 +40,8 @@ setup_kwargs = {
         "joblib",
         "dask_ml",
         "fsspec",
-        "rsgislib"
+        "rsgislib",
+        "gdal"
     ],
 }
 
