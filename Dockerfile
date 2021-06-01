@@ -4,15 +4,16 @@ ARG py_env_path=/env
 ENV LC_ALL=C.UTF-8
 
 # Install our Python requirements
-RUN mkdir -p /conf
-COPY docker/requirements.txt docker/constraints.txt docker/version.txt /conf/
+COPY docker/requirements.txt docker/version.txt /conf/
+
 RUN cat /conf/version.txt && \
-  env-build-tool new /conf/requirements.txt ${py_env_path} /wheels \
-  && rm -rf /root/.cache/pip
+  env-build-tool new /conf/requirements.txt ${py_env_path}
 
+RUN /env/bin/pip install --upgrade --extra-index-url="https://packages.dea.ga.gov.au" rsgislib
+
+# Install the crop mask tools
 ADD production/dea_ml /tmp/dea_ml
-
-RUN pip install -c /conf/constraints.txt \
+RUN /env/bin/pip install \
   --extra-index-url="https://packages.dea.ga.gov.au" /tmp/dea_ml && \
   rm -rf /tmp/dea_ml
 
@@ -37,4 +38,4 @@ WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
 
 RUN env && echo $PATH && pip freeze && pip check
-RUN odc-stats --help
+RUN cm-pred --help
