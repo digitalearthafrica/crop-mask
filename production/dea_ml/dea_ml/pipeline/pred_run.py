@@ -8,7 +8,6 @@ from odc.stats._cli_common import main, setup_logging, click_resolution
 from odc.stats.model import TaskRunnerConfig
 
 
-# Todo: upgrade this into fsspec link can access git raw file.
 def click_yaml_cfg(*args, **kw):
     """
     @click_yaml_cfg("--custom-flag", help="Whatever help")
@@ -52,7 +51,9 @@ def click_yaml_cfg(*args, **kw):
     default=None,
     help="Mark outputs for public access (default: no)",
 )
-@click.option("--location", type=str, help="Output location prefix as a uri: s3://bucket/path/")
+@click.option(
+    "--location", type=str, help="Output location prefix as a uri: s3://bucket/path/"
+)
 @click.option("--max-processing-time", type=int, help="Max seconds per task")
 @click.option("--from-sqs", type=str, help="Read tasks from SQS", default="")
 @click_yaml_cfg("--config", help="Runner Config")
@@ -61,7 +62,9 @@ def click_yaml_cfg(*args, **kw):
     type=str,
     help="Which stats plugin to run",
 )
-@click_yaml_cfg("--plugin-config", help="Config for plugin in yaml format, file or text")
+@click_yaml_cfg(
+    "--plugin-config", help="Config for plugin in yaml format, file or text"
+)
 @click_yaml_cfg("--cog-config", help="Configure COG options")
 @click.option("--resampling", type=str, help="Input resampling strategy, e.g. average")
 @click_resolution("--resolution", help="Override output resolution")
@@ -195,7 +198,9 @@ def run(
 
         _log.info(f"T:{total:,d}, OK:{finished:,d}, S:{skipped:,d}, E:{errored:,d}")
 
-    _log.info(f"Completed processing {total:,d} tasks, OK:{finished:,d}, S:{skipped:,d}, E:{errored:,d}")
+    _log.info(
+        f"Completed processing {total:,d} tasks, OK:{finished:,d}, S:{skipped:,d}, E:{errored:,d}"
+    )
 
     _log.info("Shutting down Dask cluster")
     del runner
