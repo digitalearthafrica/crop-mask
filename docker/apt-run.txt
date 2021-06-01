@@ -6,3 +6,7 @@ tmux
 wget
 curl
 nano
+vim
+libboost-system1.65.1
+libboost-filesystem1.65.1
+libboost-date-time1.65.1

@@ -1,4 +1,3 @@
----
 plugin: pred-gm-s2
 max_processing_time: 3600
 job_queue_max_lease: 900

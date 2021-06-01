@@ -8,7 +8,6 @@ from odc.stats._cli_common import main, setup_logging, click_resolution
 from odc.stats.model import TaskRunnerConfig
 
 
-# Todo: upgrade this into fsspec link can access git raw file.
 def click_yaml_cfg(*args, **kw):
     """
     @click_yaml_cfg("--custom-flag", help="Whatever help")
