@@ -46,7 +46,7 @@ setup_kwargs = {
         "rasterstats",
         "aiohttp",
         "s3fs",
-        "rsgislib"
+        "rsgislib",
     ],
 }
 

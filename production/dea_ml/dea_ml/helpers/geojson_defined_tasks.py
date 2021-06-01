@@ -73,7 +73,9 @@ def main():
     with fsspec.open(args.geojson) as fhin:
         data = json.load(fhin)
 
-    geom = Geometry(data["features"][0]["geometry"], crs=data["crs"]["properties"]["name"])
+    geom = Geometry(
+        data["features"][0]["geometry"], crs=data["crs"]["properties"]["name"]
+    )
     africa10 = GRIDS["africa_10"]
 
     task_df = pd.read_csv(args.task_csv)

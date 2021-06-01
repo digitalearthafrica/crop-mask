@@ -34,7 +34,9 @@ def image_segmentation(ndvi, predict):
     segmented_kea_file = "Eastern_tile_segmented.kea"
 
     # convert tiff to kea
-    gdal.Translate(destName=kea_file, srcDS=tiff_to_segment, format="KEA", outputSRS="EPSG:6933")
+    gdal.Translate(
+        destName=kea_file, srcDS=tiff_to_segment, format="KEA", outputSRS="EPSG:6933"
+    )
 
     # run image seg
     with HiddenPrints():
@@ -52,7 +54,9 @@ def image_segmentation(ndvi, predict):
     # calculate mode
     count, _sum = _stats(predict, labels=segments, index=segments)
     mode = _sum > (count / 2)
-    mode = xr.DataArray(mode, coords=predict.coords, dims=predict.dims, attrs=predict.attrs)
+    mode = xr.DataArray(
+        mode, coords=predict.coords, dims=predict.dims, attrs=predict.attrs
+    )
 
     # remove the tmp folder
     shutil.rmtree(tmp)
@@ -63,7 +67,9 @@ def image_segmentation(ndvi, predict):
     return mode.chunk({})
 
 
-def post_processing(predicted: xr.Dataset, urls: Dict[str, Any]) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
+def post_processing(
+    predicted: xr.Dataset, urls: Dict[str, Any]
+) -> Tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     """
     Run the delayed post_processing functions, then create a lazy
     xr.Dataset to satisfy odc-stats
@@ -83,7 +89,9 @@ def post_processing(predicted: xr.Dataset, urls: Dict[str, Any]) -> Tuple[xr.Dat
     filtered = image_segmentation(ndvi, predict)
 
     # convert delayed object to dask array
-    filtered = dask.array.from_delayed(filtered.squeeze(), shape=predict.shape, dtype=np.uint8)
+    filtered = dask.array.from_delayed(
+        filtered.squeeze(), shape=predict.shape, dtype=np.uint8
+    )
 
     # convert dask array to xr.Datarray
     filtered = xr.DataArray(filtered, coords=predict.coords, attrs=predict.attrs)
@@ -107,7 +115,9 @@ def post_processing(predicted: xr.Dataset, urls: Dict[str, Any]) -> Tuple[xr.Dat
     ds = ds.where(~wdpa, 0)
 
     # mask with WOFS
-    wofs = dc.load(product="ga_ls8c_wofs_2_summary", like=predicted.geobox, dask_chunks={})
+    wofs = dc.load(
+        product="ga_ls8c_wofs_2_summary", like=predicted.geobox, dask_chunks={}
+    )
     wofs = wofs.frequency > 0.2  # threshold
     ds = ds.where(~wofs, 0)
 

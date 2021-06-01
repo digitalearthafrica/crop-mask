@@ -73,9 +73,13 @@ class CMTaskRunner(TaskRunner):
                 if cfg.heartbeat_filepath is not None:
                     self._register_heartbeat(cfg.heartbeat_filepath)
                 if tk:
-                    tk.extend_if_needed(cfg.job_queue_max_lease, cfg.renew_safety_margin)
+                    tk.extend_if_needed(
+                        cfg.job_queue_max_lease, cfg.renew_safety_margin
+                    )
                 if cfg.max_processing_time > 0 and dt > cfg.max_processing_time:
-                    _log.error(f"Task {task.location} failed to finish on time: {dt}>{cfg.max_processing_time}")
+                    _log.error(
+                        f"Task {task.location} failed to finish on time: {dt}>{cfg.max_processing_time}"
+                    )
                     cancelled = True
                     cog.cancel()
                     break

@@ -82,7 +82,9 @@ def add_chirps(
                 y_slice = list(np.arange(ymin - 0.05, ymax + 0.05, 0.05))
 
             # index global chirps using buffered s2 tile bbox
-            chirps = assign_crs(chirps.sel(longitude=y_slice, latitude=x_slice, method="nearest"))
+            chirps = assign_crs(
+                chirps.sel(longitude=y_slice, latitude=x_slice, method="nearest")
+            )
             # fill any NaNs in CHIRPS with local (s2-tile bbox) mean
             chirps = chirps.fillna(chirps.mean())
             chirps = xr_reproject(chirps, ds.geobox, "bilinear")
@@ -160,10 +162,14 @@ def gm_mads_two_seasons_prediction(
 
     # create features
     epoch1 = common_ops(dss["S1"], era="_S1")
-    epoch1 = add_chirps(urls, epoch1, era="_S1", training=False, dask_chunks=dask_chunks)
+    epoch1 = add_chirps(
+        urls, epoch1, era="_S1", training=False, dask_chunks=dask_chunks
+    )
 
     epoch2 = common_ops(dss["S2"], era="_S2")
-    epoch2 = add_chirps(urls, epoch2, era="_S2", training=False, dask_chunks=dask_chunks)
+    epoch2 = add_chirps(
+        urls, epoch2, era="_S2", training=False, dask_chunks=dask_chunks
+    )
     if (not epoch1) or (not epoch2):
         return None
     # add slope
