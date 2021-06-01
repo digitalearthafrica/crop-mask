@@ -2,8 +2,8 @@ import os
 import shutil
 from typing import Tuple, Dict, Any
 
-import gdal
 import dask
+import gdal
 import geopandas as gpd
 import numpy as np
 import xarray as xr
@@ -19,7 +19,6 @@ from scipy.ndimage.measurements import _stats
 
 @dask.delayed
 def image_segmentation(ndvi, predict):
-
     write_cog(ndvi.to_array().compute(), "Eastern_tile_NDVI.tif", overwrite=True)
 
     # store temp files somewhere

@@ -1,7 +1,7 @@
 import os.path as osp
 from io import BytesIO
 from pathlib import Path
-from typing import Tuple, Dict, Any, Optional, Union
+from typing import Dict, Any, Optional, Union
 
 import boto3
 import fsspec
