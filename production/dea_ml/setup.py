@@ -45,8 +45,8 @@ setup_kwargs = {
         "requests",
         "rasterstats",
         "aiohttp",
-        "s3fs"
-        # "rsgislib" ## use conda to install
+        "s3fs",
+        "rsgislib"
     ],
 }
 
