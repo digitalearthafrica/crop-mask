@@ -15,6 +15,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Lint code
+      uses: RojerGS/python-black-check@v1.2
+      with:
+        line-length: '120'
+        path: '.'
+        include: 'production/dea_ml'
+
     - name: Build crop-mask image
       timeout-minutes: 20
       shell: bash
