@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'docker/**'
-      - '.github/workflows/cropmask-*'
+      - 'docker/version.txt'
+      - '.github/workflows/cropmask-push.yml'
 
 env:
   IMAGE_NAME: digitalearthafrica/crop-mask

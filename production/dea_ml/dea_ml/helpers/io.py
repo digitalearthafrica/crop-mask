@@ -27,9 +27,7 @@ def download_file(url: str, local_filename: Optional[str] = None) -> str:
     :param local_filename:
     :return:
     """
-    local_filename = (
-        local_filename if local_filename else osp.join("/tmp", url.split("/")[-1])
-    )
+    local_filename = local_filename if local_filename else osp.join("/tmp", url.split("/")[-1])
     # NOTE the stream=True parameter below
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
@@ -51,9 +49,9 @@ def read_joblib(path):
         s3_bucket, s3_key = path.split("/")[2], path.split("/")[3:]
         s3_key = "/".join(s3_key)
         with BytesIO() as f:
-            boto3.client(
-                "s3", config=Config(signature_version=UNSIGNED)
-            ).download_fileobj(Bucket=s3_bucket, Key=s3_key, Fileobj=f)
+            boto3.client("s3", config=Config(signature_version=UNSIGNED)).download_fileobj(
+                Bucket=s3_bucket, Key=s3_key, Fileobj=f
+            )
             f.seek(0)
             return joblib.load(f)
     elif path.startswith("https://"):

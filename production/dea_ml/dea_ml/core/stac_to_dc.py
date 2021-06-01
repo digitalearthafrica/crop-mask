@@ -79,9 +79,7 @@ class StacIntoDc:
         Stac transformed
         """
         if not ds_type:
-            ds_type = dict((d.name, d) for d in dc.index.datasets.types.get_all())[
-                product_name
-            ]
+            ds_type = dict((d.name, d) for d in dc.index.datasets.types.get_all())[product_name]
         return Dataset(ds_type, transform(rendered))
 
     @staticmethod
@@ -107,16 +105,12 @@ class StacIntoDc:
         properties: Dict[str, Any] = deepcopy(product.properties)
         properties["dtr:start_datetime"] = format_datetime(time_range.start)
         properties["dtr:end_datetime"] = format_datetime(time_range.end)
-        properties["odc:processing_datetime"] = format_datetime(
-            processing_dt, timespec="seconds"
-        )
+        properties["odc:processing_datetime"] = format_datetime(processing_dt, timespec="seconds")
         properties["odc:region_code"] = region_code
         properties["odc:lineage"] = dict(inputs=inputs)
         properties["odc:product"] = product.name
 
-        geobox_wgs84 = geobox.extent.to_crs(
-            "epsg:4326", resolution=math.inf, wrapdateline=True
-        )
+        geobox_wgs84 = geobox.extent.to_crs("epsg:4326", resolution=math.inf, wrapdateline=True)
         bbox = geobox_wgs84.boundingbox
 
         item = pystac.Item(

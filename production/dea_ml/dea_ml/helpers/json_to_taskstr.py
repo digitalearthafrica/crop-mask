@@ -25,9 +25,7 @@ def extract_taskstr_from_geojson(time_range: str, geojson: Dict) -> List[str]:
     for feat in geojson["features"]:
         x, y = feat["properties"]["title"].split(",")
         # xy_str = "{:s}/{:+}/{:+}".format(time_range, int(x), int(y))
-        xy_str = "x{x:+04d}/y{y:+04d}/{time_range:s}".format(
-            time_range=time_range, x=int(x), y=int(y)
-        )
+        xy_str = "x{x:+04d}/y{y:+04d}/{time_range:s}".format(time_range=time_range, x=int(x), y=int(y))
         taskstr_set.add(xy_str)
     return sorted(taskstr_set)
 

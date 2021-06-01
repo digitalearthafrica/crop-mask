@@ -37,9 +37,7 @@ import gdal
 
 
 def Usage():
-    print(
-        "Usage: validate_cloud_optimized_geotiff.py [-q] [--full-check=yes/no/auto] test.tif"
-    )
+    print("Usage: validate_cloud_optimized_geotiff.py [-q] [--full-check=yes/no/auto] test.tif")
     print("")
     print("Options:")
     print("-q: quiet mode")
@@ -69,9 +67,7 @@ def full_check_band(  # noqa pylint: disable=too-many-branches
         mask_band = band.GetMaskBand()
         mask_block_size = mask_band.GetBlockSize()
         if block_size != mask_block_size:
-            errors += [
-                band_name + ": mask block size is different from its imagery band"
-            ]
+            errors += [band_name + ": mask block size is different from its imagery band"]
             mask_band = None
 
     yblocks = (band.YSize + block_size[1] - 1) // block_size[1]
@@ -87,11 +83,7 @@ def full_check_band(  # noqa pylint: disable=too-many-branches
 
             if offset > 0:
                 if block_order_row_major and offset < last_offset:
-                    errors += [
-                        band_name
-                        + ": offset of block (%d, %d) is smaller than previous block"
-                        % (x, y)
-                    ]
+                    errors += [band_name + ": offset of block (%d, %d) is smaller than previous block" % (x, y)]
 
                 if block_leader_size_as_uint4:
                     gdal.VSIFSeekL(f, offset - 4, 0)
@@ -108,16 +100,10 @@ def full_check_band(  # noqa pylint: disable=too-many-branches
                         gdal.VSIFSeekL(f, offset + bytecount - 4, 0)
                         last_bytes = gdal.VSIFReadL(8, 1, f)
                         if last_bytes[0:4] != last_bytes[4:8]:
-                            errors += [
-                                band_name
-                                + ": for block (%d, %d), trailer bytes are invalid"
-                                % (x, y)
-                            ]
+                            errors += [band_name + ": for block (%d, %d), trailer bytes are invalid" % (x, y)]
 
             if mask_band:
-                offset_mask = mask_band.GetMetadataItem(
-                    "BLOCK_OFFSET_%d_%d" % (x, y), "TIFF"
-                )
+                offset_mask = mask_band.GetMetadataItem("BLOCK_OFFSET_%d_%d" % (x, y), "TIFF")
                 offset_mask = int(offset_mask) if offset_mask is not None else 0
                 if offset > 0 and offset_mask > 0:
                     # bytecount_mask = int(mask_band.GetMetadataItem('BLOCK_SIZE_%d_%d' % (x,y), 'TIFF'))
@@ -139,8 +125,7 @@ def full_check_band(  # noqa pylint: disable=too-many-branches
                         errors += [
                             "Mask of "
                             + band_name
-                            + ": offset of block (%d, %d) is smaller than previous block"
-                            % (x, y)
+                            + ": offset of block (%d, %d) is smaller than previous block" % (x, y)
                         ]
 
                     offset = offset_mask
@@ -148,9 +133,7 @@ def full_check_band(  # noqa pylint: disable=too-many-branches
             last_offset = offset
 
 
-def validate(  # noqa pylint: disable=too-many-branches
-    ds, check_tiled=True, full_check=False
-):
+def validate(ds, check_tiled=True, full_check=False):  # noqa pylint: disable=too-many-branches
     """Check if a file is a (Geo)TIFF with cloud optimized compatible structure.
 
     Args:
@@ -177,9 +160,7 @@ def validate(  # noqa pylint: disable=too-many-branches
         ds = gdal.Open(ds)
         gdal.PopErrorHandler()
         if ds is None:
-            raise ValidateCloudOptimizedGeoTIFFException(
-                "Invalid file : %s" % gdal.GetLastErrorMsg()
-            )
+            raise ValidateCloudOptimizedGeoTIFFException("Invalid file : %s" % gdal.GetLastErrorMsg())
         if ds.GetDriver().ShortName != "GTiff":
             raise ValidateCloudOptimizedGeoTIFFException("The file is not a GeoTIFF")
 
@@ -200,10 +181,7 @@ def validate(  # noqa pylint: disable=too-many-branches
                 errors += ["The file is greater than 512xH or Wx512, but is not tiled"]
 
         if ovr_count == 0:
-            warnings += [
-                "The file is greater than 512xH or Wx512, it is recommended "
-                "to include internal overviews"
-            ]
+            warnings += ["The file is greater than 512xH or Wx512, it is recommended " "to include internal overviews"]
 
     ifd_offset = int(main_band.GetMetadataItem("IFD_OFFSET", "TIFF"))
     ifd_offsets = [ifd_offset]
@@ -228,32 +206,21 @@ def validate(  # noqa pylint: disable=too-many-branches
         gdal.VSIFSeekL(f, expected_ifd_pos, 0)
         pattern = "GDAL_STRUCTURAL_METADATA_SIZE=%06d bytes\n" % 0
         got = gdal.VSIFReadL(len(pattern), 1, f).decode("LATIN1")
-        if len(got) == len(pattern) and got.startswith(
-            "GDAL_STRUCTURAL_METADATA_SIZE="
-        ):
+        if len(got) == len(pattern) and got.startswith("GDAL_STRUCTURAL_METADATA_SIZE="):
             size = int(got[len("GDAL_STRUCTURAL_METADATA_SIZE=") :][0:6])
             extra_md = gdal.VSIFReadL(size, 1, f).decode("LATIN1")
             block_order_row_major = "BLOCK_ORDER=ROW_MAJOR" in extra_md
             block_leader_size_as_uint4 = "BLOCK_LEADER=SIZE_AS_UINT4" in extra_md
-            block_trailer_last_4_bytes_repeated = (
-                "BLOCK_TRAILER=LAST_4_BYTES_REPEATED" in extra_md
-            )
-            mask_interleaved_with_imagery = (
-                "MASK_INTERLEAVED_WITH_IMAGERY=YES" in extra_md
-            )
+            block_trailer_last_4_bytes_repeated = "BLOCK_TRAILER=LAST_4_BYTES_REPEATED" in extra_md
+            mask_interleaved_with_imagery = "MASK_INTERLEAVED_WITH_IMAGERY=YES" in extra_md
             if "KNOWN_INCOMPATIBLE_EDITION=YES" in extra_md:
                 errors += ["KNOWN_INCOMPATIBLE_EDITION=YES is declared in the file"]
             expected_ifd_pos += len(pattern) + size
-            expected_ifd_pos += (
-                expected_ifd_pos % 2
-            )  # IFD offset starts on a 2-byte boundary
+            expected_ifd_pos += expected_ifd_pos % 2  # IFD offset starts on a 2-byte boundary
         gdal.VSIFCloseL(f)
 
         if expected_ifd_pos != ifd_offsets[0]:
-            errors += [
-                "The offset of the main IFD should be %d. It is %d instead"
-                % (expected_ifd_pos, ifd_offsets[0])
-            ]
+            errors += ["The offset of the main IFD should be %d. It is %d instead" % (expected_ifd_pos, ifd_offsets[0])]
 
     details["ifd_offsets"] = {}
     details["ifd_offsets"]["main"] = ifd_offset
@@ -266,14 +233,8 @@ def validate(  # noqa pylint: disable=too-many-branches
                 errors += ["First overview has larger dimension than main band"]
         else:
             prev_ovr_band = ds.GetRasterBand(1).GetOverview(i - 1)
-            if (
-                ovr_band.XSize > prev_ovr_band.XSize
-                or ovr_band.YSize > prev_ovr_band.YSize
-            ):
-                errors += [
-                    "Overview of index %d has larger dimension than "
-                    "overview of index %d" % (i, i - 1)
-                ]
+            if ovr_band.XSize > prev_ovr_band.XSize or ovr_band.YSize > prev_ovr_band.YSize:
+                errors += ["Overview of index %d has larger dimension than " "overview of index %d" % (i, i - 1)]
 
         if check_tiled:
             block_size = ovr_band.GetBlockSize()
@@ -306,9 +267,7 @@ def validate(  # noqa pylint: disable=too-many-branches
         blockxsize, blockysize = band.GetBlockSize()
         for y in range(int((band.YSize + blockysize - 1) / blockysize)):
             for x in range(int((band.XSize + blockxsize - 1) / blockxsize)):
-                block_offset = band.GetMetadataItem(
-                    "BLOCK_OFFSET_%d_%d" % (x, y), "TIFF"
-                )
+                block_offset = band.GetMetadataItem("BLOCK_OFFSET_%d_%d" % (x, y), "TIFF")
                 if block_offset:
                     return int(block_offset)
         return 0
@@ -325,25 +284,16 @@ def validate(  # noqa pylint: disable=too-many-branches
 
     if data_offsets[-1] != 0 and data_offsets[-1] < ifd_offsets[-1]:
         if ovr_count > 0:
-            errors += [
-                "The offset of the first block of the smallest overview "
-                "should be after its IFD"
-            ]
+            errors += ["The offset of the first block of the smallest overview " "should be after its IFD"]
         else:
-            errors += [
-                "The offset of the first block of the image should be after its IFD"
-            ]
+            errors += ["The offset of the first block of the image should be after its IFD"]
     for i in range(len(data_offsets) - 2, 0, -1):
         if data_offsets[i] != 0 and data_offsets[i] < data_offsets[i + 1]:
             errors += [
                 "The offset of the first block of overview of index %d should "
                 "be after the one of the overview of index %d" % (i - 1, i)
             ]
-    if (
-        len(data_offsets) >= 2
-        and data_offsets[0] != 0
-        and data_offsets[0] < data_offsets[1]
-    ):
+    if len(data_offsets) >= 2 and data_offsets[0] != 0 and data_offsets[0] < data_offsets[1]:
         errors += [
             "The offset of the first block of the main resolution image "
             "should be after the one of the overview of index %d" % (ovr_count - 1)
@@ -369,10 +319,7 @@ def validate(  # noqa pylint: disable=too-many-branches
             block_trailer_last_4_bytes_repeated,
             mask_interleaved_with_imagery,
         )
-        if (
-            main_band.GetMaskFlags() == gdal.GMF_PER_DATASET
-            and (filename + ".msk") not in ds.GetFileList()
-        ):
+        if main_band.GetMaskFlags() == gdal.GMF_PER_DATASET and (filename + ".msk") not in ds.GetFileList():
             full_check_band(
                 f,
                 "Mask band of main resolution image",
@@ -395,10 +342,7 @@ def validate(  # noqa pylint: disable=too-many-branches
                 block_trailer_last_4_bytes_repeated,
                 mask_interleaved_with_imagery,
             )
-            if (
-                ovr_band.GetMaskFlags() == gdal.GMF_PER_DATASET
-                and (filename + ".msk") not in ds.GetFileList()
-            ):
+            if ovr_band.GetMaskFlags() == gdal.GMF_PER_DATASET and (filename + ".msk") not in ds.GetFileList():
                 full_check_band(
                     f,
                     "Mask band of overview %d" % i,
@@ -467,9 +411,7 @@ def main(argv):  # noqa pylint: disable=too-many-branches
                 print("%s is a valid cloud optimized GeoTIFF" % filename)
 
         if not quiet and not warnings and not errors:
-            headers_size = min(
-                details["data_offsets"][k] for k in details["data_offsets"]
-            )
+            headers_size = min(details["data_offsets"][k] for k in details["data_offsets"])
             if headers_size == 0:
                 headers_size = gdal.VSIStatL(filename).size
             print("\nThe size of all IFD headers is %d bytes" % headers_size)

@@ -7,6 +7,7 @@ on:
     paths:
       - 'docker/**'
       - '.github/workflows/cropmask-*'
+      - 'production/dea_ml'
 
 jobs:
   test:
@@ -14,6 +15,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Check files using the black formatter
+      uses: lgeiger/black-action@master
+      with:
+        args: "production/dea_ml --check"
+
+    - name: Annotate diff changes using reviewdog
+      if: ${{ failure() }}
+      uses: reviewdog/action-suggester@v1
+      with:
+        tool_name: blackfmt
 
     - name: Build crop-mask image
       timeout-minutes: 20
