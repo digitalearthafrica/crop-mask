@@ -41,7 +41,9 @@ setup_kwargs = {
         "dask_ml",
         "fsspec",
         "rsgislib",
-        "gdal"
+        "gdal",
+        "requests",
+        "rasterstats"
     ],
 }
 
