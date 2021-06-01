@@ -66,9 +66,7 @@ class PredGMS2(StatsPluginInterface):
         model = read_joblib(self.urls["model"])
 
         # run predictions
-        predicted = predict_with_model(
-            model=model, data=pred_input_data, chunk_size={}, td_url=self.urls["td"]
-        )
+        predicted = predict_with_model(model=model, data=pred_input_data, chunk_size={}, td_url=self.urls["td"])
 
         # rechunk on the way out
         return predicted.chunk({"x": -1, "y": -1})

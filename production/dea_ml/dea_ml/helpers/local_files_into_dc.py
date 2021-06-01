@@ -25,9 +25,7 @@ def get_xy(part: str) -> Tuple[int, int]:
 
 def fetch_stac_json_files(data_folder: str) -> List[Tuple[str, List]]:
     return [
-        (fld, data_files)
-        for fld, subfld, data_files in os.walk(data_folder)
-        if not subfld and (".ipynb" not in fld)
+        (fld, data_files) for fld, subfld, data_files in os.walk(data_folder) if not subfld and (".ipynb" not in fld)
     ]
 
 
@@ -44,9 +42,7 @@ def collect_datasets(data_folder: str):
                 rendered = json.load(fhin)
 
             stac_doc = stac_transform(rendered)
-            metapath = list(
-                filter(lambda item: item["rel"] in "self", rendered["links"])
-            )[0]["href"]
+            metapath = list(filter(lambda item: item["rel"] in "self", rendered["links"]))[0]["href"]
             # TODO: if s3 access available use s3-to-dc directly
             yield list(from_metadata_stream([(metapath, stac_doc)], dc.index))[0][0]
 
