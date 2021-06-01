@@ -1,4 +1,5 @@
 libtiff-tools
+libgsl23
 git
 htop
 tmux
