@@ -19,7 +19,7 @@ jobs:
     - name: Check files using the black formatter
       uses: lgeiger/black-action@master
       with:
-        args: "production/dea_ml --check"
+        args: "production/dea_ml"
 
     - name: Annotate diff changes using reviewdog
       if: ${{ failure() }}
