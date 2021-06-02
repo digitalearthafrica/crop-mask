@@ -7,6 +7,10 @@ wget
 curl
 nano
 vim
+libcgal13
+libmuparser2v5
+libgsl23
 libboost-system1.65.1
 libboost-filesystem1.65.1
 libboost-date-time1.65.1
+build-essential
