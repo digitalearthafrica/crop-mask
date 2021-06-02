@@ -1,5 +1,5 @@
 --extra-index-url="https://packages.dea.ga.gov.au"
-git+https://github.com/digitalearthafrica/deafrica-sandbox-notebooks.git@minty-fresh-sandbox#subdirectory=Tools
+git+https://github.com/digitalearthafrica/deafrica-sandbox-notebooks.git#subdirectory=Tools
 datacube[performance,s3]==1.8.4.dev81+g80d466a2
 click<8.0.0
 morecantile==1.2.0
