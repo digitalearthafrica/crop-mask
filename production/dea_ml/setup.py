@@ -52,6 +52,7 @@ setup_kwargs = {
         "aiohttp",
         "s3fs",
         "rsgislib",
+        "partd",
     ],
 }
 
