@@ -26,7 +26,12 @@ setup_kwargs = {
     "packages": packages,
     "package_data": package_data,
     "python_requires": ">=3.6,<4.0",
-    "entry_points": {"console_scripts": ["cm-pred = dea_ml.pipeline.pred_run:main"]},
+    "entry_points": {
+        "console_scripts": [
+            "cm-pred = dea_ml.pipeline.pred_run:main",
+            "cm-tsk = dea_ml.helpers.geojson_defined_tasks:main",
+        ]
+    },
     "install_requires": [
         "datacube",
         "odc_index",
@@ -47,6 +52,7 @@ setup_kwargs = {
         "aiohttp",
         "s3fs",
         "rsgislib",
+        "partd",
     ],
 }
 
