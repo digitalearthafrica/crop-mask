@@ -21,13 +21,13 @@ class CMTaskRunner(TaskRunner):
 
     def _run(self, tasks: Iterable[Task]) -> Iterator[TaskResult]:
         cfg = self._cfg
+        client = self.client()
         sink = self.sink
         proc = self.proc
         check_exists = cfg.overwrite is False
         _log = self._log
 
         for task in tasks:
-            client = self.client()
             _log.info(f"Starting processing of {task.location}")
             tk = task.source
             if tk is not None:
@@ -99,6 +99,6 @@ class CMTaskRunner(TaskRunner):
                     tk.cancel()
 
             yield result
-            # TODO: why timeout here
-            del ds
-            del client
+            # TODO: why timeout here, client.restart(), client.cancel(ds)
+            # client.cancel(ds)
+            client.restart()
