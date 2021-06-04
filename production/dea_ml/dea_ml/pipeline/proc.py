@@ -10,7 +10,6 @@ import xarray as xr
 from odc.algo import wait_for_future
 from odc.stats.model import Task, TaskResult
 from odc.stats.proc import TaskRunner
-from dask.distributed import Client, LocalCluster
 
 Future = Any
 
@@ -22,6 +21,7 @@ class CMTaskRunner(TaskRunner):
 
     def _run(self, tasks: Iterable[Task]) -> Iterator[TaskResult]:
         cfg = self._cfg
+        client = self.client()
         sink = self.sink
         proc = self.proc
         check_exists = cfg.overwrite is False
@@ -29,8 +29,6 @@ class CMTaskRunner(TaskRunner):
 
         for task in tasks:
             _log.info(f"Starting processing of {task.location}")
-            cluster = LocalCluster(processes=False)
-            client = Client(cluster)
             tk = task.source
             if tk is not None:
                 t0 = tk.start_time
@@ -102,6 +100,3 @@ class CMTaskRunner(TaskRunner):
             if cfg.heartbeat_filepath is not None:
                 self._register_heartbeat(cfg.heartbeat_filepath)
             del ds
-            # TODO: why timeout here, client.restart(), client.cancel(ds)
-            client.shutdown()
-            cluster.close(timeout=cfg.job_queue_max_lease)

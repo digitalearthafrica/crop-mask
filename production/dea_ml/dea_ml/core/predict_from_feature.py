@@ -54,7 +54,7 @@ def predict_with_model(model, data, chunk_size, td_url) -> xr.Dataset:
     predicted = predict_xr(
         model,
         input_data,
-        chunk_size=chunk_size,
+        # chunk_size=chunk_size,
         clean=True,
         proba=True,
         return_input=True,
