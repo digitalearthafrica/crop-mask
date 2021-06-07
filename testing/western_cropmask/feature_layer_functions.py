@@ -38,7 +38,8 @@ def common_ops(ds, era):
 def add_chirps(ds,
                era,
                training=True,
-               dask_chunks={'x':-1, 'y':-1}):
+               dask_chunks={'x':-1, 'y':-1}
+              ):
    
     # load rainfall climatology
     if era == "_S1":
@@ -107,7 +108,9 @@ def gm_mads_two_seasons_training(ds):
     return result.astype(np.float32).squeeze()
 
 
-def gm_mads_two_seasons_prediction(geobox, dask_chunks):
+def gm_mads_two_seasons_prediction(geobox,
+                                   dask_chunks
+                                  ):
     """
     Feature layer function for production run of
     eastern crop-mask. Similar to the training function
