@@ -3,7 +3,7 @@ max_processing_time: 3600
 job_queue_max_lease: 900
 renew_safety_margin: 60
 future_poll_interval: 2
-s3_acl: bucket-ownder-full-control
+s3_acl: bucket-owner-full-control
 # Generic product attributes
 cog_opts:
   zlevel: 4
