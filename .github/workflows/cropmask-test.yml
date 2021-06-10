@@ -7,7 +7,7 @@ on:
     paths:
       - 'docker/**'
       - '.github/workflows/cropmask-*'
-      - 'production/dea_ml'
+      - 'production/dea_ml/**'
 
 jobs:
   test:
