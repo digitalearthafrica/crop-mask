@@ -85,7 +85,7 @@ def add_chirps(ds,
 
     return ds
 
-def gm_mads_two_seasons_training(ds):
+def gm_mads_two_seasons_training(query):
     
     #connect to the datacube
     dc = datacube.Datacube(app='feature_layers')
