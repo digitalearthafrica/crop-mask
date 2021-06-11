@@ -100,18 +100,21 @@ def add_chirps(
     return None
 
 
-def gm_mads_two_seasons_training(ds):
+def gm_mads_two_seasons_training(query):
+    
+    #connect to the datacube
+    dc = datacube.Datacube(app='feature_layers')
+    
+    #load S2 geomedian
+    ds = dc.load(product='gm_s2_semiannual',
+                 **query)
+    
     # load the data
-    dss = {"S1": ds.isel(time=0), "S2": ds.isel(time=1)}
-
-    # create features
-    epoch1 = common_ops(dss["S1"], era="_S1")
-    epoch1 = add_chirps(epoch1, era="_S1")
-    epoch2 = common_ops(dss["S2"], era="_S2")
-    epoch2 = add_chirps(epoch2, era="_S2")
+    dss = {"S1": ds.isel(time=0),
+           "S2": ds.isel(time=1)}
 
     # add slope
-    url_slope = "https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
+    url_slope = "https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif"
     slope = rio_slurp_xarray(url_slope, gbox=ds.geobox)
     slope = slope.to_dataset(name="slope")
 
