@@ -34,6 +34,10 @@ RUN apt-get update \
     && sed 's/#.*//' /tmp/apt-run.txt | xargs apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
+# Read configure from docker image folder
+COPY production /crop-mask/production
+COPY testing /crop-mask/testing
+
 WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
 
