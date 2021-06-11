@@ -137,7 +137,7 @@ def gm_mads_two_seasons_prediction(
     task: Task,
     measurements: List[str],
     urls: Dict[Any, Any],
-    dask_chunks: Dict[str, Any] = {},
+    dask_chunks: Dict[str, Any] = {"x": -1, "y": -1},
 ) -> Optional[xr.Dataset]:
     """
     Feature layer function for production run of

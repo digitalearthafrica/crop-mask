@@ -30,7 +30,7 @@ def get_max_cpu() -> int:
     return psutil.cpu_count()
 
 
-def predict_with_model(model, data, chunk_size, td_url) -> xr.Dataset:
+def predict_with_model(model, data, td_url) -> xr.Dataset:
     """
     run the prediction here
     """
@@ -54,7 +54,6 @@ def predict_with_model(model, data, chunk_size, td_url) -> xr.Dataset:
     predicted = predict_xr(
         model,
         input_data,
-        chunk_size=chunk_size,
         clean=True,
         proba=True,
         return_input=True,
