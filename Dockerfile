@@ -35,8 +35,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Read configure from docker image folder
-COPY production /crop-mask/production
-COPY testing /crop-mask/testing
+COPY testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_* /crop-mask/testing/eastern_cropmask/results/
+COPY testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_* /crop-mask/testing/eastern_cropmask/results/training_data/
+COPY testing/eastern_cropmask/data/Eastern.geojson /crop-mask/testing/eastern_cropmask/data/Eastern.geojson
+COPY production/dea_ml/dea_ml/config/plugin_product.yaml /crop-mask/production/dea_ml/dea_ml/config/plugin_product.yaml
+COPY production/dea_ml/dea_ml/config/ml_config.yaml /crop-mask/production/dea_ml/dea_ml/config/ml_config.yaml
 
 WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
