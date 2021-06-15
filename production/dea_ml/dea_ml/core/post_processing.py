@@ -45,7 +45,7 @@ def image_segmentation(ndvi, predict):
             outputClumps=segmented_kea_file,
             tmpath=tmp,
             numClusters=60,
-            minPxls=100,
+            minPxls=75,
         )
 
     # open segments
