@@ -36,13 +36,13 @@ RUN apt-get update \
 
 # Copy across region specific models, geojsons, and td
 #Eastern region:
-COPY testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib
-COPY testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_20210427.txt
-COPY testing/eastern_cropmask/data/Eastern.geojson /crop-mask/testing/eastern_cropmask/data/Eastern.geojson
+COPY testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib eastern/gm_mads_two_seasons_ml_model_20210427.joblib
+COPY testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_20210427.txt eastern/gm_mads_two_seasons_training_data_20210427.txt
+COPY testing/eastern_cropmask/data/Eastern.geojson /crop-mask/testing/eastern_cropmask/data/Eastern.geojson eastern/Eastern.geojson
 #Western region:
-COPY testing/western_cropmask/results/western_ml_model_20210609.joblib
-COPY testing/western_cropmask/results/training_data/western_training_data_20210609.txt
-COPY testing/western_cropmask/data/Western.geojson
+COPY testing/western_cropmask/results/western_ml_model_20210609.joblib western/western_ml_model_20210609.joblib
+COPY testing/western_cropmask/results/training_data/western_training_data_20210609.txt western/western_training_data_20210609.txt
+COPY testing/western_cropmask/data/Western.geojson western/Western.geojson
 
 WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
