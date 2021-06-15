@@ -34,12 +34,15 @@ RUN apt-get update \
     && sed 's/#.*//' /tmp/apt-run.txt | xargs apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
-# Read configure from docker image folder
-COPY testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib /crop-mask/testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib
-COPY testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_20210427.txt /crop-mask/testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_20210427.txt
+# Copy across region specific models, geojsons, and td
+#Eastern region:
+COPY testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib
+COPY testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_20210427.txt
 COPY testing/eastern_cropmask/data/Eastern.geojson /crop-mask/testing/eastern_cropmask/data/Eastern.geojson
-COPY production/dea_ml/dea_ml/config/plugin_product.yaml /crop-mask/production/dea_ml/dea_ml/config/plugin_product.yaml
-COPY production/dea_ml/dea_ml/config/ml_config.yaml /crop-mask/production/dea_ml/dea_ml/config/ml_config.yaml
+#Western region:
+COPY testing/western_cropmask/results/western_ml_model_20210609.joblib
+COPY testing/western_cropmask/results/training_data/western_training_data_20210609.txt
+COPY testing/western_cropmask/data/Western.geojson
 
 WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
