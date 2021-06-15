@@ -34,6 +34,11 @@ RUN apt-get update \
     && sed 's/#.*//' /tmp/apt-run.txt | xargs apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
+# Read configure from docker image folder
+COPY testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib /crop-mask/testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib
+COPY testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_20210427.txt /crop-mask/testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_20210427.txt
+COPY testing/eastern_cropmask/data/Eastern.geojson /crop-mask/testing/eastern_cropmask/data/Eastern.geojson
+
 WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
 
