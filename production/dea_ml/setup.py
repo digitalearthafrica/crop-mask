@@ -40,7 +40,6 @@ setup_kwargs = {
         "odc_aws",
         "odc_aio",
         "odc_stats",
-        "dataclasses; python_version<'3.7'",
         "pystac",
         "joblib",
         "dask_ml",

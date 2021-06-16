@@ -1,10 +1,11 @@
-FROM opendatacube/geobase:wheels-3.3.0 as env_builder
 ARG py_env_path=/env
+ARG V_BASE=3.3.0
 
+FROM opendatacube/geobase-builder:${V_BASE} as env_builder
 ENV LC_ALL=C.UTF-8
 
 # Install our Python requirements
-COPY docker/requirements.txt docker/version.txt /conf/
+COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
 
 RUN cat /conf/version.txt && \
   env-build-tool new /conf/requirements.txt ${py_env_path}
@@ -31,9 +32,11 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 
+RUN apt-get update \
+    && apt-get install software-properties-common -y \
+    && apt-get upgrade -y
 # Add in the dask configuration
 COPY docker/distributed.yaml /etc/dask/distributed.yaml
-
 ADD docker/apt-run.txt /tmp/
 RUN apt-get update \
     && sed 's/#.*//' /tmp/apt-run.txt | xargs apt-get install -y \
