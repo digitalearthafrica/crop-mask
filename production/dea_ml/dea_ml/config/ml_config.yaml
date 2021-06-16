@@ -1,12 +1,12 @@
 urls:
   slope: https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif
-  model: https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib?raw=true
+  model: /eastern/gm_mads_two_seasons_ml_model_20210427.joblib
   chirps:
     - s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.tif
     - s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif
   wdpa: s3://deafrica-input-datasets/protected_areas/WDPA_eastern.tif
-  aez: https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/data/Eastern.geojson?raw=true
-  td: https://github.com/digitalearthafrica/crop-mask/blob/main/testing/eastern_cropmask/results/training_data/gm_mads_two_seasons_training_data_20210427.txt?raw=true
+  aez: /eastern/Eastern.geojson
+  td: /eastern/gm_mads_two_seasons_training_data_20210427.txt
 
 rename_dict:
   B02: blue
