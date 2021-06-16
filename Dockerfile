@@ -1,4 +1,4 @@
-FROM opendatacube/geobase:wheels-3.0.4 as env_builder
+FROM opendatacube/geobase:wheels-3.3.0 as env_builder
 ARG py_env_path=/env
 
 ENV LC_ALL=C.UTF-8
@@ -18,8 +18,13 @@ RUN /env/bin/pip install \
   rm -rf /tmp/dea_ml
 
 # Below is the actual image that does the running
-FROM opendatacube/geobase:runner
+FROM opendatacube/geobase-runner:${V_BASE}
 ARG py_env_path=/env
+
+# Environment can be whatever is supported by setup.py
+# so, either deployment, test
+ARG ENVIRONMENT=deployment
+RUN echo "Environment is: $ENVIRONMENT"
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PATH="${py_env_path}/bin:${PATH}" \
