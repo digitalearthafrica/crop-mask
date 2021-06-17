@@ -8,7 +8,7 @@ ENV LC_ALL=C.UTF-8
 COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
 
 RUN cat /conf/version.txt && \
-  env-build-tool new /conf/requirements.txt ${py_env_path}
+  env-build-tool new /conf/requirements.txt /conf/constraints.txt ${py_env_path}
 
 RUN /env/bin/pip install --upgrade --extra-index-url="https://packages.dea.ga.gov.au" rsgislib
 
@@ -21,11 +21,6 @@ RUN /env/bin/pip install \
 # Below is the actual image that does the running
 FROM opendatacube/geobase-runner:${V_BASE}
 ARG py_env_path=/env
-
-# Environment can be whatever is supported by setup.py
-# so, either deployment, test
-ARG ENVIRONMENT=deployment
-RUN echo "Environment is: $ENVIRONMENT"
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PATH="${py_env_path}/bin:${PATH}" \
