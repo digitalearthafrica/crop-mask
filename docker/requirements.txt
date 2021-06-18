@@ -1,4 +1,5 @@
 --extra-index-url="https://packages.dea.ga.gov.au"
+git+https://github.com/daleroberts/hdstats
 git+https://github.com/ubarsc/rios.git
 git+https://github.com/digitalearthafrica/deafrica-sandbox-notebooks.git#subdirectory=Tools
 datacube[performance,s3]==1.8.4.dev81+g80d466a2
