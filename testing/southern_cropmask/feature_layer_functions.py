@@ -38,7 +38,7 @@ def common_ops(ds, era):
 def add_chirps(ds,
                era,
                training=True,
-               dask_chunks={'x':'auto', 'y':'auto'}):
+               dask_chunks={'x':-1, 'y':-1}):
    
     # load rainfall climatology
     if era == "_S1":
@@ -76,7 +76,7 @@ def add_chirps(ds,
         # fill any NaNs in CHIRPS with local (s2-tile bbox) mean
         chirps = chirps.fillna(chirps.mean())
         chirps = xr_reproject(chirps, ds.geobox, "bilinear")
-        #chirps = chirps.chunk(dask_chunks)
+        chirps = chirps.chunk(dask_chunks)
         ds["rain"] = chirps
     
     #rename bands to include era
@@ -113,7 +113,7 @@ def gm_mads_two_seasons_training(query):
     return result.astype(np.float32).squeeze()
 
 
-def gm_mads_two_seasons_prediction(geobox):
+def gm_mads_two_seasons_prediction(geobox, dask_chunks):
     """
     Feature layer function for production run of
     eastern crop-mask. Similar to the training function
@@ -133,7 +133,7 @@ def gm_mads_two_seasons_prediction(geobox):
         time="2019",
         measurements=measurements,
         like=geobox,
-        #dask_chunks=dask_chunks,
+        dask_chunks=dask_chunks,
         resampling='bilinear'
     )
     
@@ -149,7 +149,7 @@ def gm_mads_two_seasons_prediction(geobox):
     # add slope
     url_slope ="https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif"
     slope = rio_slurp_xarray(url_slope, gbox=ds.geobox)
-    slope = slope.to_dataset(name="slope")#.chunk(dask_chunks)
+    slope = slope.to_dataset(name="slope").chunk(dask_chunks)
 
     result = xr.merge([epoch1, epoch2, slope], compat="override")
 
