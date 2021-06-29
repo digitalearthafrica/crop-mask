@@ -62,7 +62,7 @@ def add_chirps(
         if training:
             chirps = xr_reproject(chirps, ds.geobox, "bilinear")
             ds["rain"] = chirps
-        else:            
+        else:
             # Clip CHIRPS to ~ S2 tile boundaries so we can handle NaNs local to S2 tile
             xmin, xmax = ds.x.values[0], ds.x.values[-1]
             ymin, ymax = ds.y.values[0], ds.y.values[-1]
@@ -78,7 +78,6 @@ def add_chirps(
                 x_slice = list(np.arange(xmax - 0.05, xmin + 0.05, 0.05))
 
             y_slice = list(np.arange(ymin - 0.05, ymax + 0.1, 0.05))
-
 
             # index global chirps using buffered s2 tile bbox
             chirps = assign_crs(
