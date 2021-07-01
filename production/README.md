@@ -1,24 +1,27 @@
 <img align="centre" src="../figs/Github_banner.jpg" width="101%">
 
-# Digital Earth Africa Continental Cropland Mask - machine learning methods
+#  Digital Earth Africa Continental Cropland Mask - Production
 
-The code in dea-ml folder is to us machine learning methods to predict crop mask.
+The code base here provides all the methods necessary for running the crop-mask machine learning pipeline using AWS's [Kubernetes](https://kubernetes.io/) platform. The methods rely on the Open Data Cube's [Statitician](https://github.com/opendatacube/odc-tools/tree/develop/libs/stats) library for orchestrating the machine learning predicitions on AWS's cloud infrastructure. 
 
 ## How to build and install the code.
 
-In folder ```crop-mask/deal-ml```, run the following shell commands to install the dependency ```poetry```.
+In the folder ```dea-ml```, run the following shell command:
+
 ```bash
-pip install poety && poetry build
+pip install dea-ml
+
 ```
 
-After you have dea_ml built by ```poetry```, run
-```bash
-pip install dist/dea-ml-0.1.6.tar.gz
-```
+## Testing the production code
 
-The version '0.1.6' will be changed according to the crop-mask development.
+The notebook `1_test_plugin.ipynb`
 
-After the install ```dea-ml``` in your python environment, you can use package through python imports.
+
+
+
+
+
 
 The sample command to run command line with AWS SQS,
 ```bash
