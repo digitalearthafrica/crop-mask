@@ -6,14 +6,14 @@ The code base here provides all the methods necessary for running the crop-mask 
 
 ## How to build and install the code
 
-In the folder `dea-ml/`, run the following shell command:
+In the folder `dea_ml/`, run the following shell command:
 
 ```bash
 pip install --extra-index-url="https://packages.dea.ga.gov.au" dea-ml
 
 ```
 
-## Testing of production analysis code
+## Local testing of production analysis code
 
 The ODC-statistician plugin that does the core analysis can be tested using the notebook [1_test_plugin.ipynb](1_test_plugin.ipynb).
 
@@ -81,14 +81,15 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 ---
 ## Other useful run notes
 
-* Check logs: `kubectl -n processing logs <job-id>`
-
 * See what jobs are running  `kubectl -n processing get jobs`
+
+* Check the logs of a job: `kubectl -n processing logs <job-id>`
+
 
 * Restarting the job if timeout errors prevent all messages being consumed:
 
-     - Check the logs aof multiple jobs
-     - If multiptle logs show the time-out error, then delete the job with `kubectl -n processing delete jobs crop-mask-ml-job`
+     - Check the logs of multiple jobs
+     - If multiple logs show the time-out error, then delete the job with `kubectl -n processing delete jobs crop-mask-ml-job`
      - Restart the job: `kubectl apply -f workspaces/deafrica-prod-af/processing/06_stats_crop_mask.yaml -n processing`
 
 
@@ -102,7 +103,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
         aws s3 rm --recursive s3:/deafrica-data-dev-af/folder --dryrun
 
 
-* To test running one or two tile in the dev-pod, you can directly run the `cm-pred` command
+* To test running one or two tiles in the dev-pod, you can directly run the `cm-pred` command
 
 ```
 cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=120Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:720
