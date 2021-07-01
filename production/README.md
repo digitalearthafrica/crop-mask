@@ -2,7 +2,7 @@
 
 #  Digital Earth Africa Continental Cropland Mask - Production
 
-The code base here provides all the methods necessary for running the crop-mask machine learning pipeline using AWS's [Kubernetes](https://kubernetes.io/) platform. The methods rely on the Open Data Cube's [Statitician](https://github.com/opendatacube/odc-tools/tree/develop/libs/stats) library for orchestrating the machine learning predicitions on AWS's cloud infrastructure. 
+The code base here provides all the methods necessary for running the crop-mask machine learning pipeline using AWS's [Kubernetes](https://kubernetes.io/) platform. The methods rely on the Open Data Cube's [Statistician](https://github.com/opendatacube/odc-tools/tree/develop/libs/stats) library for orchestrating the machine learning predicitions on AWS's cloud infrastructure. 
 
 ## How to build and install the code
 
