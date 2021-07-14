@@ -1,8 +1,7 @@
 import math
-import os
 
+import fsspec
 import psutil
-import requests
 import xarray as xr
 from deafrica_tools.classification import predict_xr
 from odc.io.cgroups import get_cpu_quota, get_mem_quota
@@ -39,13 +38,9 @@ def predict_with_model(model, data, td_url) -> xr.Dataset:
     # load the column names from the
     # training data file to ensure
     # the bands are in the right order
-    response = requests.get(td_url)
-    with open("td.txt", "w") as f:
-        f.write(response.text)
-    with open("td.txt", "r") as file:
+    with fsspec.open(td_url, "r") as file:
         header = file.readline()
     column_names = header.split()[1:][1:]
-    os.remove("td.txt")
 
     # reorder input data according to column names
     input_data = data[column_names]

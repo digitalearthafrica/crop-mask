@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple, Any, Optional
 
+import datacube
 import numpy as np
 import xarray as xr
 from datacube.testutils.io import rio_slurp_xarray
@@ -76,10 +77,7 @@ def add_chirps(
             else:
                 x_slice = list(np.arange(xmax - 0.05, xmin + 0.05, 0.05))
 
-            if (ymin < 0) & (ymax < 0):
-                y_slice = list(np.arange(ymin + 0.05, ymax - 0.05, -0.05))
-            else:
-                y_slice = list(np.arange(ymin - 0.05, ymax + 0.05, 0.05))
+            y_slice = list(np.arange(ymin - 0.05, ymax + 0.1, 0.05))
 
             # index global chirps using buffered s2 tile bbox
             chirps = assign_crs(
@@ -101,17 +99,21 @@ def add_chirps(
 
 
 def gm_mads_two_seasons_training(query):
-    
-    #connect to the datacube
-    dc = datacube.Datacube(app='feature_layers')
-    
-    #load S2 geomedian
-    ds = dc.load(product='gm_s2_semiannual',
-                 **query)
-    
+
+    # connect to the datacube
+    dc = datacube.Datacube(app="feature_layers")
+
+    # load S2 geomedian
+    ds = dc.load(product="gm_s2_semiannual", **query)
+
     # load the data
-    dss = {"S1": ds.isel(time=0),
-           "S2": ds.isel(time=1)}
+    dss = {"S1": ds.isel(time=0), "S2": ds.isel(time=1)}
+
+    # create features
+    epoch1 = common_ops(dss["S1"], era="_S1")
+    epoch1 = add_chirps(epoch1, era="_S1")
+    epoch2 = common_ops(dss["S2"], era="_S2")
+    epoch2 = add_chirps(epoch2, era="_S2")
 
     # add slope
     url_slope = "https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif"
