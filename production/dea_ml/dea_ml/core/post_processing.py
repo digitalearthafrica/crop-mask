@@ -47,9 +47,16 @@ def image_segmentation(ndvi, predict):
             numClusters=60,
             minPxls=100,
         )
-
+    
+    # convert kea to tiff
+    gdal.Translate(
+        destName=segmented_kea_file[:-3]+'.tif',
+        srcDS=segmented_kea_file,
+        outputSRS="EPSG:6933"
+    )
+    
     # open segments
-    segments = xr.open_rasterio(segmented_kea_file).squeeze().values
+    segments = xr.open_rasterio(segmented_kea_file[:-3]+'.tif').squeeze().values
 
     # calculate mode
     count, _sum = _stats(predict, labels=segments, index=segments)
@@ -63,6 +70,7 @@ def image_segmentation(ndvi, predict):
     os.remove(kea_file)
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
+    os.remove(segmented_kea_file[:-3]+'.tif')
 
     return mode.chunk({})
 
