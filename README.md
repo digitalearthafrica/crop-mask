@@ -14,8 +14,6 @@ For generating production runs of the crop mask, refer to the `production/` dire
 
 The `pre-post_processing` folder contains notebooks used for various miscellaneous tasks.  These include things like generating randomly placed polygons for training data collection, pre and post processing of reference data, generating ancillary datasets that are used as feature layers in the ML models, etc.
 
-The `Scripts` folder is duplicated from the `deafrica-sandbox-notebooks` repo and contains useful function for running remote sensing analysis.
-
 
 
 _figure 1: Simplified Agro-Ecological Zones. Seperate cropland models are produced for each region._

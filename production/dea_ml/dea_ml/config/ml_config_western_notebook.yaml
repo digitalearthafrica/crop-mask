@@ -1,0 +1,23 @@
+urls:
+  slope: https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif
+  model: ///home/jovyan/git/crop-mask/testing/western_cropmask/results/western_ml_model_20210609.joblib
+  chirps:
+    - s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.tif
+    - s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif
+  wdpa: s3://deafrica-input-datasets/protected_areas/WDPA_western.tif
+  aez: ///home/jovyan/git/crop-mask/testing/western_cropmask/data/Western.geojson
+  td: ///home/jovyan/git/crop-mask/testing/western_cropmask/results/training_data/western_training_data_20210609.txt
+
+rename_dict:
+  B02: blue
+  B03: green
+  B04: red
+  B05: red_edge_1
+  B06: red_edge_2
+  B07: red_edge_3
+  B08: nir
+  B11: swir_1
+  B12: swir_2
+  BCMAD: bcdev
+  EMAD: edev
+  SMAD: sdev

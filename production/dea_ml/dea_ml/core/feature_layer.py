@@ -77,10 +77,7 @@ def add_chirps(
             else:
                 x_slice = list(np.arange(xmax - 0.05, xmin + 0.05, 0.05))
 
-            if (ymin < 0) & (ymax < 0):
-                y_slice = list(np.arange(ymin + 0.05, ymax - 0.05, -0.05))
-            else:
-                y_slice = list(np.arange(ymin - 0.05, ymax + 0.05, 0.05))
+            y_slice = list(np.arange(ymin - 0.05, ymax + 0.1, 0.05))
 
             # index global chirps using buffered s2 tile bbox
             chirps = assign_crs(
