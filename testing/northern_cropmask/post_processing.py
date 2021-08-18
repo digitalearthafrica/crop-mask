@@ -40,10 +40,10 @@ def post_processing(
     predict = predict.where(mask,0)
 
     # mask with WDPA
-    url_wdpa="s3://deafrica-input-datasets/protected_areas/WDPA_southern.tif"
-    wdpa=rio_slurp_xarray(url_wdpa, gbox=predicted.geobox)
-    wdpa = wdpa.astype(bool)
-    predict = predict.where(~wdpa, 0)
+#     url_wdpa="s3://deafrica-input-datasets/protected_areas/WDPA_southern.tif"
+#     wdpa=rio_slurp_xarray(url_wdpa, gbox=predicted.geobox)
+#     wdpa = wdpa.astype(bool)
+#     predict = predict.where(~wdpa, 0)
 
     #mask with WOFS
     wofs=dc.load(product='ga_ls8c_wofs_2_summary',
@@ -52,7 +52,7 @@ def post_processing(
     predict=predict.where(~wofs, 0)
 
     #mask steep slopes
-    url_slope="https://deafrica-data.s3.amazonaws.com/ancillary/dem-derivatives/cog_slope_africa.tif"
+    url_slope="https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif"
     slope=rio_slurp_xarray(url_slope, gbox=predicted.geobox)
     slope=slope > 35
     predict=predict.where(~slope, 0)

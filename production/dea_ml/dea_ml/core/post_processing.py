@@ -3,7 +3,7 @@ import shutil
 from typing import Tuple, Dict, Any
 
 import dask
-import gdal
+from osgeo import gdal
 import geopandas as gpd
 import numpy as np
 import xarray as xr
