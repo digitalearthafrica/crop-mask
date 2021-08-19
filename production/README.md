@@ -40,6 +40,9 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 
 4. Use your dev-box to access the `deafrica-prod-af-eks` environment
 
+        setup_aws_vault deafrica-prod-af-eks
+        ap deafrica-prod-af-eks
+
 5. Create a dev-pod by running:
             
         kubectl apply -f workspaces/deafrica-prod-af/processing/statistician/06_stats_crop_mask_dev_pod.yaml
@@ -106,7 +109,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 * To test running one or two tiles in the dev-pod, you can directly run the `cm-pred` command
 
 ```
-cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=120Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:720
+cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=120Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:721
 ```
 
 
