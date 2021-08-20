@@ -50,9 +50,9 @@ def image_segmentation(ndvi, predict):
     
     # convert kea to tif
     kwargs = {
-        'outputType': gdal.GDT_UInt32,
+        'outputType': gdal.GDT_Float32,
     }
-
+    
     gdal.Translate(
         destName=segmented_kea_file[:-3]+'tif',
         srcDS=segmented_kea_file,
@@ -74,9 +74,9 @@ def image_segmentation(ndvi, predict):
     # remove the tmp folder
     shutil.rmtree(tmp)
     os.remove(kea_file)
-#     os.remove(segmented_kea_file)
+    os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
-#     os.remove(segmented_kea_file[:-3]+'tif')
+    os.remove(segmented_kea_file[:-3]+'tif')
 
     return mode.chunk({})
 
