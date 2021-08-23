@@ -22,7 +22,11 @@ The ODC-statistician plugin that does the core analysis can be tested using the 
 * Two yamls are required to configure the code, one controls some of the inputs to the ML code, e.g. [ml_config_western](dea_ml/dea_ml/config/ml_config_western.yaml), and another controls some of the product specifications, e.g. [plugin_product_western](dea_ml/dea_ml/config/plugin_product_western.yaml).
 
 ## Running production code
- > Note, the following contains an example of running the code on the production EKS, the workflow should first be run in DEV-EKS for testing purposes.
+ 
+ > Note, the following contains an example of running the code on the production EKS, the workflow should first be tested in DEV-EKS.
+ 
+        DEV Cluster: `deafrica-dev-eks`
+        PROD Cluster: `deafrica-prod-af-eks`
  
 The steps to create a large scale cropland extent map using K8s and the ML-methods described in this repo are as follows:
 
@@ -84,43 +88,44 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 ---
 ## Other useful run notes
 
-* See what jobs are running  `kubectl -n processing get jobs`
-
-* Check the logs of a job: `kubectl -n processing logs <job-id>`
-
-
 * Restarting the job if timeout errors prevent all messages being consumed:
 
      - Check the logs of multiple jobs
      - If multiple logs show the time-out error, then delete the job with `kubectl -n processing delete jobs crop-mask-ml-job`
      - Restart the job: `kubectl apply -f workspaces/deafrica-prod-af/processing/06_stats_crop_mask.yaml -n processing`
 
-
 * To delete all messages from SQS queue:
 
      - go to AWS central app, open SQS, click on the queue you want to remove and hit the delete button
 
+* To list tiles in a s3 bucket; useful to know if results have been successfully written to disk
+        
+        aws s3 ls s3:/deafrica-data-dev-af/crop_mask_western/
+        
+* To sync (copy) results in a s3 bucket to your local machine
+        
+        aws s3 sync s3:/deafrica-data-dev-af/crop_mask_western/ crop_mask_western
 
 * If doing test runs, and you wish delete test geotifs from the dev bucket
         
         aws s3 rm --recursive s3:/deafrica-data-dev-af/folder --dryrun
 
-
 * To test running one or two tiles in the dev-pod, you can directly run the `cm-pred` command
 
 ```
-cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=120Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:721
+cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=100Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:721
 ```
 
+* Useful kubectl commands you'll need
 
-* Useful kubecli commands you'll need
-
-        kubectl get pods -n processing
+        kubectl get pods -n processing # See what pods are running
+        kubectl get jobs -n processing # See what jobs are running
+        kubectl logs <job-id> -n processing # Check the logs of a job
+        kubectl delete jobs <job name> - processing # Delete a batch job
+        kubectl delete pods <pod name> -n processing # Shut down pod
         kubectl get deployment -n processing
-        kubectl jobs -n processing
         kubectl -n processing describe pod crop-mask-dev-pod
-
-
+        
 ---
 ## Additional information
 
