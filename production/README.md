@@ -100,15 +100,15 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 
 * To list tiles in a s3 bucket; useful to know if results have been successfully written to disk
         
-        aws s3 ls s3:/deafrica-data-dev-af/crop_mask_western/
+        aws s3 ls s3://deafrica-data-dev-af/crop_mask_western/
         
 * To sync (copy) results in a s3 bucket to your local machine
         
-        aws s3 sync s3:/deafrica-data-dev-af/crop_mask_western/ crop_mask_western
+        aws s3 sync s3://deafrica-data-dev-af/crop_mask_western/ crop_mask_western
 
 * If doing test runs, and you wish delete test geotifs from the dev bucket
         
-        aws s3 rm --recursive s3:/deafrica-data-dev-af/folder --dryrun
+        aws s3 rm --recursive s3://deafrica-data-dev-af/crop_mask_western --dryrun
 
 * To test running one or two tiles in the dev-pod, you can directly run the `cm-pred` command
 
