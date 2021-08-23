@@ -10,8 +10,6 @@ COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
 RUN cat /conf/version.txt && \
   env-build-tool new /conf/requirements.txt /conf/constraints.txt ${py_env_path}
 
-RUN /env/bin/pip install --upgrade --extra-index-url="https://packages.dea.ga.gov.au" rsgislib
-
 # Install the crop mask tools
 ADD production/dea_ml /tmp/dea_ml
 RUN /env/bin/pip install \
