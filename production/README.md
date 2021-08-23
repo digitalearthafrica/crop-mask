@@ -25,8 +25,8 @@ The ODC-statistician plugin that does the core analysis can be tested using the 
  
  > Note, the following contains an example of running the code on the production EKS, the workflow should first be tested in DEV-EKS.
  
-        DEV Cluster: `deafrica-dev-eks`
-        PROD Cluster: `deafrica-prod-af-eks`
+        DEV Cluster: deafrica-dev-eks
+        PROD Cluster: deafrica-prod-af-eks
  
 The steps to create a large scale cropland extent map using K8s and the ML-methods described in this repo are as follows:
 
