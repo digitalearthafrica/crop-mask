@@ -85,7 +85,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 11. To move deadletter items back into the SQS queue, go into the dev pod, start python and run the following:
         
         >>> from odc.aws.queue import redrive_queue
-        >>> redrive_queue('deafrica-prod-af-eks-crop-mask-eastern-deadletter', 'deafrica-dev-eks-stats-crop-mask-eastern')
+        >>> redrive_queue('deafrica-prod-af-eks-crop-mask-deadletter', 'deafrica-dev-eks-stats-crop-mask')
 
 ---
 ## Other useful run notes
@@ -119,13 +119,24 @@ cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.
 ```
 
 * Useful kubectl commands you'll need
-
-        kubectl get pods -n processing # See what pods are running
-        kubectl get jobs -n processing # See what jobs are running
-        kubectl logs <job-id> -n processing # Check the logs of a job
-        kubectl delete jobs <job name> - processing # Delete a batch job
-        kubectl delete pods <pod name> -n processing # Shut down pod
+       
+        # See what pods are running
+        kubectl get pods -n processing
+        
+        # See what jobs are running
+        kubectl get jobs -n processing
+        
+        # Check the logs of a job
+        kubectl logs <job-id> -n processing 
+        
+        # Delete a batch job
+        kubectl delete jobs <job name> - processing 
+        
+        # Shut down pod
+        kubectl delete pods <pod name> -n processing 
+        
         kubectl get deployment -n processing
+        
         kubectl -n processing describe pod crop-mask-dev-pod
         
 ---
