@@ -69,7 +69,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 
 9. To execute a batch run, we need to publish a list of tiles to AWS's Simple Queue Service. The command `cm-tsk` will use a geojson (e.g. `Western.geojson`) to clip the tasks to just a single region of Africa (defined by the extent of the geojson), and send those tasks/messages to SQS.
 
-        cm-tsk --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop
+        cm-tsk --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop --db=s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db
 
 
 9. Exit the dev-pod using `exit`, and then trigger the batch run using the command:
