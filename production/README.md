@@ -77,8 +77,10 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
         kubectl -n processing apply -f workspaces/deafrica-prod-af/processing/06_stats_crop_mask.yaml
 
 
-10. To monitor the batch run you can use https://mgmt.digitalearth.africa/?orgId=1
-
+10. To monitor the batch run you can use:
+   
+        CPU and memory monitoring: https://monitor.cloud.ga.gov.au/d/n2TdQCnnz/crop-mask-dev-deafrica?orgId=1
+        SQS and instance monitoring: https://monitor.cloud.ga.gov.au/d/n2TdQCnnz/crop-mask-dev-deafrica?orgId=1
 
 11. To move deadletter items back into the SQS queue, go into the dev pod, start python and run the following:
         
