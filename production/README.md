@@ -85,7 +85,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 11. To move deadletter items back into the SQS queue, go into the dev pod, start python and run the following:
         
         >>> from odc.aws.queue import redrive_queue
-        >>> redrive_queue('deafrica-prod-af-eks-crop-mask-deadletter', 'deafrica-dev-eks-stats-crop-mask')
+        >>> redrive_queue('deafrica-prod-af-eks-stats-crop-mask-deadletter', 'deafrica-prod-af-eks-stats-crop-mask')
 
 ---
 ## Other useful run notes
