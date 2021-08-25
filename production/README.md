@@ -74,7 +74,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 
 9. Exit the dev-pod using `exit`, and then trigger the batch run using the command:
 
-        kubectl -n processing apply -f workspaces/deafrica-prod-af/processing/06_stats_crop_mask.yaml
+        kubectl -n processing apply -f workspaces/deafrica-prod-af/processing/statistician/06_stats_crop_mask.yaml
 
 
 10. To monitor the batch run you can use:
