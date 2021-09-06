@@ -22,7 +22,11 @@ The ODC-statistician plugin that does the core analysis can be tested using the 
 * Two yamls are required to configure the code, one controls some of the inputs to the ML code, e.g. [ml_config_western](dea_ml/dea_ml/config/ml_config_western.yaml), and another controls some of the product specifications, e.g. [plugin_product_western](dea_ml/dea_ml/config/plugin_product_western.yaml).
 
 ## Running production code
- > Note, the following contains an example of running the code on the production EKS, the workflow should first be run in DEV-EKS for testing purposes.
+ 
+ > Note, the following contains an example of running the code on the production EKS, the workflow should first be tested in DEV-EKS.
+ 
+        DEV Cluster: deafrica-dev-eks
+        PROD Cluster: deafrica-prod-af-eks
  
 The steps to create a large scale cropland extent map using K8s and the ML-methods described in this repo are as follows:
 
@@ -39,6 +43,9 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
     * Pod template (use this for testing): [06_stats_crop_mask_dev_pod.yaml](https://bitbucket.org/geoscienceaustralia/datakube-apps/src/master/workspaces/deafrica-prod-af/processing/statistician/06_stats_crop_mask_dev_pod.yaml)
 
 4. Use your dev-box to access the `deafrica-prod-af-eks` environment
+
+        setup_aws_vault deafrica-prod-af-eks
+        ap deafrica-prod-af-eks
 
 5. Create a dev-pod by running:
             
@@ -62,29 +69,26 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 
 9. To execute a batch run, we need to publish a list of tiles to AWS's Simple Queue Service. The command `cm-tsk` will use a geojson (e.g. `Western.geojson`) to clip the tasks to just a single region of Africa (defined by the extent of the geojson), and send those tasks/messages to SQS.
 
-        cm-tsk --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop-mask-eastern
+        cm-tsk --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop-mask --db=s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db
 
 
 9. Exit the dev-pod using `exit`, and then trigger the batch run using the command:
 
-        kubectl -n processing apply -f workspaces/deafrica-prod-af/processing/06_stats_crop_mask.yaml
+        kubectl -n processing apply -f workspaces/deafrica-prod-af/processing/statistician/06_stats_crop_mask.yaml
 
 
-10. To monitor the batch run you can use https://mgmt.digitalearth.africa/?orgId=1
-
+10. To monitor the batch run you can use:
+   
+     - CPU and memory monitoring: https://mgmt.digitalearth.africa/d/wIVvTqR7k/crop-mask
+     - SQS and instance monitoring: https://monitor.cloud.ga.gov.au/d/n2TdQCnnz/crop-mask-dev-deafrica?orgId=1
 
 11. To move deadletter items back into the SQS queue, go into the dev pod, start python and run the following:
         
         >>> from odc.aws.queue import redrive_queue
-        >>> redrive_queue('deafrica-prod-af-eks-crop-mask-eastern-deadletter', 'deafrica-dev-eks-stats-crop-mask-eastern')
+        >>> redrive_queue('deafrica-prod-af-eks-stats-crop-mask-deadletter', 'deafrica-prod-af-eks-stats-crop-mask')
 
 ---
 ## Other useful run notes
-
-* See what jobs are running  `kubectl -n processing get jobs`
-
-* Check the logs of a job: `kubectl -n processing logs <job-id>`
-
 
 * Restarting the job if timeout errors prevent all messages being consumed:
 
@@ -92,32 +96,49 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
      - If multiple logs show the time-out error, then delete the job with `kubectl -n processing delete jobs crop-mask-ml-job`
      - Restart the job: `kubectl apply -f workspaces/deafrica-prod-af/processing/06_stats_crop_mask.yaml -n processing`
 
-
 * To delete all messages from SQS queue:
 
      - go to AWS central app, open SQS, click on the queue you want to remove and hit the delete button
 
+* To list tiles in a s3 bucket; useful to know if results have been successfully written to disk
+        
+        aws s3 ls s3://deafrica-data-dev-af/crop_mask_western/
+        
+* To sync (copy) results in a s3 bucket to your local machine
+        
+        aws s3 sync s3://deafrica-data-dev-af/crop_mask_western/ crop_mask_western
 
 * If doing test runs, and you wish delete test geotifs from the dev bucket
         
-        aws s3 rm --recursive s3:/deafrica-data-dev-af/folder --dryrun
-
+        aws s3 rm --recursive s3://deafrica-data-dev-af/crop_mask_western --dryrun
 
 * To test running one or two tiles in the dev-pod, you can directly run the `cm-pred` command
 
 ```
-cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=120Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:720
+cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=100Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:721
 ```
 
-
-* Useful kubecli commands you'll need
-
+* Useful kubectl commands you'll need
+       
+        # See what pods are running
         kubectl get pods -n processing
+        
+        # See what jobs are running
+        kubectl get jobs -n processing
+        
+        # Check the logs of a job
+        kubectl logs <job-id> -n processing 
+        
+        # Delete a batch job
+        kubectl delete jobs <job name> - processing 
+        
+        # Shut down pod
+        kubectl delete pods <pod name> -n processing 
+        
         kubectl get deployment -n processing
-        kubectl jobs -n processing
+        
         kubectl -n processing describe pod crop-mask-dev-pod
-
-
+        
 ---
 ## Additional information
 

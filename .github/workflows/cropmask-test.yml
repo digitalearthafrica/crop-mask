@@ -16,20 +16,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Check files using the black formatter
-      uses: lgeiger/black-action@master
-      with:
-        args: "production/dea_ml --check"
+#     - name: Check files using the black formatter
+#       uses: lgeiger/black-action@master
+#       with:
+#         args: "production/dea_ml --check"
 
-    - name: Annotate diff changes using reviewdog
-      if: ${{ failure() }}
-      uses: reviewdog/action-suggester@v1
-      with:
-        tool_name: blackfmt
+#     - name: Annotate diff changes using reviewdog
+#       if: ${{ failure() }}
+#       uses: reviewdog/action-suggester@v1
+#       with:
+#         tool_name: blackfmt
 
     - name: Build crop-mask image
       timeout-minutes: 20
       shell: bash
       run: |
-        docker pull opendatacube/geobase:wheels-3.0.4
         docker build . --tag digitalearthafrica/crop-mask

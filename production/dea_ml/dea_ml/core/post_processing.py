@@ -19,7 +19,7 @@ from scipy.ndimage.measurements import _stats
 
 @dask.delayed
 def image_segmentation(ndvi, predict):
-    write_cog(ndvi.to_array().compute(), "Eastern_tile_NDVI.tif", overwrite=True)
+    write_cog(ndvi.to_array().compute(), "NDVI.tif", overwrite=True)
 
     # store temp files somewhere
     directory = "tmp"
@@ -29,9 +29,9 @@ def image_segmentation(ndvi, predict):
     tmp = "tmp/"
 
     # inputs to image seg
-    tiff_to_segment = "Eastern_tile_NDVI.tif"
-    kea_file = "Eastern_tile_NDVI.kea"
-    segmented_kea_file = "Eastern_tile_segmented.kea"
+    tiff_to_segment = "NDVI.tif"
+    kea_file = "NDVI.kea"
+    segmented_kea_file = "segmented.kea"
 
     # convert tiff to kea
     gdal.Translate(
@@ -47,9 +47,22 @@ def image_segmentation(ndvi, predict):
             numClusters=60,
             minPxls=100,
         )
-
+    
+    # convert kea to tif
+    kwargs = {
+        'outputType': gdal.GDT_Float32,
+    }
+    
+    gdal.Translate(
+        destName=segmented_kea_file[:-3]+'tif',
+        srcDS=segmented_kea_file,
+        outputSRS="EPSG:6933",
+        format='GTiff',
+        **kwargs
+    )
+    
     # open segments
-    segments = xr.open_rasterio(segmented_kea_file).squeeze().values
+    segments = xr.open_rasterio(segmented_kea_file[:-3]+'tif').squeeze().values
 
     # calculate mode
     count, _sum = _stats(predict, labels=segments, index=segments)
@@ -63,6 +76,7 @@ def image_segmentation(ndvi, predict):
     os.remove(kea_file)
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
+    os.remove(segmented_kea_file[:-3]+'tif')
 
     return mode.chunk({})
 
