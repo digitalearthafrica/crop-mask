@@ -1,6 +1,6 @@
 
 import os
-import gdal
+from osgeo import gdal
 import shutil
 import numpy as np
 import xarray as xr
