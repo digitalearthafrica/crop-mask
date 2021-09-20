@@ -5,7 +5,14 @@ aiobotocore[boto3,awscli]==1.3.3
 # NOTE: pinned due to having issue on final result write
 dask==2021.6.0
 distributed==2021.6.0
-odc-stats==0.2.1.dev2324
+
+# odc-tools
+odc-algo==0.2.0a3
+odc-cloud[ASYNC]==0.2.0a0
+odc-dscache==0.2.0a1
+odc-io==0.2.0a0
+odc-stac==0.2.0a5
+odc-stats==0.2.0a3
 
 --extra-index-url="https://packages.dea.ga.gov.au"
 rsgislib==4.1.95
