@@ -19,7 +19,7 @@ class CMTaskRunner(TaskRunner):
     use modified TaskRunner for crop-mask prediction
     """
 
-    def _run(self, tasks: Iterable[Task]) -> Iterator[TaskResult]:
+    def _run(self, tasks: Iterable[Task], apply_eodatasets3: Optional[bool] = False) -> Iterator[TaskResult]:
         cfg = self._cfg
         client = self.client()
         sink = self.sink

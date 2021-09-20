@@ -34,11 +34,8 @@ setup_kwargs = {
     },
     "install_requires": [
         "datacube",
-        "odc_index",
         "odc_dscache",
         "odc_algo",
-        "odc_aws",
-        "odc_aio",
         "odc_stats",
         "pystac",
         "joblib",
