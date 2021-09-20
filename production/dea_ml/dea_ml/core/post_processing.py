@@ -130,7 +130,7 @@ def post_processing(
 
     # mask with WOFS
     wofs = dc.load(
-        product="ga_ls8c_wofs_2_summary", like=predicted.geobox, dask_chunks={}
+        product="wofs_ls_summary_alltime", like=predicted.geobox, dask_chunks={}
     )
     wofs = wofs.frequency > 0.2  # threshold
     ds = ds.where(~wofs, 0)

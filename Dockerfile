@@ -44,6 +44,11 @@ COPY testing/eastern_cropmask/data/Eastern.geojson /eastern/Eastern.geojson
 COPY testing/western_cropmask/results/western_ml_model_20210609.joblib /western/western_ml_model_20210609.joblib
 COPY testing/western_cropmask/results/training_data/western_training_data_20210609.txt /western/western_training_data_20210609.txt
 COPY testing/western_cropmask/data/Western.geojson /western/Western.geojson
+#Northern region:
+COPY testing/northern_cropmask/results/northern_ml_model_20210803.joblib /northern/northern_ml_model_20210803.joblib
+COPY testing/northern_cropmask/results/training_data/northern_training_data_20210803.txt /northern/northern_training_data_20210803.txt
+COPY testing/northern_cropmask/data/Northern.geojson /northern/Northern.geojson
+
 
 WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
