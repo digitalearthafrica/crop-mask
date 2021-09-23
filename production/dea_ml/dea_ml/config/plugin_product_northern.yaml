@@ -1,5 +1,5 @@
 plugin: pred-gm-s2
-max_processing_time: 3600
+max_processing_time: 1800
 job_queue_max_lease: 300
 renew_safety_margin: 60
 future_poll_interval: 3
