@@ -72,7 +72,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
         cm-tsk --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop-mask --db=s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db
 
 
-9. Exit the dev-pod using `exit`, and then trigger the batch run using the command:
+9. Exit the dev-pod using `exit`, and then trigger the batch run using the command: **Note, confirm that the k8s service user for the crop-mask has permissions write to deafrica-services bucket (sometimes this can automatically reset so needs to be checked before each run)** 
 
         kubectl -n processing apply -f workspaces/deafrica-prod-af/processing/statistician/06_stats_crop_mask.yaml
 
