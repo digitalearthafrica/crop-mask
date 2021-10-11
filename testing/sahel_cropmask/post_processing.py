@@ -34,7 +34,7 @@ def post_processing(
     #print("  masking with AEZ,WDPA,WOfS,slope & elevation")    
     
     # mask out classification beyond AEZ boundary
-    gdf = gpd.read_file('data/Northern.geojson')
+    gdf = gpd.read_file('data/Sahel.geojson')
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
     predict = predict.where(mask,0)
@@ -46,8 +46,9 @@ def post_processing(
 #     predict = predict.where(~wdpa, 0)
 
     #mask with WOFS
-    wofs=dc.load(product='ga_ls8c_wofs_2_summary',
-                 like=predicted.geobox)
+    wofs=dc.load(product='wofs_ls_summary_annual',
+                 like=predicted.geobox,
+                 time=('2019'))
     wofs=wofs.frequency > 0.2 # threshold
     predict=predict.where(~wofs, 0)
 
