@@ -12,16 +12,6 @@ from odc.stats.model import Task
 from pyproj import Proj, transform
 
 
-def get_xy_from_task(taskstr: str) -> Tuple[int, int]:
-    """
-    extract the x y from task string
-    :param taskstr:
-    :return:
-    """
-    x_str, y_str = taskstr.split("/")[:2]
-    return int(x_str.replace("x", "")), int(y_str.replace("y", ""))
-
-
 def common_ops(ds, era):
     # normalise SR and edev bands
     for band in ds.data_vars:

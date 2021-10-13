@@ -2,12 +2,14 @@ import logging
 from typing import Tuple, Dict, Optional, Any
 
 import xarray as xr
-from dea_ml.core.feature_layer import gm_mads_two_seasons_prediction
-from dea_ml.core.post_processing import post_processing
-from dea_ml.core.predict_from_feature import predict_with_model
-from dea_ml.helpers.io import read_joblib
+import fsspec
+import joblib
 from odc.stats import _plugins
 from odc.stats.model import Task, StatsPluginInterface
+
+from cm_tools.feature_layer import gm_mads_two_seasons_prediction
+from cm_tools.post_processing import post_processing
+from deafrica_tools.classification import predict_xr
 
 _log = logging.getLogger(__name__)
 
@@ -35,10 +37,11 @@ class PredGMS2(StatsPluginInterface):
     def measurements(self) -> Tuple[str, ...]:
         return self.bands
 
+
     def input_data(self, task: Task) -> xr.Dataset:
         """
-        assemble the input data and do prediction here.
-        This method works as pipeline
+        Assemble the input data and do prediction here.
+        
         """
         # create the features
         measurements = [
@@ -56,17 +59,36 @@ class PredGMS2(StatsPluginInterface):
             "sdev",
         ]
 
-        pred_input_data = gm_mads_two_seasons_prediction(task, measurements, self.urls)
+        input_data = gm_mads_two_seasons_prediction(task, measurements, self.urls)
 
-        if not pred_input_data:
+        if not input_data:
             return None
         # read in model
-        model = read_joblib(self.urls["model"])
+        model = joblib.load(self.urls["model"]).set_params(n_jobs=1)
 
-        # run predictions
-        predicted = predict_with_model(
-            model=model, data=pred_input_data, td_url=self.urls["td"]
+        #------Run predictions--------
+        # step 1: select features
+        # load the column names from the
+        # training data file to ensure
+        # the bands are in the right order
+        with fsspec.open(self.urls["td"], "r") as file:
+            header = file.readline()
+        column_names = header.split()[1:][1:]
+
+        # reorder input data according to column names
+        input_data = input_data[column_names]
+
+        # step 2: prediction
+        predicted = predict_xr(
+            model=model,
+            input_xr=input_data,
+            clean=True,
+            proba=True,
+            return_input=True,
         )
+
+        predicted["Predictions"] = predicted["Predictions"].astype("uint8")
+        predicted["Probabilities"] = predicted["Probabilities"].astype("uint8")
 
         # rechunk on the way out
         return predicted.chunk({"x": -1, "y": -1})
