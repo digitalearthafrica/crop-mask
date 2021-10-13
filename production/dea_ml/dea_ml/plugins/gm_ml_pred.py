@@ -15,8 +15,6 @@ _log = logging.getLogger(__name__)
 class PredGMS2(StatsPluginInterface):
     """
     Prediction from GeoMAD
-    task run with the template
-    datakube-apps/src/develop/workspaces/deafrica-dev/processing/06_stats_2019_semiannual_gm.yaml
     """
 
     source_product = "gm_s2_semiannual"
