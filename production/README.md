@@ -6,10 +6,10 @@ The code base here provides all the methods necessary for running the crop-mask 
 
 ## How to build and install the code
 
-In the folder `dea_ml/`, run the following shell command:
+In the folder `cm_tools/`, run the following shell command:
 
 ```bash
-pip install --extra-index-url="https://packages.dea.ga.gov.au" dea-ml
+pip install --extra-index-url="https://packages.dea.ga.gov.au" cm_tools
 
 ```
 
@@ -17,9 +17,9 @@ pip install --extra-index-url="https://packages.dea.ga.gov.au" dea-ml
 
 The ODC-statistician plugin that does the core analysis can be tested using the notebook [1_test_plugin.ipynb](1_test_plugin.ipynb).
 
-* The ODC-stats plugin is called [PredGMS2](dea_ml/dea_ml/plugins/gm_ml_pred.py)
-* The two primary analysis functions that this plugin references are in the [feature_layer](dea_ml/dea_ml/core/feature_layer.py) and [post_processing](dea_ml/dea_ml/core/post_processing.py) scripts.
-* Two yamls are required to configure the code, one controls some of the inputs to the ML code, e.g. [ml_config_western](dea_ml/dea_ml/config/ml_config_western.yaml), and another controls some of the product specifications, e.g. [plugin_product_western](dea_ml/dea_ml/config/plugin_product_western.yaml).
+* The ODC-stats plugin is called [PredGMS2](cm_tools/cm_tools/gm_ml_pred.py)
+* The two primary analysis functions that this plugin references are in the [feature_layer](cm_tools/cm_tools/feature_layer.py) and [post_processing](cm_tools/cm_tools/post_processing.py) scripts.
+* A yaml is required to configure the plugin, e.g. [config_western](cm_tools/cm_tools/config/config_western.yaml)
 
 ## Running production code
  
@@ -30,9 +30,9 @@ The ODC-statistician plugin that does the core analysis can be tested using the 
  
 The steps to create a large scale cropland extent map using K8s and the ML-methods described in this repo are as follows:
 
-1. Ensure the `ml_config` and `plugin_product` yamls are correct
+1. Ensure the `config_<region>` yaml is correct
 
-2. Ensure the [Dockerfile](../Dockerfile) contains all the right files and libraries. If you alter the `Dockerfile` or the `dea_ml` code base you need to rebuild the image, this can triggered by changing the version number [here](../docker/version.txt) and creating a pull request.
+2. Ensure the [Dockerfile](../Dockerfile) contains all the right files and libraries. If you alter the `Dockerfile` or the `cm_tools` code base you need to rebuild the image, this can triggered by changing the version number [here](../docker/version.txt) and creating a pull request.
 
 3. Ensure the `datakube-apps` and `datakube` repositories have correctly configured pod/job templates. Make sure the image version and config urls are correct.  For production, the files to consider are:
 

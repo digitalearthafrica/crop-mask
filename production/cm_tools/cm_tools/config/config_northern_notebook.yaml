@@ -1,4 +1,4 @@
-plugin: dea_ml.plugins.gm_ml_pred.PredGMS2
+plugin: cm_tools.gm_ml_pred.PredGMS2
 plugin_config:
     urls:
       slope: https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif

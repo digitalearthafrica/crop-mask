@@ -21,13 +21,12 @@ def gen_args():
     )
     parse.add_argument(
         "--sqs",
-        default="deafrica-dev-eks-stats-geomedian-semiannual",
-        help="default sqs is the semiannual one",
+        help="The SQS queue where task messages will be sent",
     )
     parse.add_argument(
         "--db",
-        default="s3://deafrica-data-dev-af/crop_mask_eastern/0-1-0/gm_s2_semiannual_all.db",
-        help="task db file url",
+        default="s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db",
+        help="s3 url with the location of the database cache file",
     )
     return parse.parse_args()
 
@@ -35,7 +34,7 @@ def gen_args():
 def publish_task(task_slices: Sequence[Tuple], db_url: str, sqs: str):
     """
     publish the task_df index onto SQS defined
-    odc-stats publish-tasks s3://deafrica-data-dev-af/crop_mask_eastern/0-1-0/gm_s2_semiannual_all.db \
+    odc-stats publish-tasks s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db \
     deafrica-dev-eks-stats-geomedian-semiannual 4005:4010
     """
     assert all([db_url, sqs]), "must have all required arguments, db_url, sqs"
