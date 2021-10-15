@@ -22,6 +22,9 @@ REQUIRED = [
     "rsgislib",
     "scipy",
     "dask",
+    "dask-ml",
+    "rasterstats",
+    "geopy"
 ]
 
 # Package meta-data.
