@@ -69,7 +69,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 
 9. To execute a batch run, we need to publish a list of tiles to AWS's Simple Queue Service. The command `cm-tsk` will use a geojson (e.g. `Western.geojson`) to clip the tasks to just a single region of Africa (defined by the extent of the geojson), and send those tasks/messages to SQS.
 
-        cm-tsk --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop-mask --db=s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db
+        cm-task --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop-mask --db=s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db
 
 
 9. Exit the dev-pod using `exit`, and then trigger the batch run using the command: **Note, confirm that the k8s service user for the crop-mask has permissions write to deafrica-services bucket (sometimes this can automatically reset so needs to be checked before each run)** 
@@ -115,7 +115,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 * To test running one or two tiles in the dev-pod, you can directly run the `cm-pred` command
 
 ```
-cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=100Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:721
+odc-stats run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --resolution=10 --threads=15 --memory-limit=100Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:721
 ```
 
 * Useful kubectl commands you'll need
