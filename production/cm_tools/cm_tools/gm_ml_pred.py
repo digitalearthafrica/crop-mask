@@ -20,7 +20,7 @@ class PredGMS2(StatsPluginInterface):
     """
 
     source_product = "gm_s2_semiannual"
-    target_product = "crop_mask_eastern"
+    target_product = "crop_mask_<region>"
 
     def __init__(
         self,
