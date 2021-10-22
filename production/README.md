@@ -6,10 +6,10 @@ The code base here provides all the methods necessary for running the crop-mask 
 
 ## How to build and install the code
 
-In the folder `dea_ml/`, run the following shell command:
+In the folder `cm_tools/`, run the following shell command:
 
 ```bash
-pip install --extra-index-url="https://packages.dea.ga.gov.au" dea-ml
+pip install --extra-index-url="https://packages.dea.ga.gov.au" cm_tools
 
 ```
 
@@ -17,9 +17,9 @@ pip install --extra-index-url="https://packages.dea.ga.gov.au" dea-ml
 
 The ODC-statistician plugin that does the core analysis can be tested using the notebook [1_test_plugin.ipynb](1_test_plugin.ipynb).
 
-* The ODC-stats plugin is called [PredGMS2](dea_ml/dea_ml/plugins/gm_ml_pred.py)
-* The two primary analysis functions that this plugin references are in the [feature_layer](dea_ml/dea_ml/core/feature_layer.py) and [post_processing](dea_ml/dea_ml/core/post_processing.py) scripts.
-* Two yamls are required to configure the code, one controls some of the inputs to the ML code, e.g. [ml_config_western](dea_ml/dea_ml/config/ml_config_western.yaml), and another controls some of the product specifications, e.g. [plugin_product_western](dea_ml/dea_ml/config/plugin_product_western.yaml).
+* The ODC-stats plugin is called [PredGMS2](cm_tools/cm_tools/gm_ml_pred.py)
+* The two primary analysis functions that this plugin references are in the [feature_layer](cm_tools/cm_tools/feature_layer.py) and [post_processing](cm_tools/cm_tools/post_processing.py) scripts.
+* A yaml is required to configure the plugin, e.g. [config_western](cm_tools/cm_tools/config/config_western.yaml)
 
 ## Running production code
  
@@ -30,9 +30,9 @@ The ODC-statistician plugin that does the core analysis can be tested using the 
  
 The steps to create a large scale cropland extent map using K8s and the ML-methods described in this repo are as follows:
 
-1. Ensure the `ml_config` and `plugin_product` yamls are correct
+1. Ensure the `config_<region>` yaml is correct
 
-2. Ensure the [Dockerfile](../Dockerfile) contains all the right files and libraries. If you alter the `Dockerfile` or the `dea_ml` code base you need to rebuild the image, this can triggered by changing the version number [here](../docker/version.txt) and creating a pull request.
+2. Ensure the [Dockerfile](../Dockerfile) contains all the right files and libraries. If you alter the `Dockerfile` or the `cm_tools` code base you need to rebuild the image, this can triggered by changing the version number [here](../docker/version.txt) and creating a pull request.
 
 3. Ensure the `datakube-apps` and `datakube` repositories have correctly configured pod/job templates. Make sure the image version and config urls are correct.  For production, the files to consider are:
 
@@ -69,10 +69,10 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 
 9. To execute a batch run, we need to publish a list of tiles to AWS's Simple Queue Service. The command `cm-tsk` will use a geojson (e.g. `Western.geojson`) to clip the tasks to just a single region of Africa (defined by the extent of the geojson), and send those tasks/messages to SQS.
 
-        cm-tsk --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop-mask --db=s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db
+        cm-task --task-csv=gm_s2_semiannual_all.csv --geojson=/western/Western.geojson --outfile=/tmp/aez.csv --sqs deafrica-prod-af-eks-stats-crop-mask --db=s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db
 
 
-9. Exit the dev-pod using `exit`, and then trigger the batch run using the command:
+9. Exit the dev-pod using `exit`, and then trigger the batch run using the command: **Note, confirm that the k8s service user for the crop-mask has permissions write to deafrica-services bucket (sometimes this can automatically reset so needs to be checked before each run)** 
 
         kubectl -n processing apply -f workspaces/deafrica-prod-af/processing/statistician/06_stats_crop_mask.yaml
 
@@ -115,7 +115,7 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
 * To test running one or two tiles in the dev-pod, you can directly run the `cm-pred` command
 
 ```
-cm-pred run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --plugin-config=${PCFG} --resolution=10 --threads=15 --memory-limit=100Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:721
+odc-stats run s3://deafrica-services/crop_mask_eastern/1-0-0/gm_s2_semiannual_all.db --config=${CFG} --resolution=10 --threads=15 --memory-limit=100Gi --location=s3://deafrica-data-dev-af/{product}/{version} 719:721
 ```
 
 * Useful kubectl commands you'll need

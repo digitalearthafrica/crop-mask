@@ -1,0 +1,47 @@
+plugin: cm_tools.gm_ml_pred.PredGMS2
+plugin_config:
+    urls:
+      slope: https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif
+      model: ///home/jovyan/git/crop-mask/testing/sahel_cropmask/results/sahel_ml_model_2021112.joblib
+      chirps:
+        - s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.tif
+        - s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif
+      wdpa: s3://deafrica-input-datasets/protected_areas/WDPA_western.tif #place holder, no WDPA for northern
+      aez: ///home/jovyan/git/crop-mask/testing/sahel_cropmask/data/Sahel.geojson
+      td: ///home/jovyan/git/crop-mask/testing/sahel_cropmask/results/training_data/sahel_training_data_20211112.txt
+    rename_dict:
+      B02: blue
+      B03: green
+      B04: red
+      B05: red_edge_1
+      B06: red_edge_2
+      B07: red_edge_3
+      B08: nir
+      B11: swir_1
+      B12: swir_2
+      BCMAD: bcdev
+      EMAD: edev
+      SMAD: sdev
+product:
+  name: crop_mask_sahel
+  short_name: crop_mask_sahel
+  version: 1.0.0
+  product_family: geomedian
+  collections_site: explorer.digitalearth.africa
+  producer: digitalearthafrica.org
+  region_code_format: "x{x:03d}y{y:03d}"
+# computing resources
+threads: 15s
+memory_limit: 120Gi
+max_processing_time: 3600
+job_queue_max_lease: 900
+renew_safety_margin: 60
+future_poll_interval: 2
+s3_acl: bucket-owner-full-control
+# Generic product attributes
+cog_opts:
+  zlevel: 4
+  overrides:
+    rgba:
+      compress: JPEG
+      jpeg_quality: 90
