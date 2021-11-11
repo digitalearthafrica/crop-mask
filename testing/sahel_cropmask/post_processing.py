@@ -55,7 +55,7 @@ def post_processing(
     #mask steep slopes
     url_slope="https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif"
     slope=rio_slurp_xarray(url_slope, gbox=predicted.geobox)
-    slope=slope > 35
+    slope=slope > 50
     predict=predict.where(~slope, 0)
 
     #mask where the elevation is above 3600m
