@@ -9,19 +9,6 @@ plugin_config:
       wdpa: s3://deafrica-input-datasets/protected_areas/WDPA_western.tif
       aez: /western/Western.geojson
       td: /western/western_training_data_20210609.txt
-    rename_dict:
-      B02: blue
-      B03: green
-      B04: red
-      B05: red_edge_1
-      B06: red_edge_2
-      B07: red_edge_3
-      B08: nir
-      B11: swir_1
-      B12: swir_2
-      BCMAD: bcdev
-      EMAD: edev
-      SMAD: sdev
 product:
   name: crop_mask_western
   short_name: crop_mask_western
@@ -31,7 +18,7 @@ product:
   producer: digitalearthafrica.org
   region_code_format: "x{x:03d}y{y:03d}"
 # computing resources
-threads: 15s
+threads: 15
 memory_limit: 120Gi
 max_processing_time: 3600
 job_queue_max_lease: 900
@@ -41,7 +28,3 @@ s3_acl: bucket-owner-full-control
 # Generic product attributes
 cog_opts:
   zlevel: 4
-  overrides:
-    rgba:
-      compress: JPEG
-      jpeg_quality: 90
