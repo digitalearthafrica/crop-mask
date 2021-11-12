@@ -1,5 +1,3 @@
-from typing import Dict, List, Tuple, Any, Optional
-
 import datacube
 import numpy as np
 import xarray as xr
@@ -10,6 +8,7 @@ from odc.algo import xr_reproject
 from odc.algo.io import load_with_native_transform
 from odc.stats.model import Task
 from pyproj import Proj, transform
+from typing import Dict, List, Tuple, Any, Optional, Sequence
 
 
 def common_ops(ds, era):
@@ -129,7 +128,8 @@ def drop_nan_nodata(xx):
 
 
 def gm_mads_two_seasons_prediction(
-    task: Task,
+    datasets,
+    geobox,
     measurements: List[str],
     urls: Dict[Any, Any],
     dask_chunks: Dict[str, Any] = {"x": -1, "y": -1},
@@ -142,14 +142,14 @@ def gm_mads_two_seasons_prediction(
     """
 
     ds = load_with_native_transform(
-        task.datasets,
-        geobox=task.geobox,
+        datasets,
+        geobox=geobox,
         native_transform=lambda x: drop_nan_nodata(x),
         bands=measurements,
         chunks=dask_chunks,
         resampling="bilinear",
     )
-
+    
     dss = {
         "S1": ds.isel(spec=0).drop(["spatial_ref", "spec"]),
         "S2": ds.isel(spec=1).drop(["spatial_ref", "spec"]),

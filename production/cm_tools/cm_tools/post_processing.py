@@ -129,16 +129,17 @@ def post_processing(
     ds = ds.where(~wdpa, 0)
 
     # mask with WOFS
-    wofs = dc.load(
-        product="wofs_ls_summary_alltime", like=predicted.geobox, dask_chunks={}
-    )
-    wofs = wofs.frequency > 0.2  # threshold
-    ds = ds.where(~wofs, 0)
+    wofs=dc.load(product='wofs_ls_summary_annual',
+                 like=predicted.geobox,
+                 dask_chunks={},
+                 time=('2019'))
+    wofs=wofs.frequency > 0.3 # threshold
+    predict=predict.where(~wofs, 0)
 
     # mask steep slopes
     slope = rio_slurp_xarray(urls["slope"], gbox=predicted.geobox)
     slope = slope.chunk({})
-    slope = slope > 35
+    slope = slope > 50
     ds = ds.where(~slope, 0)
 
     # mask where the elevation is above 3600m
