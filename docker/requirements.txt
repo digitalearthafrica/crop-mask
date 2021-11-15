@@ -12,7 +12,7 @@ odc-cloud[ASYNC]==0.2.0a0
 odc-dscache==0.2.0a1
 odc-io==0.2.0a0
 odc-stac==0.2.0a5
-odc-stats==0.2.0a3
+odc-stats==1.0.6a
 
 --extra-index-url="https://packages.dea.ga.gov.au"
 rsgislib==4.1.95
