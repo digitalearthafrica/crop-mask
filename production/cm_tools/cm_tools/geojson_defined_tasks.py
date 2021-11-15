@@ -13,6 +13,9 @@ def gen_args():
     parse = argparse.ArgumentParser()
     parse.add_argument("--task-csv", help="task csv file.")
     parse.add_argument("--geojson", help="the absolute path of the geojson file")
+    parse.add_argument("--grid",
+                       help="the tiling grid to use e.g. africa_10",
+                      default='africa_10')
     parse.add_argument("--outfile", help="output task file")
     parse.add_argument(
         "--publish",
@@ -50,7 +53,7 @@ def publish_task(task_slices: Sequence[Tuple], db_url: str, sqs: str):
 def gen_slices(task_df: pd.DataFrame) -> Sequence[Tuple]:
     tasks_slices = []
     # sorted the indices first, then extract related indices
-    indices = sorted(task_df["Index"])
+    indices = sorted(task_df['Index'])
     start: int = indices[0]
     for cur, next in zip(indices[:-1], indices[1:]):
         if next - cur > 1:
@@ -69,23 +72,25 @@ def main():
         raise ValueError("No geojson file specified")
     if not args.outfile:
         raise ValueError("No output file specified")
+    print('Using tiling grid '+ args.grid)
     with fsspec.open(args.geojson) as fhin:
         data = json.load(fhin)
 
     geom = Geometry(
         data["features"][0]["geometry"], crs=data["crs"]["properties"]["name"]
     )
-    africa10 = GRIDS["africa_10"]
 
+    africa = GRIDS[args.grid]
     task_df = pd.read_csv(args.task_csv)
     aez_tasks = []
     for row in task_df.itertuples():
-        tmp_geom = africa10.tile_geobox((row.X, row.Y)).extent
+        tmp_geom = africa.tile_geobox((row.X, row.Y)).extent
         if geom.contains(tmp_geom) or geom.overlaps(tmp_geom):
             aez_tasks.append(row)
     output_df = pd.DataFrame(aez_tasks)
     output_df.to_csv(args.outfile, index=False)
-    print("Generated tasks from geojson.")
+    print("Generated "+str(len(output_df))+" tasks from geojson")
+
     if args.publish:
         tasks_slices = gen_slices(output_df)
         publish_task(tasks_slices, args.db, args.sqs)
