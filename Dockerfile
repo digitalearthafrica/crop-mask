@@ -49,6 +49,15 @@ COPY testing/western_cropmask/data/Western.geojson /western/Western.geojson
 COPY testing/northern_cropmask/results/northern_ml_model_20210803.joblib /northern/northern_ml_model_20210803.joblib
 COPY testing/northern_cropmask/results/training_data/northern_training_data_20210803.txt /northern/northern_training_data_20210803.txt
 COPY testing/northern_cropmask/data/Northern.geojson /northern/Northern.geojson
+#Sahel region:
+COPY testing/sahel_cropmask/results/sahel_ml_model_20211110.joblib /sahel/sahel_ml_model_20211110.joblib
+COPY testing/sahel_cropmask/results/training_data/sahel_training_data_20211110.txt /sahel/sahel_training_data_20211110.txt
+COPY testing/sahel_cropmask/data/Sahel.geojson /sahel/Sahel.geojson
+#Southern region:
+COPY testing/southern_cropmask/results/southern_ml_model_20211108.joblib /southern/southern_ml_model_20211108.joblib
+COPY testing/southern_cropmask/results/training_data/southern_training_data_20211108.txt /southern/southern_training_data_20211108.txt
+COPY testing/southern_cropmask/data/Southern.geojson /southern/Southern.geojson
+
 
 WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
