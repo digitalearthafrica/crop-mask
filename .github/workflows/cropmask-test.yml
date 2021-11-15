@@ -7,7 +7,7 @@ on:
     paths:
       - 'docker/**'
       - '.github/workflows/cropmask-*'
-      - 'production/dea_ml/**'
+      - 'production/cm_tools/**'
 
 jobs:
   test:
@@ -19,7 +19,7 @@ jobs:
 #     - name: Check files using the black formatter
 #       uses: lgeiger/black-action@master
 #       with:
-#         args: "production/dea_ml --check"
+#         args: "production/cm_tools --check"
 
 #     - name: Annotate diff changes using reviewdog
 #       if: ${{ failure() }}
