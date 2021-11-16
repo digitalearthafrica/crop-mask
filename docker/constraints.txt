@@ -13,4 +13,4 @@ odc-cloud==0.2.0a0
 odc-dscache==0.2.0a1
 odc-io==0.2.0a0
 odc-stac==0.2.0a5
-odc-stats==1.0.6a
+odc-stats==1.0.4
