@@ -8,9 +8,10 @@ s3transfer==0.4.2
 pyyaml==5.4.1
 GDAL==3.3.0
 # odc-tools
-odc-algo==0.2.0a3
-odc-cloud==0.2.0a0
-odc-dscache==0.2.0a1
-odc-io==0.2.0a0
-odc-stac==0.2.0a5
+odc-stats==1.0.4
+odc-apps-cloud==0.2.1.dev3193
+odc-algo==0.2.1.dev3193
+odc-io==0.2.1.dev3193
+odc-dscache==0.2.0a3
+odc-stac==0.2.2
 odc-stats==1.0.4

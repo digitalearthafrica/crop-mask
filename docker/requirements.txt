@@ -7,13 +7,13 @@ dask==2021.6.0
 distributed==2021.6.0
 
 # odc-tools
-odc-algo==0.2.0a3
-odc-cloud[ASYNC]==0.2.0a0
-odc-dscache==0.2.0a1
-odc-io==0.2.0a0
-odc-stac==0.2.0a5
+odc-dscache==0.2.0a3
+odc-stac==0.2.2
 odc-stats==1.0.4
 
 --extra-index-url="https://packages.dea.ga.gov.au"
 rsgislib==4.1.95
 hdstats==0.1.8.post1
+odc-apps-cloud==0.2.1.dev3193
+odc-algo==0.2.1.dev3193
+odc-io==0.2.1.dev3193
