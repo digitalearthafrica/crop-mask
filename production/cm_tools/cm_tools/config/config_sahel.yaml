@@ -8,7 +8,7 @@ plugin_config:
         - s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif
       wdpa: s3://deafrica-input-datasets/protected_areas/WDPA_western.tif #place holder
       aez: /sahel/Sahel.geojson
-      td: /sahel/Sahel_training_data_20211110.txt
+      td: /sahel/sahel_training_data_20211110.txt
 product:
   name: crop_mask_sahel
   short_name: crop_mask_sahel
