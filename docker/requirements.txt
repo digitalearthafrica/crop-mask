@@ -1,3 +1,4 @@
+numpy
 git+https://github.com/ubarsc/rios.git
 git+https://github.com/digitalearthafrica/deafrica-sandbox-notebooks.git#subdirectory=Tools
 datacube[performance,s3]==1.8.5
