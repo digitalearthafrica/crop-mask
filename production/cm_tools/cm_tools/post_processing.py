@@ -133,7 +133,7 @@ def post_processing(
                  like=predicted.geobox,
                  dask_chunks={},
                  time=('2019'))
-    wofs=wofs.frequency > 0.3 # threshold
+    wofs=wofs.frequency > 0.2 # threshold
     predict=predict.where(~wofs, 0)
 
     # mask steep slopes

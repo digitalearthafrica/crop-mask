@@ -49,7 +49,7 @@ def post_processing(
     wofs=dc.load(product='wofs_ls_summary_annual',
                  like=predicted.geobox,
                  time=('2019'))
-    wofs=wofs.frequency > 0.2 # threshold
+    wofs=wofs.frequency > 0.3 # threshold
     predict=predict.where(~wofs, 0)
 
     #mask steep slopes
