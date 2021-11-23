@@ -50,7 +50,7 @@ from rsgislib import segmentation
 import dill
 from pathos.multiprocessing import ProcessingPool as Pool
 from osgeo import gdal
-from rios import rat
+# from rios import rat
 import json
 import shutil
 
