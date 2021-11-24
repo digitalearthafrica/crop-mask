@@ -134,7 +134,7 @@ def post_processing(
                  dask_chunks={},
                  time=('2019'))
     wofs=wofs.frequency > 0.20 # threshold
-    predict=predict.where(~wofs, 0)
+    ds=ds.where(~wofs, 0)
 
     # mask steep slopes
     slope = rio_slurp_xarray(urls["slope"], gbox=predicted.geobox)
