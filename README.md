@@ -25,7 +25,7 @@ The cropland maps all share the following specifications:
 * Have a spatial resolution of 10 metres
 * Developed using data from 2019
 * **Cropland definition**:
-    * `A piece of land of minimum 0.16 ha that is sowed/planted and harvest-able at least once within the 12 months after the sowing/planting date.`
+    * `A piece of land of minimum 0.01 ha that is sowed/planted and harvest-able at least once within the 12 months after the sowing/planting date.`
     * This definition will exclude grasslands and perennial crops which can be difficult for satellite imagery to differentiate from natural vegetation.
 
 ***
