@@ -34,7 +34,7 @@ The steps to create a large scale cropland extent map using K8s/Argo and the ML-
 
 2. Ensure the [Dockerfile](../Dockerfile) contains all the right files and libraries. If you alter the `Dockerfile` or the `cm_tools` code base you need to rebuild the image, this can triggered by changing the version number [here](../docker/version.txt) and creating a pull request.
 
-3. Login to DE Africa's [Argo-production](https://argo.digitalearth.africa/workflows?limit=500) workspace (or [Argo-dev](https://argo.dev.digitalearth.africa/workflows?limit=500), click on `submit workflow`, and the use the drop-down box to select the `stats-crop-mask-processing` template.  The yaml file which creates this workflow is located [here](https://github.com/digitalearthafrica/datakube-apps/blob/main/workspaces/deafrica-prod-af/processing/argo/workflow-templates/stats-crop-mask.yaml) in the [datakube-apps](https://github.com/digitalearthafrica/datakube-apps) repo.
+3. Login to DE Africa's [Argo-production](https://argo.digitalearth.africa/workflows?limit=500) workspace (or [Argo-dev](https://argo.dev.digitalearth.africa/workflows?limit=500)), click on `submit workflow`, and use the drop-down box to select the `stats-crop-mask-processing` template.  The yaml file which creates this workflow is located [here](https://github.com/digitalearthafrica/datakube-apps/blob/main/workspaces/deafrica-prod-af/processing/argo/workflow-templates/stats-crop-mask.yaml) in the [datakube-apps](https://github.com/digitalearthafrica/datakube-apps) repo.
 
 4. Change the parameters in the workflow template to align with the job you're running. A screen shot is shown below.
 
