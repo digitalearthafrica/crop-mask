@@ -8,7 +8,7 @@ A central focus for governing bodies in Africa is the need to secure the necessa
 
 ## Description
 
-The notebooks and scripts in this repository build cropland extent (crop/non-crop) maps for each of the eight simplified Agro-Ecological Zones (AEZ) shown in figure 1. The process for building models and generating test classifications for each AEZ are contained in their namesake folders within the `testing/` directory (e.g. `testing/eastern_cropmask`).
+The notebooks and scripts in this repository build cropland extent (crop/non-crop) maps for each of the _eight_ simplified Agro-Ecological Zones (AEZ) shown in figure 1. The process for building models and generating test classifications for each AEZ are contained in their namesake folders within the `testing/` directory (e.g. `testing/eastern_cropmask`).
 
 For generating production runs of the crop mask, refer to the `production/` directory.
 
