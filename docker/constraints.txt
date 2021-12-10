@@ -14,4 +14,4 @@ odc-algo==0.2.1.dev3193
 odc-io==0.2.1.dev3193
 odc-dscache==0.2.0a3
 odc-stac==0.2.2
-odc-stats==1.0.7
+odc-stats==1.0.4
