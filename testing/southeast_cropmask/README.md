@@ -1,6 +1,6 @@
 <img align="centre" src="../../figs/Github_banner.jpg" width="100%">
 
-# Southern Africa Cropland Mask
+# Southeast Africa Cropland Mask
 
 ## Background
 
