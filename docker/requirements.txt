@@ -9,7 +9,7 @@ distributed==2021.6.0
 # odc-tools
 odc-dscache==0.2.0a3
 odc-stac==0.2.2
-odc-stats==1.0.4
+odc-stats==1.0.7
 
 --extra-index-url="https://packages.dea.ga.gov.au"
 rsgislib==4.1.95

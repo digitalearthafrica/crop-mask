@@ -58,7 +58,6 @@ COPY testing/southern_cropmask/results/southern_ml_model_20211108.joblib /southe
 COPY testing/southern_cropmask/results/training_data/southern_training_data_20211108.txt /southern/southern_training_data_20211108.txt
 COPY testing/southern_cropmask/data/Southern.geojson /southern/Southern.geojson
 
-
 WORKDIR /tmp
 COPY --from=env_builder $py_env_path $py_env_path
 
