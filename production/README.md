@@ -9,7 +9,7 @@ The code base here provides all the methods necessary for running the crop mask 
 In the folder `cm_tools/`, run the following shell command:
 
 ```bash
-pip install --extra-index-url="https://packages.dea.ga.gov.au" cm_tools
+pip install cm_tools
 
 ```
 
