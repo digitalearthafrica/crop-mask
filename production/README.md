@@ -54,8 +54,8 @@ The steps to create a large scale cropland extent map using K8s/Argo and the ML-
 
 5. To monitor the batch run you can use:
    
-     * Production CPU, memory, SQS monitoring: https://mgmt.digitalearth.africa/d/wIVvTqR7k/crop-mask
-     * Dev CPU, memory, SQS monitoring: https://mgmt.dev.digitalearth.africa/d/wIVvTqR7k/crop-mask
+     * Production CPU, memory, SQS monitoring: https://mgmt.digitalearth.africa/d/CropMaskMetrics/crop-mask-annual
+     * Dev CPU, memory, SQS monitoring: https://mgmt.dev.digitalearth.africa/d/CropMaskMetrics/crop-mask-annual
 
 6. To check the logs of any pod, you can click on one of the pods that displays in Argo after you hit submit and then click the `logs` button 
 
