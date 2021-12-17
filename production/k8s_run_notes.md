@@ -2,11 +2,24 @@
 
 > These are notes for running a crop-mask job manually through the command line after logging into the dev or prod k8s cluster (using a devbox). The notes here are largely superseeded by the Argo run procedure explained in the `README` file, but these notes are preserved here for posterity.
 
+* The ODC-stats plugin is called [PredGMS2](cm_tools/cm_tools/gm_ml_pred.py)
+* The two primary functions that this plugin references are in the [feature_layer](cm_tools/cm_tools/feature_layer.py) and [post_processing](cm_tools/cm_tools/post_processing.py) scripts.
+* A yaml is required to configure the plugin, e.g. [config_western](cm_tools/cm_tools/config/config_western.yaml)
+
+## Running production code
+ 
+ > Note, the following contains an example of running the code on the production EKS, the workflow should first be tested in DEV-EKS.
+ 
+        DEV Cluster: deafrica-dev-eks
+        PROD Cluster: deafrica-prod-af-eks
+ 
+The steps to create a large scale cropland extent map using K8s and the ML-methods described in this repo are as follows:
+
 1. Ensure the `config_<region>` yaml is correct for the region of Africa you are running. i.e. one of these files [here](https://github.com/digitalearthafrica/crop-mask/tree/main/production/cm_tools/cm_tools/config)
 
 2. Ensure the [Dockerfile](../Dockerfile) contains all the right files and libraries. If you alter the `Dockerfile` or the `cm_tools` code base you need to rebuild the image, this can triggered by changing the version number [here](../docker/version.txt) and creating a pull request.
 
-3. Ensure the `datakube-apps` and `datakube` repositories have correctly configured pod/argo templates. Make sure the image version and config urls are correct.  For production, the files to consider are:
+3. Ensure the `datakube-apps` and `datakube` repositories have correctly configured pod/job templates. Make sure the image version and config urls are correct.  For production, the files to consider are:
 
 * Batch run job template: [06_stats_crop_mask.yaml](https://bitbucket.org/geoscienceaustralia/datakube-apps/src/master/workspaces/deafrica-prod-af/processing/statistician/06_stats_crop_mask.yaml)
 
