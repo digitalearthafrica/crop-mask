@@ -35,7 +35,7 @@ def post_processing(
     #print("  masking with AEZ,WDPA,WOfS,slope & elevation")    
     
     # mask out classification beyond AEZ boundary
-    gdf = gpd.read_file('data/Southern_SE.shp').to_crs('epsg:6933')
+    gdf = gpd.read_file('data/Southeast.shp').to_crs('epsg:6933')
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
     predict = predict.where(mask,0)
