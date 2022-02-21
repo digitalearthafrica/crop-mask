@@ -9,7 +9,6 @@ from datacube import Datacube
 from odc.algo import xr_reproject
 from datacube.utils.cog import write_cog
 from rsgislib.segmentation import segutils
-from scipy.ndimage.measurements import _stats
 from datacube.utils.geometry import assign_crs
 from datacube.testutils.io import rio_slurp_xarray
 from deafrica_tools.spatial import xr_rasterize
