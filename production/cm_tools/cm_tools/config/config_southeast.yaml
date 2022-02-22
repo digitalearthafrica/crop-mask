@@ -1,0 +1,30 @@
+plugin: cm_tools.gm_ml_pred.PredGMS2
+plugin_config:
+    urls:
+      slope: https://deafrica-input-datasets.s3.af-south-1.amazonaws.com/srtm_dem/srtm_africa_slope.tif
+      model: /southeast/southeast_ml_model_20220222.joblib
+      chirps:
+        - s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.tif
+        - s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif
+      wdpa: s3://deafrica-input-datasets/protected_areas/WDPA_southern.tif #covers southeast region too
+      aez: /southern/Southeast.geojson
+      td: /southern/southeast_training_data_20220222.txt
+product:
+  name: crop_mask_southeast
+  short_name: crop_mask_southeast
+  version: 1.0.0
+  product_family: geomedian
+  collections_site: explorer.digitalearth.africa
+  producer: digitalearthafrica.org
+  region_code_format: "x{x:03d}y{y:03d}"
+# computing resources
+threads: 15
+memory_limit: 120Gi
+max_processing_time: 3600
+job_queue_max_lease: 900
+renew_safety_margin: 60
+future_poll_interval: 2
+s3_acl: bucket-owner-full-control
+# Generic product attributes
+cog_opts:
+  zlevel: 4

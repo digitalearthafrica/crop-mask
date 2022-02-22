@@ -11,6 +11,7 @@ IS_DEAFRICA_SANDBOX = ('sandbox' in os.getenv('JUPYTER_IMAGE', default=''))
 REQUIRED = [
     "xarray",
     "joblib",
+    "numba",
     "numpy",
     "datacube",
     "pyproj",
