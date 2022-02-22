@@ -1,40 +1,31 @@
-ARG py_env_path=/env
-ARG V_BASE=3.3.0
-
-FROM opendatacube/geobase-builder:${V_BASE} as env_builder
-ENV LC_ALL=C.UTF-8
-
-# Install our Python requirements
-COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
-
-RUN cat /conf/version.txt && \
-  env-build-tool new /conf/requirements.txt /conf/constraints.txt ${py_env_path}
-
-# Install the crop mask tools
-ADD production/cm_tools /tmp/cm_tools
-RUN /env/bin/pip install \
-  --extra-index-url="https://packages.dea.ga.gov.au" /tmp/cm_tools && \
-  rm -rf /tmp/cm_tools
-
-# Below is the actual image that does the running
-FROM opendatacube/geobase-runner:${V_BASE}
-ARG py_env_path=/env
+FROM osgeo/gdal:ubuntu-small-3.4.1
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    PATH="${py_env_path}/bin:${PATH}" \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 
+# Install system tools
 RUN apt-get update \
-    && apt-get install software-properties-common -y \
-    && apt-get upgrade -y
-    
-# Add in the dask configuration
-COPY docker/distributed.yaml /etc/dask/distributed.yaml
+    && apt-get install software-properties-common -y
+
 ADD docker/apt-run.txt /tmp/
 RUN apt-get update \
     && sed 's/#.*//' /tmp/apt-run.txt | xargs apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
+
+# Install the crop mask tools
+ADD production/cm_tools /tmp/cm_tools
+RUN pip install --extra-index-url="https://packages.dea.ga.gov.au" /tmp/cm_tools && \
+  rm -rf /tmp/cm_tools
+
+# Install our Python requirements
+RUN mkdir -p /conf
+COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
+
+RUN cat /conf/version.txt && \
+  pip install --no-cache-dir --upgrade pip \
+  && pip install --no-cache-dir \
+  -r /conf/requirements.txt \
 
 # Copy across region specific models, geojsons, and training data
 #Eastern region:
@@ -63,7 +54,6 @@ COPY testing/southeast_cropmask/results/training_data/southeast_training_data_20
 COPY testing/southeast_cropmask/data/Southeast.geojson /southeast/Southeast.geojson
 
 WORKDIR /tmp
-COPY --from=env_builder $py_env_path $py_env_path
 
 RUN env && echo $PATH && pip freeze && pip check
 RUN cm-task --help

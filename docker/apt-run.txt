@@ -7,7 +7,6 @@ wget
 curl
 nano
 vim
-# libcgal13
 libcgal-dev
 libmuparser-dev
 libgsl23
@@ -15,3 +14,8 @@ libboost-system1.71.0
 libboost-filesystem1.71.0
 libboost-date-time1.71.0
 build-essential
+python3-pip
+python3-dev
+ca-certificates
+build-essential
+libpq-dev
