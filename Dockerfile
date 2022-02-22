@@ -13,6 +13,9 @@ RUN apt-get update \
     && sed 's/#.*//' /tmp/apt-run.txt | xargs apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
+# Add in the dask configuration
+COPY docker/distributed.yaml /etc/dask/distributed.yaml
+
 # Install our Python requirements
 RUN mkdir -p /conf
 COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
