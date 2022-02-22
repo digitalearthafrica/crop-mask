@@ -55,5 +55,5 @@ COPY testing/southeast_cropmask/data/Southeast.geojson /southeast/Southeast.geoj
 
 WORKDIR /tmp
 
-RUN env && echo $PATH && pip freeze && pip check
+RUN pip freeze && pip check
 RUN cm-task --help
