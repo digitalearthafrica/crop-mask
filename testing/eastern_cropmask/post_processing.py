@@ -14,7 +14,7 @@ from datacube.utils.geometry import assign_crs
 from deafrica_tools.classification import HiddenPrints
 from deafrica_tools.spatial import xr_rasterize
 from rsgislib.segmentation import segutils
-from scipy.ndimage.measurements import _stats
+from scipy.ndimage._measurements import _stats
 
 # @dask.delayed
 # def image_segmentation(ndvi, predict):   
