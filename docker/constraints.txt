@@ -321,7 +321,7 @@ numexpr==2.8.1
     # via
     #   deafrica-tools
     #   odc-algo
-numpy==1.22.2
+numpy==1.21.5
     # via
     #   astropy
     #   bottleneck
