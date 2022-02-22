@@ -1,17 +1,658 @@
-dask_ml==1.9.0
-click==8.0.1
-morecantile==2.1.2
-aiobotocore==1.3.3
+affine==2.3.0
+    # via
+    #   datacube
+    #   eodatasets3
+    #   odc-algo
+    #   odc-stac
+    #   rasterio
+    #   rasterstats
+aiobotocore[awscli,boto3]==1.3.3
+    # via
+    #   -r requirements.txt
+    #   odc-cloud
+aiohttp==3.8.1
+    # via aiobotocore
+aioitertools==0.9.0
+    # via aiobotocore
+aiosignal==1.2.0
+    # via aiohttp
+argon2-cffi==21.3.0
+    # via notebook
+argon2-cffi-bindings==21.2.0
+    # via argon2-cffi
+astropy==5.0.1
+    # via hdstats
+asttokens==2.0.5
+    # via stack-data
+async-timeout==4.0.2
+    # via aiohttp
+attrs==21.4.0
+    # via
+    #   aiohttp
+    #   cattrs
+    #   eodatasets3
+    #   fiona
+    #   jsonschema
+    #   rasterio
+awscli==1.19.106
+    # via aiobotocore
+backcall==0.2.0
+    # via ipython
+black==22.1.0
+    # via ipython
+bleach==4.1.0
+    # via nbconvert
+boltons==21.0.0
+    # via eodatasets3
 boto3==1.17.106
+    # via
+    #   aiobotocore
+    #   datacube
+    #   odc-cloud
 botocore==1.20.106
-s3transfer==0.4.2
-pyyaml==5.4.1
-GDAL==3.3.0
-# odc-tools
-odc-stats==1.0.4
-odc-apps-cloud==0.2.1.dev3193
+    # via
+    #   aiobotocore
+    #   awscli
+    #   boto3
+    #   datacube
+    #   eodatasets3
+    #   odc-cloud
+    #   odc-stats
+    #   s3transfer
+bottleneck==1.3.2
+    # via datacube
+branca==0.4.2
+    # via
+    #   deafrica-tools
+    #   folium
+cachetools==5.0.0
+    # via datacube
+cattrs==1.10.0
+    # via eodatasets3
+certifi==2021.10.8
+    # via
+    #   fiona
+    #   pyproj
+    #   rasterio
+    #   requests
+cffi==1.15.0
+    # via argon2-cffi-bindings
+cftime==1.5.2
+    # via netcdf4
+charset-normalizer==2.0.12
+    # via
+    #   aiohttp
+    #   requests
+ciso8601==2.2.0
+    # via
+    #   datacube
+    #   eodatasets3
+click==8.0.4
+    # via
+    #   black
+    #   click-plugins
+    #   cligj
+    #   datacube
+    #   distributed
+    #   eodatasets3
+    #   fiona
+    #   odc-apps-cloud
+    #   odc-dscache
+    #   odc-stats
+    #   rasterio
+click-plugins==1.1.1
+    # via
+    #   fiona
+    #   rasterio
+cligj==0.7.2
+    # via
+    #   fiona
+    #   rasterio
+    #   rasterstats
+cloudpickle==2.0.0
+    # via
+    #   datacube
+    #   distributed
+colorama==0.4.3
+    # via awscli
+cycler==0.11.0
+    # via matplotlib
+dask[array]==2021.6.0
+    # via
+    #   -r requirements.txt
+    #   dask-image
+    #   datacube
+    #   deafrica-tools
+    #   distributed
+    #   odc-algo
+    #   odc-stats
+dask-image==2021.12.0
+    # via odc-algo
+datacube[performance,s3]==1.8.5
+    # via
+    #   -r requirements.txt
+    #   deafrica-tools
+    #   eodatasets3
+    #   odc-algo
+    #   odc-dscache
+    #   odc-stac
+    #   odc-stats
+    #   odc-ui
+datetime==4.4
+    # via deafrica-tools
+deafrica-tools @ git+https://github.com/digitalearthafrica/deafrica-sandbox-notebooks.git#subdirectory=Tools
+    # via -r requirements.txt
+debugpy==1.5.1
+    # via ipykernel
+decorator==5.1.1
+    # via ipython
+defusedxml==0.7.1
+    # via
+    #   eodatasets3
+    #   nbconvert
+distributed==2021.6.0
+    # via
+    #   -r requirements.txt
+    #   datacube
+    #   odc-algo
+    #   odc-stats
+docutils==0.15.2
+    # via awscli
+entrypoints==0.4
+    # via
+    #   jupyter-client
+    #   nbconvert
+eodatasets3==0.25.0
+    # via odc-stats
+executing==0.8.2
+    # via stack-data
+fiona==1.8.21
+    # via
+    #   deafrica-tools
+    #   geopandas
+    #   rasterstats
+folium==0.12.1.post1
+    # via deafrica-tools
+fonttools==4.29.1
+    # via matplotlib
+frozenlist==1.3.0
+    # via
+    #   aiohttp
+    #   aiosignal
+fsspec==2022.1.0
+    # via deafrica-tools
+gdal==3.4.1
+    # via
+    #   deafrica-tools
+    #   rsgislib
+geographiclib==1.52
+    # via geopy
+geopandas==0.10.2
+    # via deafrica-tools
+geopy==2.2.0
+    # via deafrica-tools
+greenlet==1.1.2
+    # via sqlalchemy
+h5py==3.6.0
+    # via rsgislib
+hdstats==0.1.8.post1
+    # via
+    #   -r requirements.txt
+    #   deafrica-tools
+heapdict==1.0.1
+    # via zict
+idna==3.3
+    # via
+    #   requests
+    #   yarl
+imageio==2.16.0
+    # via scikit-image
+importlib-resources==5.4.0
+    # via jsonschema
+ipykernel==6.9.1
+    # via
+    #   ipywidgets
+    #   notebook
+ipyleaflet==0.15.0
+    # via odc-ui
+ipython==8.0.1
+    # via
+    #   ipykernel
+    #   ipywidgets
+    #   jupyter-ui-poll
+    #   odc-ui
+ipython-genutils==0.2.0
+    # via
+    #   ipywidgets
+    #   nbformat
+    #   notebook
+ipywidgets==7.6.5
+    # via
+    #   ipyleaflet
+    #   odc-ui
+jedi==0.18.1
+    # via ipython
+jinja2==3.0.3
+    # via
+    #   branca
+    #   folium
+    #   nbconvert
+    #   notebook
+    #   odc-stac
+jmespath==0.10.0
+    # via
+    #   boto3
+    #   botocore
+joblib==1.1.0
+    # via scikit-learn
+jsonschema==4.4.0
+    # via
+    #   datacube
+    #   eodatasets3
+    #   nbformat
+jupyter-client==7.1.2
+    # via
+    #   ipykernel
+    #   nbclient
+    #   notebook
+jupyter-core==4.9.2
+    # via
+    #   jupyter-client
+    #   nbconvert
+    #   nbformat
+    #   notebook
+jupyter-ui-poll==0.2.1
+    # via odc-ui
+jupyterlab-pygments==0.1.2
+    # via nbconvert
+jupyterlab-widgets==1.0.2
+    # via ipywidgets
+kiwisolver==1.3.2
+    # via matplotlib
+lark-parser==0.12.0
+    # via datacube
+lmdb==1.3.0
+    # via odc-dscache
+markupsafe==2.1.0
+    # via jinja2
+matplotlib==3.5.1
+    # via
+    #   deafrica-tools
+    #   odc-ui
+matplotlib-inline==0.1.3
+    # via
+    #   ipykernel
+    #   ipython
+mistune==0.8.4
+    # via nbconvert
+msgpack==1.0.3
+    # via distributed
+multidict==6.0.2
+    # via
+    #   aiohttp
+    #   yarl
+munch==2.5.0
+    # via fiona
+mypy-extensions==0.4.3
+    # via black
+nbclient==0.5.11
+    # via nbconvert
+nbconvert==6.4.2
+    # via notebook
+nbformat==5.1.3
+    # via
+    #   ipywidgets
+    #   nbclient
+    #   nbconvert
+    #   notebook
+nest-asyncio==1.5.4
+    # via
+    #   ipykernel
+    #   jupyter-client
+    #   nbclient
+    #   notebook
+netcdf4==1.5.8
+    # via datacube
+networkx==2.6.3
+    # via scikit-image
+notebook==6.4.8
+    # via widgetsnbextension
+numexpr==2.8.1
+    # via
+    #   deafrica-tools
+    #   odc-algo
+numpy==1.22.2
+    # via
+    #   astropy
+    #   bottleneck
+    #   cftime
+    #   dask-image
+    #   datacube
+    #   deafrica-tools
+    #   eodatasets3
+    #   folium
+    #   h5py
+    #   hdstats
+    #   imageio
+    #   matplotlib
+    #   netcdf4
+    #   numexpr
+    #   odc-algo
+    #   odc-stac
+    #   odc-stats
+    #   odc-ui
+    #   pandas
+    #   pims
+    #   pyerfa
+    #   pywavelets
+    #   rasterio
+    #   rasterstats
+    #   rsgislib
+    #   scikit-image
+    #   scikit-learn
+    #   scipy
+    #   snuggs
+    #   tifffile
+    #   xarray
 odc-algo==0.2.1.dev3193
-odc-io==0.2.1.dev3193
+    # via
+    #   -r requirements.txt
+    #   odc-stats
+    #   odc-ui
+odc-apps-cloud==0.2.1.dev3193
+    # via -r requirements.txt
+odc-cloud[async]==0.2.1
+    # via
+    #   odc-apps-cloud
+    #   odc-stats
 odc-dscache==0.2.0a3
+    # via
+    #   -r requirements.txt
+    #   odc-stats
+odc-io==0.2.1.dev3193
+    # via
+    #   -r requirements.txt
+    #   odc-apps-cloud
 odc-stac==0.2.2
+    # via
+    #   -r requirements.txt
+    #   odc-algo
+    #   odc-dscache
+    #   odc-stats
 odc-stats==1.0.4
+    # via -r requirements.txt
+odc-ui==0.2.1.dev3246
+    # via deafrica-tools
+owslib==0.25.0
+    # via deafrica-tools
+packaging==21.3
+    # via
+    #   astropy
+    #   bleach
+    #   matplotlib
+    #   numexpr
+    #   scikit-image
+    #   xarray
+pandas==1.4.1
+    # via
+    #   datacube
+    #   deafrica-tools
+    #   geopandas
+    #   odc-stac
+    #   odc-stats
+    #   odc-ui
+    #   xarray
+pandocfilters==1.5.0
+    # via nbconvert
+parso==0.8.3
+    # via jedi
+pathspec==0.9.0
+    # via black
+pexpect==4.8.0
+    # via ipython
+pickleshare==0.7.5
+    # via ipython
+pillow==9.0.1
+    # via
+    #   imageio
+    #   matplotlib
+    #   scikit-image
+pims==0.5
+    # via dask-image
+platformdirs==2.5.1
+    # via black
+prometheus-client==0.13.1
+    # via notebook
+prompt-toolkit==3.0.28
+    # via ipython
+psutil==5.9.0
+    # via distributed
+psycopg2==2.9.3
+    # via datacube
+ptyprocess==0.7.0
+    # via
+    #   pexpect
+    #   terminado
+pure-eval==0.2.2
+    # via stack-data
+pyasn1==0.4.8
+    # via rsa
+pycparser==2.21
+    # via cffi
+pyerfa==2.0.0.1
+    # via astropy
+pygments==2.11.2
+    # via
+    #   ipython
+    #   jupyterlab-pygments
+    #   nbconvert
+pyparsing==3.0.7
+    # via
+    #   matplotlib
+    #   packaging
+    #   snuggs
+pyproj==3.3.0
+    # via
+    #   datacube
+    #   deafrica-tools
+    #   eodatasets3
+    #   geopandas
+    #   owslib
+pyrsistent==0.18.1
+    # via jsonschema
+pystac==1.3.0
+    # via
+    #   eodatasets3
+    #   odc-stac
+    #   odc-stats
+python-dateutil==2.8.2
+    # via
+    #   botocore
+    #   datacube
+    #   jupyter-client
+    #   matplotlib
+    #   owslib
+    #   pandas
+    #   pystac
+python-rapidjson==1.6
+    # via eodatasets3
+pytz==2021.3
+    # via
+    #   datetime
+    #   owslib
+    #   pandas
+pywavelets==1.2.0
+    # via scikit-image
+pyyaml==5.4.1
+    # via
+    #   astropy
+    #   awscli
+    #   datacube
+    #   distributed
+    #   owslib
+pyzmq==22.3.0
+    # via
+    #   jupyter-client
+    #   jupyter-ui-poll
+    #   notebook
+rasterio==1.2.10
+    # via
+    #   datacube
+    #   deafrica-tools
+    #   eodatasets3
+    #   odc-algo
+    #   odc-ui
+    #   rasterstats
+rasterstats==0.16.0
+    # via deafrica-tools
+requests==2.27.1
+    # via
+    #   folium
+    #   owslib
+rios @ https://github.com/ubarsc/rios/archive/rios-1.4.10.tar.gz
+    # via
+    #   -r requirements.txt
+    #   rsgislib
+rsa==4.7.2
+    # via awscli
+rsgislib==4.1.95
+    # via -r requirements.txt
+ruamel-yaml==0.17.21
+    # via eodatasets3
+ruamel-yaml-clib==0.2.6
+    # via ruamel-yaml
+s3transfer==0.4.2
+    # via
+    #   awscli
+    #   boto3
+scikit-image==0.19.2
+    # via
+    #   deafrica-tools
+    #   odc-algo
+scikit-learn==1.0.2
+    # via deafrica-tools
+scipy==1.8.0
+    # via
+    #   dask-image
+    #   deafrica-tools
+    #   eodatasets3
+    #   hdstats
+    #   scikit-image
+    #   scikit-learn
+send2trash==1.8.0
+    # via notebook
+shapely==1.8.1.post1
+    # via
+    #   datacube
+    #   deafrica-tools
+    #   eodatasets3
+    #   geopandas
+    #   rasterstats
+simplejson==3.17.6
+    # via rasterstats
+six==1.16.0
+    # via
+    #   asttokens
+    #   bleach
+    #   fiona
+    #   munch
+    #   pims
+    #   python-dateutil
+    #   slicerator
+slicerator==1.0.0
+    # via pims
+snuggs==1.4.7
+    # via rasterio
+sortedcontainers==2.4.0
+    # via distributed
+sqlalchemy==1.4.31
+    # via datacube
+stack-data==0.2.0
+    # via ipython
+structlog==21.5.0
+    # via eodatasets3
+tblib==1.7.0
+    # via distributed
+terminado==0.13.1
+    # via notebook
+testpath==0.5.0
+    # via nbconvert
+threadpoolctl==3.1.0
+    # via scikit-learn
+tifffile==2022.2.9
+    # via scikit-image
+tomli==2.0.1
+    # via black
+toolz==0.11.2
+    # via
+    #   datacube
+    #   distributed
+    #   odc-algo
+    #   odc-dscache
+    #   odc-stac
+    #   odc-stats
+tornado==6.1
+    # via
+    #   distributed
+    #   ipykernel
+    #   jupyter-client
+    #   jupyter-ui-poll
+    #   notebook
+    #   terminado
+tqdm==4.62.3
+    # via
+    #   deafrica-tools
+    #   odc-stats
+    #   rsgislib
+traitlets==5.1.1
+    # via
+    #   ipykernel
+    #   ipython
+    #   ipywidgets
+    #   jupyter-client
+    #   jupyter-core
+    #   matplotlib-inline
+    #   nbclient
+    #   nbconvert
+    #   nbformat
+    #   notebook
+    #   traittypes
+traittypes==0.2.1
+    # via ipyleaflet
+typing-extensions==4.1.1
+    # via
+    #   aioitertools
+    #   black
+urllib3==1.26.8
+    # via
+    #   botocore
+    #   requests
+wcwidth==0.2.5
+    # via prompt-toolkit
+webencodings==0.5.1
+    # via bleach
+widgetsnbextension==3.5.2
+    # via ipywidgets
+wrapt==1.13.3
+    # via aiobotocore
+xarray==0.21.1
+    # via
+    #   datacube
+    #   deafrica-tools
+    #   eodatasets3
+    #   odc-algo
+    #   odc-stac
+    #   odc-stats
+    #   odc-ui
+xyzservices==2022.2.0
+    # via ipyleaflet
+yarl==1.7.2
+    # via aiohttp
+zict==2.0.0
+    # via distributed
+zipp==3.7.0
+    # via importlib-resources
+zope-interface==5.4.0
+    # via datetime
+zstandard==0.17.0
+    # via odc-dscache

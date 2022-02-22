@@ -13,19 +13,15 @@ RUN apt-get update \
     && sed 's/#.*//' /tmp/apt-run.txt | xargs apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
-# Install the crop mask tools
-ADD production/cm_tools /tmp/cm_tools
-RUN pip install --extra-index-url="https://packages.dea.ga.gov.au" /tmp/cm_tools && \
-  rm -rf /tmp/cm_tools
-
 # Install our Python requirements
 RUN mkdir -p /conf
 COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
 
-RUN cat /conf/version.txt && \
-  pip install --no-cache-dir --upgrade pip \
-  && pip install --no-cache-dir \
-  -r /conf/requirements.txt
+RUN pip install --no-cache-dir -r /conf/requirements.txt
+
+# Install the crop mask tools
+ADD production/cm_tools /code
+RUN pip install /code
 
 # Copy across region specific models, geojsons, and training data
 #Eastern region:
@@ -53,7 +49,7 @@ COPY testing/southeast_cropmask/results/southeast_ml_model_20220222.joblib /sout
 COPY testing/southeast_cropmask/results/training_data/southeast_training_data_20220222.txt /southeast/southeast_training_data_20220222.txt
 COPY testing/southeast_cropmask/data/Southeast.geojson /southeast/Southeast.geojson
 
-WORKDIR /tmp
+WORKDIR /code
 
 RUN pip freeze
 RUN cm-task --help
