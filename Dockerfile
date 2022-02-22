@@ -16,8 +16,9 @@ RUN apt-get update \
 # Install our Python requirements
 RUN mkdir -p /conf
 COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
-
-RUN pip install --no-cache-dir -r /conf/requirements.txt
+RUN pip install --no-cache-dir \
+    -r /conf/requirements.txt \
+    -c /conf/constraints.txt
 
 # Install the crop mask tools
 ADD production/cm_tools /code
