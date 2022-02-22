@@ -25,7 +25,7 @@ COPY docker/requirements.txt docker/version.txt docker/constraints.txt /conf/
 RUN cat /conf/version.txt && \
   pip install --no-cache-dir --upgrade pip \
   && pip install --no-cache-dir \
-  -r /conf/requirements.txt \
+  -r /conf/requirements.txt
 
 # Copy across region specific models, geojsons, and training data
 #Eastern region:
