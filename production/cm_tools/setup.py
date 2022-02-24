@@ -23,7 +23,8 @@ REQUIRED = [
     "typing",
     "geopandas",
     "gdal",
-    "rsgislib",
+    # The absurdity of rsgislib is that it's installed and it's not able to be checked
+    # "rsgislib",
     "scipy",
     "dask",
     "dask-ml",
