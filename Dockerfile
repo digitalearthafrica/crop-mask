@@ -23,8 +23,9 @@ RUN conda update -n base -c defaults conda \
 # Make the environment always activate
 RUN echo "conda activate cropmask" > ~/.bashrc
 
-# Manually install Rasterio, so it works, maybe
-RUN pip install rasterio --no-binary rasterio
+# Pip requirements (rasterio and Tools)
+COPY docker/requirements.txt /conf/
+RUN pip install -r /conf/requirements.txt
 
 # Check we can use rsgislib
 RUN python -c "import rsgislib; print(rsgislib.__version__)" \
