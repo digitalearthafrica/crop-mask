@@ -17,6 +17,7 @@ REQUIRED = [
     "pyproj",
     "fsspec",
     "odc-stats",
+    "odc-stac",
     "odc-algo",
     "odc-dscache",
     "pandas",
