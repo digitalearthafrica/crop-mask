@@ -72,4 +72,5 @@ ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "cropmask"]
 RUN python -c "import rsgislib; print(rsgislib.__version__)" \
   && python -c "from rsgislib.segmentation import segutils" \
   && cat /conf/version.txt \
-  && cm-task --help
+  && cm-task --help \
+  && odc-stats --version
