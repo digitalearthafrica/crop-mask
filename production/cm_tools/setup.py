@@ -31,7 +31,9 @@ REQUIRED = [
     "dask",
     "dask-ml",
     "rasterstats",
-    "geopy"
+    "geopy",
+    # DE Africa tools from https://github.com/digitalearthafrica/deafrica-sandbox-notebooks/tree/main/Tools
+    "deafrica_tools",
 ]
 
 # Package meta-data.
