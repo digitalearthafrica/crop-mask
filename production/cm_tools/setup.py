@@ -18,6 +18,7 @@ REQUIRED = [
     "fsspec",
     "odc-stats",
     "odc-stac",
+    "odc-io",
     "odc-algo",
     "odc-dscache",
     "pandas",
