@@ -6,7 +6,11 @@ RUN mkdir -p /conf
 # Make RUN commands use `bash --login`:
 SHELL ["/bin/bash", "--login", "-c"]
 
-RUN apt-get update && apt-get install -y build-essential
+RUN apt-get update \
+  && apt-get install -y \
+  build-essential \
+  awscli \
+  wget
 
 # Add in the dask configuration
 COPY docker/distributed.yaml /etc/dask/distributed.yaml
