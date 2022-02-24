@@ -31,7 +31,8 @@ REQUIRED = [
     "dask",
     "dask-ml",
     "rasterstats",
-    "geopy"
+    "geopy",
+    "dask_ml"
 ]
 
 # Package meta-data.
