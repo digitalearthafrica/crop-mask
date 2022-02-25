@@ -4,4 +4,3 @@ channels:
 dependencies:
   - python=3.8
   - rsgislib=4.1.95
-  - pyproj=2.6.0
