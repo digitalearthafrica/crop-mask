@@ -7,8 +7,8 @@ plugin_config:
         - s3://deafrica-input-datasets/rainfall/CHPclim_jan_jun_cumulative_rainfall.tif
         - s3://deafrica-input-datasets/rainfall/CHPclim_jul_dec_cumulative_rainfall.tif
       wdpa: s3://deafrica-input-datasets/protected_areas/WDPA_southern.tif #covers southeast region too
-      aez: /southern/Southeast.geojson
-      td: /southern/southeast_training_data_20220222.txt
+      aez: /southeast/Southeast.geojson
+      td: /southeast/southeast_training_data_20220222.txt
 product:
   name: crop_mask_southeast
   short_name: crop_mask_southeast
