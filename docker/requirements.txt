@@ -1,0 +1,4 @@
+git+https://github.com/digitalearthafrica/deafrica-sandbox-notebooks.git#subdirectory=Tools
+rasterio
+
+--no-binary rasterio
