@@ -73,7 +73,7 @@ COPY testing/southeast_cropmask/data/Southeast.geojson /southeast/Southeast.geoj
 WORKDIR /code
 ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "cropmask"]
 
-# Prove it works!
+# Prove it works! Smoke tests and so on... really should have real code tests.
 RUN python -c "import rsgislib; print(rsgislib.__version__)" \
   && python -c "from rsgislib.segmentation import segutils" \
   && cat /conf/version.txt \
