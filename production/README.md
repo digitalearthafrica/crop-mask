@@ -21,6 +21,18 @@ The ODC-statistician plugin that does the core analysis can be tested within DE 
 * The two primary functions that this plugin references are in the [feature_layer](cm_tools/cm_tools/feature_layer.py) and [post_processing](cm_tools/cm_tools/post_processing.py) scripts.
 * A yaml is required to configure the plugin, e.g. [config_western](cm_tools/cm_tools/config/config_western.yaml)
 
+## List of Production Models for each AEZ
+
+Within each testing folder a number of the earlier iteration models are retained. To reduce confusion, a list of the models used to create the production crop masks are listed below (these can also be found in the `Dockerfile`).  The date the training data and models were created identifies each iteration of model:
+
+* Eastern: `testing/eastern_cropmask/results/gm_mads_two_seasons_ml_model_20210427.joblib`
+* Western:  `testing/western_cropmask/results/western_ml_model_20210609.joblib`
+* Northern: `testing/northern_cropmask/results/northern_ml_model_20210803.joblib`
+* Sahel: `testing/sahel_cropmask/results/sahel_ml_model_20211110.joblib`
+* Southern: `testing/southern_cropmask/results/southern_ml_model_20211108.joblib`
+* South East: `testing/southeast_cropmask/results/southeast_ml_model_20220222.joblib`
+* Central: `testing/central_cropmask/results/central_ml_model_20220304.joblib`
+
 ## Running production code
  
  > Note, the following contains an example of running the code on the production EKS, the workflow should first be tested in DEV-EKS.
