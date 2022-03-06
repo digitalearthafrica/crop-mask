@@ -68,6 +68,10 @@ COPY testing/southern_cropmask/data/Southern.geojson /southern/Southern.geojson
 COPY testing/southeast_cropmask/results/southeast_ml_model_20220222.joblib /southeast/southeast_ml_model_20220222.joblib
 COPY testing/southeast_cropmask/results/training_data/southeast_training_data_20220222.txt /southeast/southeast_training_data_20220222.txt
 COPY testing/southeast_cropmask/data/Southeast.geojson /southeast/Southeast.geojson
+# Central region:
+COPY testing/central_cropmask/results/central_ml_model_20220304.joblib /central/central_ml_model_20220304.joblib
+COPY testing/central_cropmask/results/training_data/central_training_data_20220304.txt /central/central_training_data_20220304.txt
+COPY testing/central_cropmask/data/Central.geojson /central/Central.geojson
 
 # Execution environment
 WORKDIR /code
