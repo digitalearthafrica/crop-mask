@@ -21,7 +21,7 @@ product:
 threads: 15
 memory_limit: 120Gi
 max_processing_time: 3600
-job_queue_max_lease: 900
+job_queue_max_lease: 3600
 renew_safety_margin: 60
 future_poll_interval: 2
 s3_acl: bucket-owner-full-control
