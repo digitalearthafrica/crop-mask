@@ -72,6 +72,10 @@ COPY testing/southeast_cropmask/data/Southeast.geojson /southeast/Southeast.geoj
 COPY testing/central_cropmask/results/central_ml_model_20220304.joblib /central/central_ml_model_20220304.joblib
 COPY testing/central_cropmask/results/training_data/central_training_data_20220304.txt /central/central_training_data_20220304.txt
 COPY testing/central_cropmask/data/Central.geojson /central/Central.geojson
+# Indian Ocean region:
+COPY testing/indian_ocean_cropmask/results/indian_ocean_ml_model_20220310.joblib /indian_ocean/indian_ocean_ml_model_20220310.joblib
+COPY testing/indian_ocean_cropmask/results/training_data/indian_ocean_training_data_20220310.txt /indian_ocean/indian_ocean_training_data_20220310.txt
+COPY testing/indian_ocean_cropmask/data/Indian_ocean.geojson /indian_ocean/Indian_ocean.geojson
 
 # Execution environment
 WORKDIR /code
