@@ -13,9 +13,9 @@ def gen_args():
     parse = argparse.ArgumentParser()
     parse.add_argument("--task-csv", help="task csv file.")
     parse.add_argument("--geojson", help="the absolute path of the geojson file")
-    parse.add_argument("--grid",
-                       help="the tiling grid to use e.g. africa_10",
-                      default='africa_10')
+    parse.add_argument(
+        "--grid", help="the tiling grid to use e.g. africa_10", default="africa_10"
+    )
     parse.add_argument("--outfile", help="output task file")
     parse.add_argument(
         "--publish",
@@ -53,7 +53,7 @@ def publish_task(task_slices: Sequence[Tuple], db_url: str, sqs: str):
 def gen_slices(task_df: pd.DataFrame) -> Sequence[Tuple]:
     tasks_slices = []
     # sorted the indices first, then extract related indices
-    indices = sorted(task_df['Index'])
+    indices = sorted(task_df["Index"])
     start: int = indices[0]
     for cur, next in zip(indices[:-1], indices[1:]):
         if next - cur > 1:
@@ -72,7 +72,7 @@ def main():
         raise ValueError("No geojson file specified")
     if not args.outfile:
         raise ValueError("No output file specified")
-    print('Using tiling grid '+ args.grid)
+    print("Using tiling grid " + args.grid)
     with fsspec.open(args.geojson) as fhin:
         data = json.load(fhin)
 
@@ -89,7 +89,7 @@ def main():
             aez_tasks.append(row)
     output_df = pd.DataFrame(aez_tasks)
     output_df.to_csv(args.outfile, index=False)
-    print("Generated "+str(len(output_df))+" tasks from geojson")
+    print("Generated " + str(len(output_df)) + " tasks from geojson")
 
     if args.publish:
         tasks_slices = gen_slices(output_df)

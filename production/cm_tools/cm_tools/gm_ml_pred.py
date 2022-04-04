@@ -1,16 +1,17 @@
 import logging
+from typing import Any, Dict, Optional, Sequence, Tuple
+
 import fsspec
 import joblib
 import xarray as xr
-from odc.stats.model import Task
-from typing import Tuple, Dict, Optional, Any, Sequence
-from odc.stats.plugins._registry import register
-from odc.stats.plugins import StatsPluginInterface
 from datacube.model import Dataset
 from datacube.utils.geometry import GeoBox
 from deafrica_tools.classification import predict_xr
-from cm_tools.post_processing import post_processing
+from odc.stats.plugins import StatsPluginInterface
+from odc.stats.plugins._registry import register
+
 from cm_tools.feature_layer import gm_mads_two_seasons_prediction
+from cm_tools.post_processing import post_processing
 
 _log = logging.getLogger(__name__)
 
@@ -73,10 +74,10 @@ class PredGMS2(StatsPluginInterface):
         with fsspec.open(self.urls["td"], "r") as file:
             header = file.readline()
         column_names = header.split()[1:][1:]
-        
+
         # reorder input data according to column names
         input_data = input_data[column_names]
-        
+
         # step 2: prediction
         predicted = predict_xr(
             model=model,

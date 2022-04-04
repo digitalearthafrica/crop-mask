@@ -1,9 +1,8 @@
 import os
 import shutil
-from typing import Tuple, Dict, Any
+from typing import Any, Dict, Tuple
 
 import dask
-from osgeo import gdal
 import geopandas as gpd
 import numpy as np
 import xarray as xr
@@ -13,8 +12,10 @@ from datacube.utils.cog import write_cog
 from datacube.utils.geometry import assign_crs
 from deafrica_tools.classification import HiddenPrints
 from deafrica_tools.spatial import xr_rasterize
+from osgeo import gdal
 from rsgislib.segmentation import segutils
 from scipy.ndimage._measurements import _stats
+
 
 @dask.delayed
 def image_segmentation(ndvi, predict):
@@ -46,22 +47,22 @@ def image_segmentation(ndvi, predict):
             numClusters=60,
             minPxls=100,
         )
-    
+
     # convert kea to tif
     kwargs = {
-        'outputType': gdal.GDT_Float32,
+        "outputType": gdal.GDT_Float32,
     }
-    
+
     gdal.Translate(
-        destName=segmented_kea_file[:-3]+'tif',
+        destName=segmented_kea_file[:-3] + "tif",
         srcDS=segmented_kea_file,
         outputSRS="EPSG:6933",
-        format='GTiff',
+        format="GTiff",
         **kwargs
     )
-    
+
     # open segments
-    segments = xr.open_rasterio(segmented_kea_file[:-3]+'tif').squeeze().values
+    segments = xr.open_rasterio(segmented_kea_file[:-3] + "tif").squeeze().values
 
     # calculate mode
     count, _sum = _stats(predict, labels=segments, index=segments)
@@ -75,7 +76,7 @@ def image_segmentation(ndvi, predict):
     os.remove(kea_file)
     os.remove(segmented_kea_file)
     os.remove(tiff_to_segment)
-    os.remove(segmented_kea_file[:-3]+'tif')
+    os.remove(segmented_kea_file[:-3] + "tif")
 
     return mode.chunk({})
 
@@ -128,12 +129,14 @@ def post_processing(
     ds = ds.where(~wdpa, 0)
 
     # mask with WOFS
-    wofs=dc.load(product='wofs_ls_summary_annual',
-                 like=predicted.geobox,
-                 dask_chunks={},
-                 time=('2019'))
-    wofs=wofs.frequency > 0.20 # threshold
-    ds=ds.where(~wofs, 0)
+    wofs = dc.load(
+        product="wofs_ls_summary_annual",
+        like=predicted.geobox,
+        dask_chunks={},
+        time=("2019"),
+    )
+    wofs = wofs.frequency > 0.20  # threshold
+    ds = ds.where(~wofs, 0)
 
     # mask steep slopes
     slope = rio_slurp_xarray(urls["slope"], gbox=predicted.geobox)

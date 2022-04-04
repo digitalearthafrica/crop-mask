@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Optional
+
 import datacube
 import numpy as np
 import xarray as xr
@@ -6,9 +8,7 @@ from datacube.utils.geometry import assign_crs
 from deafrica_tools.bandindices import calculate_indices
 from odc.algo import xr_reproject
 from odc.algo.io import load_with_native_transform
-from odc.stats.model import Task
 from pyproj import Proj, transform
-from typing import Dict, List, Tuple, Any, Optional, Sequence
 
 
 def common_ops(ds, era):
@@ -149,7 +149,7 @@ def gm_mads_two_seasons_prediction(
         chunks=dask_chunks,
         resampling="bilinear",
     )
-    
+
     dss = {
         "S1": ds.isel(spec=0).drop(["spatial_ref", "spec"]),
         "S2": ds.isel(spec=1).drop(["spatial_ref", "spec"]),
