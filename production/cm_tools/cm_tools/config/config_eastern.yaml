@@ -31,5 +31,5 @@ future_poll_interval: 2
 s3_acl: bucket-owner-full-control
 # Generic product attributes
 cog_opts:
-  complress: deflate
+  compress: deflate
   zlevel: 9
