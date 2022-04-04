@@ -116,7 +116,11 @@ def post_processing(
     # --Post process masking----------------------------------------
 
     # merge back together for masking
-    ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": filtered})
+    output_bands = {"mask": predict, "prob": proba, "filtered": filtered}
+    ds = xr.Dataset(output_bands)
+    # Set nodata attr per band
+    for name in output_bands.keys():
+        ds[name].attrs["nodata"] = NODATA
 
     # mask out classification beyond AEZ boundary
     gdf = gpd.read_file(urls["aez"])
@@ -151,8 +155,5 @@ def post_processing(
     elevation = dc.load(product="dem_srtm", like=predicted.geobox, dask_chunks={})
     elevation = elevation.elevation > 3600  # threshold
     ds = ds.where(~elevation.squeeze(), NODATA)
-
-    # Configure nodata on the output ds
-    ds = ds.assign_attrs(nodata=NODATA)
 
     return ds.squeeze()

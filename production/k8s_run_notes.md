@@ -118,9 +118,10 @@ odc-stats run gm_s2_semiannual_2021--P1Y.db \
   --resolution=10 \
   --threads=15 \
   --memory-limit=100Gi \
-  --location=file:///tmp/cm_test/{product}/{version}
+  --location=file:///tmp/cm_test/{product}/{version} \
+  2019--P1Y/x+215/y+075
 ```
 
 ### Zip
 
-`zip -r ~/cm_test.zip 2019--P1Y/`
+`zip -r ~/cm_test.zip /tmp/cm_test/crop_mask_eastern/1-1-0/x215/y075/2019--P1Y/`
