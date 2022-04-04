@@ -120,3 +120,7 @@ odc-stats run gm_s2_semiannual_2021--P1Y.db \
   --memory-limit=100Gi \
   --location=file:///tmp/cm_test/{product}/{version}
 ```
+
+### Zip
+
+`zip -r ~/cm_test.zip 2019--P1Y/`

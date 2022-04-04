@@ -19,7 +19,9 @@ product:
   region_code_format: "x{x:03d}y{y:03d}"
   nodata:
     prob: 255
-# computing resources
+    mask: 255
+    filtered: 255
+# Computing resources
 threads: 15
 memory_limit: 120Gi
 max_processing_time: 3600
