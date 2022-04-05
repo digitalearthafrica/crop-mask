@@ -90,6 +90,9 @@ def post_processing(
     """
     dc = Datacube(app="whatever")
 
+    # Set an explicit NODATA value
+    NODATA = 255
+
     # grab predictions and proba for post process filtering
     predict = predicted.Predictions
     proba = predicted.Probabilities
@@ -113,20 +116,24 @@ def post_processing(
     # --Post process masking----------------------------------------
 
     # merge back together for masking
-    ds = xr.Dataset({"mask": predict, "prob": proba, "filtered": filtered})
+    output_bands = {"mask": predict, "prob": proba, "filtered": filtered}
+    ds = xr.Dataset(output_bands)
+    # Set nodata attr per band
+    for name in output_bands.keys():
+        ds[name].attrs["nodata"] = NODATA
 
     # mask out classification beyond AEZ boundary
     gdf = gpd.read_file(urls["aez"])
     with HiddenPrints():
         mask = xr_rasterize(gdf, predicted)
     mask = mask.chunk({})
-    ds = ds.where(mask, 0)
+    ds = ds.where(mask, NODATA)
 
     # mask with WDPA
     wdpa = rio_slurp_xarray(urls["wdpa"], gbox=predicted.geobox)
     wdpa = wdpa.chunk({})
     wdpa = wdpa.astype(bool)
-    ds = ds.where(~wdpa, 0)
+    ds = ds.where(~wdpa, NODATA)
 
     # mask with WOFS
     wofs = dc.load(
@@ -136,17 +143,17 @@ def post_processing(
         time=("2019"),
     )
     wofs = wofs.frequency > 0.20  # threshold
-    ds = ds.where(~wofs, 0)
+    ds = ds.where(~wofs, NODATA)
 
     # mask steep slopes
     slope = rio_slurp_xarray(urls["slope"], gbox=predicted.geobox)
     slope = slope.chunk({})
     slope = slope > 50
-    ds = ds.where(~slope, 0)
+    ds = ds.where(~slope, NODATA)
 
     # mask where the elevation is above 3600m
     elevation = dc.load(product="dem_srtm", like=predicted.geobox, dask_chunks={})
     elevation = elevation.elevation > 3600  # threshold
-    ds = ds.where(~elevation.squeeze(), 0)
+    ds = ds.where(~elevation.squeeze(), NODATA)
 
     return ds.squeeze()

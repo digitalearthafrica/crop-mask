@@ -97,3 +97,31 @@ The steps to create a large scale cropland extent map using K8s and the ML-metho
         kubectl get deployment -n processing
         
         kubectl -n processing describe pod crop-mask-dev-pod 
+
+## Alex's Notes
+
+### Save Tasks
+
+``` bash
+odc-stats save-tasks \
+  --frequency annual \
+  --grid africa-10 gm_s2_semiannual \
+  --tiles=215:218,75:78 \
+  --year=2019
+```
+
+### Run
+
+``` bash
+odc-stats run gm_s2_semiannual_2021--P1Y.db \
+  --config production/cm_tools/cm_tools/config/config_eastern.yaml \
+  --resolution=10 \
+  --threads=15 \
+  --memory-limit=100Gi \
+  --location=file:///tmp/cm_test/{product}/{version} \
+  2019--P1Y/x+215/y+075
+```
+
+### Zip
+
+`zip -r ~/cm_test.zip /tmp/cm_test/crop_mask_eastern/1-1-0/x215/y075/2019--P1Y/`
