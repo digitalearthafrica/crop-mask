@@ -125,3 +125,12 @@ odc-stats run gm_s2_semiannual_2021--P1Y.db \
 ### Zip
 
 `zip -r ~/cm_test.zip /tmp/cm_test/crop_mask_eastern/1-1-0/x215/y075/2019--P1Y/`
+
+### Run time and costs in 2022
+
+* Worst case run time for a single job is `40` minutes or `0.66` hours.
+* Jobs are being run with `12` processors and `120 GB` of memory.
+* An r5.16xl instance with `64` processors and `512` GB of memory costs `$1.20` USD an hour.
+* Approximate cost per job is then `$1.20` per hour at `0.66` hours divided by `6` jobs per instance
+with gets us $0.132.
+* So, for example, the Eastern test run includes `390` datasets, so should cost around `$50` USD.

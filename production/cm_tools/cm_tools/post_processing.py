@@ -88,17 +88,16 @@ def post_processing(
     Run the delayed post_processing functions, then create a lazy
     xr.Dataset to satisfy odc-stats
     """
-    dc = Datacube(app="whatever")
+    dc = Datacube(app="Crop mask")
 
     # Set an explicit NODATA value
     NODATA = 255
 
-    # grab predictions and proba for post process filtering
+    # Grab predictions and probability for post process filtering
     predict = predicted.Predictions
     proba = predicted.Probabilities
     proba = proba.where(predict == 1, 100 - proba)  # crop proba only
 
-    # ------image seg and filtering -------------
     # write out ndvi for image seg
     ndvi = assign_crs(predicted[["NDVI_S1", "NDVI_S2"]], crs=predicted.geobox.crs)
 
@@ -122,38 +121,38 @@ def post_processing(
     for name in output_bands.keys():
         ds[name].attrs["nodata"] = NODATA
 
-    # mask out classification beyond AEZ boundary
+    # Mask out classification beyond region boundary
     gdf = gpd.read_file(urls["aez"])
     with HiddenPrints():
-        mask = xr_rasterize(gdf, predicted)
-    mask = mask.chunk({})
-    ds = ds.where(mask, NODATA)
+        gdf_mask = xr_rasterize(gdf, predicted)
+    gdf_mask = gdf_mask.chunk({})
+    ds = ds.where(gdf_mask, NODATA)
 
-    # mask with WDPA
+    # Mask with WDPA
     wdpa = rio_slurp_xarray(urls["wdpa"], gbox=predicted.geobox)
     wdpa = wdpa.chunk({})
     wdpa = wdpa.astype(bool)
     ds = ds.where(~wdpa, NODATA)
 
-    # mask with WOFS
-    wofs = dc.load(
-        product="wofs_ls_summary_annual",
-        like=predicted.geobox,
-        dask_chunks={},
-        time=("2019"),
-    )
+    # Mask with WOFS
+    # TODO: Make the year configurable and threshold configurable
+    wofs = dc.load(product="wofs_ls_summary_annual", like=predicted.geobox, dask_chunks={}, time=("2019"))
     wofs = wofs.frequency > 0.20  # threshold
     ds = ds.where(~wofs, NODATA)
 
-    # mask steep slopes
-    slope = rio_slurp_xarray(urls["slope"], gbox=predicted.geobox)
-    slope = slope.chunk({})
+    # Mask steep slopes
+    # TODO: Make the threshold configurable
+    slope = dc.load(product="dem_srtm_deriv", like=predicted.geobox, measurements=["slope"], dask_chunks={})
     slope = slope > 50
-    ds = ds.where(~slope, NODATA)
+    ds = ds.where(~slope.squeeze(), NODATA)
 
-    # mask where the elevation is above 3600m
+    # Mask where the elevation is above 3600m
+    # TODO: Make the threshold configurable
     elevation = dc.load(product="dem_srtm", like=predicted.geobox, dask_chunks={})
     elevation = elevation.elevation > 3600  # threshold
     ds = ds.where(~elevation.squeeze(), NODATA)
+
+    # Clean up datasets that were used for masking
+    del gdf, gdf_mask, wdpa, wofs, slope, elevation
 
     return ds.squeeze()
