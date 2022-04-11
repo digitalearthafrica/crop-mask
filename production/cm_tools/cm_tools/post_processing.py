@@ -143,7 +143,7 @@ def post_processing(
     # Mask steep slopes
     # TODO: Make the threshold configurable
     slope = dc.load(product="dem_srtm_deriv", like=predicted.geobox, measurements=["slope"], dask_chunks={})
-    slope = slope > 50
+    slope = slope.slope > 50
     ds = ds.where(~slope.squeeze(), NODATA)
 
     # Mask where the elevation is above 3600m
